@@ -3426,198 +3426,198 @@ activity_3424,2026-08-25T00:51:56Z,REFRESH_CACHE,account_service,cache_service,c
 activity_3425,2026-08-25T01:06:32Z,REFRESH_CACHE,account_service,cache_service,cache_431,SUCCESS,Profile cache refresh processed cache_431.
 activity_3426,2026-08-25T01:51:41Z,UPDATE_RECORD,support_platform,search_service,support_6600,SUCCESS,Support-case index update processed support_6600.
 activity_3427,2026-08-25T03:44:33Z,INDEX_RECORD,account_service,search_service,search_2286,SUCCESS,Customer search-index refresh processed search_2286.
-activity_3428,2026-08-25T04:19:22Z,DELETE_RECORD,deletion_worker,account_service,account_003,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: account_003.
-activity_3429,2026-08-25T09:58:34Z,RETAIN_RECORD,security_service,archive_service,audit_record_5729,SUCCESS,Security-event archival processed audit_record_5729.
-activity_3430,2026-08-25T10:15:03Z,UPDATE_RECORD,support_platform,search_service,support_2128,SUCCESS,Support-case index update processed support_2128.
-activity_3431,2026-08-25T10:45:32Z,DELETE_RECORD,deletion_worker,account_service,account_8926,FAILED,Deletion worker submitted primary profile account_8926 to account_service.
-activity_3432,2026-08-25T10:56:16Z,DELETE_RECORD,deletion_worker,account_service,account_8491,PARTIAL,Deletion worker submitted primary profile account_8491 to account_service.
-activity_3433,2026-08-25T11:07:59Z,DELETE_RECORD,deletion_worker,account_service,account_9797,SUCCESS,Deletion worker submitted primary profile account_9797 to account_service.
-activity_3434,2026-08-25T11:38:13Z,UPDATE_RECORD,support_platform,search_service,support_5664,SUCCESS,Support-case index update processed support_5664.
-activity_3435,2026-08-25T12:44:24Z,SYNC_RECORD,integration_service,search_service,data_flow_1121,SUCCESS,Active connector repopulated downstream resource search_4801.
-activity_3436,2026-08-25T12:53:51Z,DELETE_RECORD,deletion_worker,analytics_platform,analytics_9914,FAILED,Deletion worker received the final result for analytics_9914 from analytics_platform.
-activity_3437,2026-08-25T13:00:08Z,DELETE_RECORD,deletion_worker,search_service,search_428,FAILED,Deletion worker received the final result for search_428 from search_service.
-activity_3438,2026-08-25T13:03:53Z,DELETE_RECORD,deletion_worker,search_service,search_4801,FAILED,Deletion worker received the final result for search_4801 from search_service.
-activity_3439,2026-08-25T17:44:07Z,REFRESH_CACHE,account_service,cache_service,cache_9583,SUCCESS,Profile cache refresh processed cache_9583.
-activity_3440,2026-08-25T23:48:46Z,REFRESH_CACHE,account_service,cache_service,cache_7361,SUCCESS,Profile cache refresh processed cache_7361.
-activity_3441,2026-08-26T01:53:56Z,SYNC_RECORD,account_service,analytics_platform,analytics_7426,SUCCESS,Customer profile synchronization processed analytics_7426.
-activity_3442,2026-08-26T03:02:37Z,SYNC_RECORD,account_service,analytics_platform,analytics_7260,SUCCESS,Customer profile synchronization processed analytics_7260.
-activity_3443,2026-08-26T07:35:24Z,CREATE_EXPORT,export_service,object_store,export_8961,SUCCESS,Scheduled account export processed export_8961.
-activity_3444,2026-08-26T08:46:47Z,DELETE_RECORD,deletion_worker,account_service,account_3865,PARTIAL,Deletion worker submitted primary profile account_3865 to account_service.
-activity_3445,2026-08-26T08:57:31Z,DELETE_RECORD,deletion_worker,account_service,account_631,SUCCESS,Deletion worker submitted primary profile account_631 to account_service.
-activity_3446,2026-08-26T09:08:44Z,DELETE_RECORD,deletion_worker,account_service,account_5661,SUCCESS,Deletion worker submitted primary profile account_5661 to account_service.
-activity_3447,2026-08-26T09:21:59Z,UPDATE_RECORD,support_platform,search_service,support_661,SUCCESS,Support-case index update processed support_661.
-activity_3448,2026-08-26T09:31:12Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_9069,SUCCESS,Policy action completed for analytics_9069.
-activity_3449,2026-08-26T11:00:39Z,SYNC_RECORD,integration_service,search_service,data_flow_4218,SUCCESS,Active connector repopulated downstream resource search_7455.
-activity_3450,2026-08-26T11:19:09Z,DELETE_RECORD,deletion_worker,search_service,search_7455,FAILED,Deletion worker received the final result for search_7455 from search_service.
-activity_3451,2026-08-26T11:25:20Z,UPDATE_RECORD,profile_service,account_service,account_2660,SUCCESS,Profile preference update processed account_2660.
-activity_3452,2026-08-26T12:11:59Z,INDEX_RECORD,account_service,search_service,search_611,SUCCESS,Customer search-index refresh processed search_611.
-activity_3453,2026-08-26T12:58:22Z,CREATE_EXPORT,export_service,object_store,export_4698,SUCCESS,Scheduled account export processed export_4698.
-activity_3454,2026-08-26T17:46:39Z,SYNC_RECORD,account_service,analytics_platform,analytics_4897,SUCCESS,Customer profile synchronization processed analytics_4897.
-activity_3455,2026-08-26T20:02:42Z,UPDATE_RECORD,support_platform,search_service,support_6544,SUCCESS,Support-case index update processed support_6544.
-activity_3456,2026-08-27T00:05:37Z,INDEX_RECORD,account_service,search_service,search_9030,SUCCESS,Customer search-index refresh processed search_9030.
-activity_3457,2026-08-27T02:10:15Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_913,SUCCESS,Transactional email delivery processed email_delivery_913.
-activity_3458,2026-08-27T03:20:09Z,SYNC_RECORD,account_service,analytics_platform,analytics_5762,SUCCESS,Customer profile synchronization processed analytics_5762.
-activity_3459,2026-08-27T05:52:37Z,DELETE_RECORD,deletion_worker,account_service,account_2449,PARTIAL,Deletion worker submitted primary profile account_2449 to account_service.
-activity_3460,2026-08-27T06:01:11Z,DELETE_RECORD,deletion_worker,account_service,account_4911,PARTIAL,Deletion worker submitted primary profile account_4911 to account_service.
-activity_3461,2026-08-27T06:12:24Z,DELETE_RECORD,deletion_worker,account_service,account_2387,FAILED,Deletion worker submitted primary profile account_2387 to account_service.
-activity_3462,2026-08-27T07:44:03Z,SYNC_RECORD,integration_service,search_service,data_flow_9927,SUCCESS,Active connector repopulated downstream resource search_6302.
-activity_3463,2026-08-27T08:03:32Z,DELETE_RECORD,deletion_worker,search_service,search_6302,FAILED,Deletion worker received the final result for search_6302 from search_service.
-activity_3464,2026-08-27T08:47:41Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_901,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: analytics_901.
-activity_3465,2026-08-27T09:33:26Z,SYNC_RECORD,account_service,analytics_platform,analytics_1805,SUCCESS,Customer profile synchronization processed analytics_1805.
-activity_3466,2026-08-27T10:55:42Z,DELETE_RECORD,deletion_worker,account_service,account_4163,SUCCESS,Deletion worker submitted primary profile account_4163 to account_service.
-activity_3467,2026-08-27T11:37:27Z,RETAIN_RECORD,security_service,archive_service,audit_record_7203,SUCCESS,Security-event archival processed audit_record_7203.
-activity_3468,2026-08-27T12:41:34Z,CHECK_DATA_FLOW,deletion_worker,integration_service,data_flow_8524,SUCCESS,Connector status check confirmed that data flow data_flow_8524 remains enabled.
-activity_3469,2026-08-27T13:00:04Z,DELETE_RECORD,deletion_worker,search_service,search_9359,FAILED,Deletion worker received the final result for search_9359 from search_service.
-activity_3470,2026-08-27T13:19:33Z,REDACT_RECORD,deletion_worker,support_platform,support_6477,FAILED,Deletion worker received the final result for support_6477 from support_platform.
-activity_3471,2026-08-27T13:38:03Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_3697,FAILED,Deletion worker received the final result for analytics_3697 from analytics_platform.
-activity_3472,2026-08-27T14:18:32Z,UPDATE_RECORD,support_platform,search_service,support_8242,SUCCESS,Support-case index update processed support_8242.
-activity_3473,2026-08-27T15:38:30Z,RETAIN_RECORD,security_service,archive_service,audit_record_7813,SUCCESS,Security-event archival processed audit_record_7813.
-activity_3474,2026-08-27T16:11:20Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_1941,SUCCESS,Transactional email delivery processed email_delivery_1941.
-activity_3475,2026-08-27T20:37:28Z,REFRESH_CACHE,account_service,cache_service,cache_9107,SUCCESS,Profile cache refresh processed cache_9107.
-activity_3476,2026-08-27T21:55:15Z,RETAIN_RECORD,security_service,archive_service,audit_record_8808,SUCCESS,Security-event archival processed audit_record_8808.
-activity_3477,2026-08-28T00:26:10Z,SYNC_RECORD,account_service,analytics_platform,analytics_8836,SUCCESS,Customer profile synchronization processed analytics_8836.
-activity_3478,2026-08-28T00:30:06Z,INDEX_RECORD,account_service,search_service,search_9333,SUCCESS,Customer search-index refresh processed search_9333.
-activity_3479,2026-08-28T03:07:27Z,REFRESH_CACHE,account_service,cache_service,cache_488,SUCCESS,Profile cache refresh processed cache_488.
-activity_3480,2026-08-28T03:45:15Z,INDEX_RECORD,account_service,search_service,search_7843,SUCCESS,Customer search-index refresh processed search_7843.
-activity_3481,2026-08-28T04:28:27Z,CREATE_EXPORT,export_service,object_store,export_4064,SUCCESS,Scheduled account export processed export_4064.
-activity_3482,2026-08-28T06:42:10Z,SYNC_RECORD,account_service,analytics_platform,analytics_3717,SUCCESS,Customer profile synchronization processed analytics_3717.
-activity_3483,2026-08-28T09:11:01Z,DELETE_RECORD,deletion_worker,account_service,account_005,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: account_005.
-activity_3484,2026-08-28T09:11:09Z,SYNC_RECORD,account_service,account_failover_replica,account_005,SUCCESS,Replication worker reported its final checkpoint. Target resource: account_005.
-activity_3485,2026-08-28T09:53:51Z,INDEX_RECORD,account_service,search_service,search_9145,SUCCESS,Customer search-index refresh processed search_9145.
-activity_3486,2026-08-28T10:47:43Z,DELETE_RECORD,deletion_worker,account_service,account_5762,FAILED,Deletion worker submitted primary profile account_5762 to account_service.
-activity_3487,2026-08-28T11:07:25Z,CLASSIFY_REQUEST,privacy_intake,privacy_case_management,account_2461,SUCCESS,Privacy intake classified request for account_2461 as non-deletion; no destructive action was authorized.
+activity_3428,2026-08-25T09:58:34Z,RETAIN_RECORD,security_service,archive_service,audit_record_5729,SUCCESS,Security-event archival processed audit_record_5729.
+activity_3429,2026-08-25T10:15:03Z,UPDATE_RECORD,support_platform,search_service,support_2128,SUCCESS,Support-case index update processed support_2128.
+activity_3430,2026-08-25T10:45:32Z,DELETE_RECORD,deletion_worker,account_service,account_8926,FAILED,Deletion worker submitted primary profile account_8926 to account_service.
+activity_3431,2026-08-25T10:56:16Z,DELETE_RECORD,deletion_worker,account_service,account_8491,PARTIAL,Deletion worker submitted primary profile account_8491 to account_service.
+activity_3432,2026-08-25T11:07:59Z,DELETE_RECORD,deletion_worker,account_service,account_9797,SUCCESS,Deletion worker submitted primary profile account_9797 to account_service.
+activity_3433,2026-08-25T11:38:13Z,UPDATE_RECORD,support_platform,search_service,support_5664,SUCCESS,Support-case index update processed support_5664.
+activity_3434,2026-08-25T12:44:24Z,SYNC_RECORD,integration_service,search_service,data_flow_1121,SUCCESS,Active connector repopulated downstream resource search_4801.
+activity_3435,2026-08-25T12:53:51Z,DELETE_RECORD,deletion_worker,analytics_platform,analytics_9914,FAILED,Deletion worker received the final result for analytics_9914 from analytics_platform.
+activity_3436,2026-08-25T13:00:08Z,DELETE_RECORD,deletion_worker,search_service,search_428,FAILED,Deletion worker received the final result for search_428 from search_service.
+activity_3437,2026-08-25T13:03:53Z,DELETE_RECORD,deletion_worker,search_service,search_4801,FAILED,Deletion worker received the final result for search_4801 from search_service.
+activity_3438,2026-08-25T17:44:07Z,REFRESH_CACHE,account_service,cache_service,cache_9583,SUCCESS,Profile cache refresh processed cache_9583.
+activity_3439,2026-08-25T23:48:46Z,REFRESH_CACHE,account_service,cache_service,cache_7361,SUCCESS,Profile cache refresh processed cache_7361.
+activity_3440,2026-08-26T01:53:56Z,SYNC_RECORD,account_service,analytics_platform,analytics_7426,SUCCESS,Customer profile synchronization processed analytics_7426.
+activity_3441,2026-08-26T03:02:37Z,SYNC_RECORD,account_service,analytics_platform,analytics_7260,SUCCESS,Customer profile synchronization processed analytics_7260.
+activity_3442,2026-08-26T07:35:24Z,CREATE_EXPORT,export_service,object_store,export_8961,SUCCESS,Scheduled account export processed export_8961.
+activity_3443,2026-08-26T08:46:47Z,DELETE_RECORD,deletion_worker,account_service,account_3865,PARTIAL,Deletion worker submitted primary profile account_3865 to account_service.
+activity_3444,2026-08-26T08:57:31Z,DELETE_RECORD,deletion_worker,account_service,account_631,SUCCESS,Deletion worker submitted primary profile account_631 to account_service.
+activity_3445,2026-08-26T09:08:44Z,DELETE_RECORD,deletion_worker,account_service,account_5661,SUCCESS,Deletion worker submitted primary profile account_5661 to account_service.
+activity_3446,2026-08-26T09:21:59Z,UPDATE_RECORD,support_platform,search_service,support_661,SUCCESS,Support-case index update processed support_661.
+activity_3447,2026-08-26T09:31:12Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_9069,SUCCESS,Policy action completed for analytics_9069.
+activity_3448,2026-08-26T11:00:39Z,SYNC_RECORD,integration_service,search_service,data_flow_4218,SUCCESS,Active connector repopulated downstream resource search_7455.
+activity_3449,2026-08-26T11:19:09Z,DELETE_RECORD,deletion_worker,search_service,search_7455,FAILED,Deletion worker received the final result for search_7455 from search_service.
+activity_3450,2026-08-26T11:25:20Z,UPDATE_RECORD,profile_service,account_service,account_2660,SUCCESS,Profile preference update processed account_2660.
+activity_3451,2026-08-26T12:11:59Z,INDEX_RECORD,account_service,search_service,search_611,SUCCESS,Customer search-index refresh processed search_611.
+activity_3452,2026-08-26T12:58:22Z,CREATE_EXPORT,export_service,object_store,export_4698,SUCCESS,Scheduled account export processed export_4698.
+activity_3453,2026-08-26T17:46:39Z,SYNC_RECORD,account_service,analytics_platform,analytics_4897,SUCCESS,Customer profile synchronization processed analytics_4897.
+activity_3454,2026-08-26T20:02:42Z,UPDATE_RECORD,support_platform,search_service,support_6544,SUCCESS,Support-case index update processed support_6544.
+activity_3455,2026-08-27T00:05:37Z,INDEX_RECORD,account_service,search_service,search_9030,SUCCESS,Customer search-index refresh processed search_9030.
+activity_3456,2026-08-27T02:10:15Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_913,SUCCESS,Transactional email delivery processed email_delivery_913.
+activity_3457,2026-08-27T03:20:09Z,SYNC_RECORD,account_service,analytics_platform,analytics_5762,SUCCESS,Customer profile synchronization processed analytics_5762.
+activity_3458,2026-08-27T05:52:37Z,DELETE_RECORD,deletion_worker,account_service,account_2449,PARTIAL,Deletion worker submitted primary profile account_2449 to account_service.
+activity_3459,2026-08-27T06:01:11Z,DELETE_RECORD,deletion_worker,account_service,account_4911,PARTIAL,Deletion worker submitted primary profile account_4911 to account_service.
+activity_3460,2026-08-27T06:12:24Z,DELETE_RECORD,deletion_worker,account_service,account_2387,FAILED,Deletion worker submitted primary profile account_2387 to account_service.
+activity_3461,2026-08-27T07:44:03Z,SYNC_RECORD,integration_service,search_service,data_flow_9927,SUCCESS,Active connector repopulated downstream resource search_6302.
+activity_3462,2026-08-27T08:03:32Z,DELETE_RECORD,deletion_worker,search_service,search_6302,FAILED,Deletion worker received the final result for search_6302 from search_service.
+activity_3463,2026-08-27T08:47:41Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_901,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: analytics_901.
+activity_3464,2026-08-27T09:33:26Z,SYNC_RECORD,account_service,analytics_platform,analytics_1805,SUCCESS,Customer profile synchronization processed analytics_1805.
+activity_3465,2026-08-27T10:55:42Z,DELETE_RECORD,deletion_worker,account_service,account_4163,SUCCESS,Deletion worker submitted primary profile account_4163 to account_service.
+activity_3466,2026-08-27T11:37:27Z,RETAIN_RECORD,security_service,archive_service,audit_record_7203,SUCCESS,Security-event archival processed audit_record_7203.
+activity_3467,2026-08-27T12:41:34Z,CHECK_DATA_FLOW,deletion_worker,integration_service,data_flow_8524,SUCCESS,Connector status check confirmed that data flow data_flow_8524 remains enabled.
+activity_3468,2026-08-27T13:00:04Z,DELETE_RECORD,deletion_worker,search_service,search_9359,FAILED,Deletion worker received the final result for search_9359 from search_service.
+activity_3469,2026-08-27T13:19:33Z,REDACT_RECORD,deletion_worker,support_platform,support_6477,FAILED,Deletion worker received the final result for support_6477 from support_platform.
+activity_3470,2026-08-27T13:38:03Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_3697,FAILED,Deletion worker received the final result for analytics_3697 from analytics_platform.
+activity_3471,2026-08-27T14:18:32Z,UPDATE_RECORD,support_platform,search_service,support_8242,SUCCESS,Support-case index update processed support_8242.
+activity_3472,2026-08-27T15:38:30Z,RETAIN_RECORD,security_service,archive_service,audit_record_7813,SUCCESS,Security-event archival processed audit_record_7813.
+activity_3473,2026-08-27T16:11:20Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_1941,SUCCESS,Transactional email delivery processed email_delivery_1941.
+activity_3474,2026-08-27T20:37:28Z,REFRESH_CACHE,account_service,cache_service,cache_9107,SUCCESS,Profile cache refresh processed cache_9107.
+activity_3475,2026-08-27T21:55:15Z,RETAIN_RECORD,security_service,archive_service,audit_record_8808,SUCCESS,Security-event archival processed audit_record_8808.
+activity_3476,2026-08-28T00:26:10Z,SYNC_RECORD,account_service,analytics_platform,analytics_8836,SUCCESS,Customer profile synchronization processed analytics_8836.
+activity_3477,2026-08-28T00:30:06Z,INDEX_RECORD,account_service,search_service,search_9333,SUCCESS,Customer search-index refresh processed search_9333.
+activity_3478,2026-08-28T03:07:27Z,REFRESH_CACHE,account_service,cache_service,cache_488,SUCCESS,Profile cache refresh processed cache_488.
+activity_3479,2026-08-28T03:45:15Z,INDEX_RECORD,account_service,search_service,search_7843,SUCCESS,Customer search-index refresh processed search_7843.
+activity_3480,2026-08-28T04:28:27Z,CREATE_EXPORT,export_service,object_store,export_4064,SUCCESS,Scheduled account export processed export_4064.
+activity_3481,2026-08-28T06:42:10Z,SYNC_RECORD,account_service,analytics_platform,analytics_3717,SUCCESS,Customer profile synchronization processed analytics_3717.
+activity_3482,2026-08-28T09:11:01Z,DELETE_RECORD,deletion_worker,account_service,account_005,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: account_005.
+activity_3483,2026-08-28T09:11:09Z,SYNC_RECORD,account_service,account_failover_replica,account_005,SUCCESS,Replication worker reported its final checkpoint. Target resource: account_005.
+activity_3484,2026-08-28T09:53:51Z,INDEX_RECORD,account_service,search_service,search_9145,SUCCESS,Customer search-index refresh processed search_9145.
+activity_3485,2026-08-28T10:47:43Z,DELETE_RECORD,deletion_worker,account_service,account_5762,FAILED,Deletion worker submitted primary profile account_5762 to account_service.
+activity_3486,2026-08-28T11:07:25Z,CLASSIFY_REQUEST,privacy_intake,privacy_case_management,account_2461,SUCCESS,Privacy intake classified request for account_2461 as non-deletion; no destructive action was authorized.
+activity_3487,2026-08-28T11:09:11Z,DELETE_RECORD,deletion_worker,account_service,account_9255,SUCCESS,Deletion worker submitted primary profile account_9255 to account_service.
 activity_3488,2026-08-28T12:38:21Z,UPDATE_RECORD,support_platform,search_service,support_9123,SUCCESS,Support-case index update processed support_9123.
 activity_3489,2026-08-28T12:46:35Z,DELETE_RECORD,deletion_worker,support_platform,support_9538,FAILED,Deletion worker received the final result for support_9538 from support_platform.
-activity_3490,2026-08-29T01:53:05Z,UPDATE_RECORD,profile_service,account_service,account_8597,SUCCESS,Profile preference update processed account_8597.
-activity_3491,2026-08-29T05:47:13Z,SYNC_RECORD,account_service,analytics_platform,analytics_8088,SUCCESS,Customer profile synchronization processed analytics_8088.
-activity_3492,2026-08-29T06:03:23Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_6334,SUCCESS,Transactional email delivery processed email_delivery_6334.
-activity_3493,2026-08-29T06:43:38Z,CREATE_EXPORT,export_service,object_store,export_9905,SUCCESS,Scheduled account export processed export_9905.
-activity_3494,2026-08-29T07:26:32Z,RETAIN_RECORD,security_service,archive_service,audit_record_6522,SUCCESS,Security-event archival processed audit_record_6522.
-activity_3495,2026-08-29T07:35:08Z,INDEX_RECORD,account_service,search_service,search_4825,SUCCESS,Customer search-index refresh processed search_4825.
-activity_3496,2026-08-29T07:49:42Z,DELETE_RECORD,deletion_worker,account_service,account_7643,PARTIAL,Deletion worker submitted primary profile account_7643 to account_service.
-activity_3497,2026-08-29T08:00:56Z,DELETE_RECORD,deletion_worker,account_service,account_1378,SUCCESS,Deletion worker submitted primary profile account_1378 to account_service.
-activity_3498,2026-08-29T08:01:35Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_2101,SUCCESS,Transactional email delivery processed email_delivery_2101.
-activity_3499,2026-08-29T08:48:28Z,DELETE_RECORD,deletion_worker,account_service,account_5715,FAILED,Deletion worker submitted primary profile account_5715 to account_service.
-activity_3500,2026-08-29T08:59:43Z,DELETE_RECORD,deletion_worker,account_service,account_1298,SUCCESS,Deletion worker submitted primary profile account_1298 to account_service.
-activity_3501,2026-08-29T09:10:27Z,DELETE_RECORD,deletion_worker,account_service,account_9862,FAILED,Deletion worker submitted primary profile account_9862 to account_service.
-activity_3502,2026-08-29T09:31:09Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_2572,SUCCESS,Policy action completed for analytics_2572.
-activity_3503,2026-08-29T09:31:24Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_8858,SUCCESS,Policy action completed for analytics_8858.
-activity_3504,2026-08-29T09:38:48Z,DELETE_RECORD,deletion_worker,support_platform,support_1370,FAILED,Deletion worker received the final result for support_1370 from support_platform.
-activity_3505,2026-08-29T09:38:53Z,REDACT_RECORD,deletion_worker,support_platform,support_7479,SUCCESS,Policy action completed for support_7479.
-activity_3506,2026-08-29T09:43:25Z,UPDATE_RECORD,profile_service,account_service,account_1493,SUCCESS,Profile preference update processed account_1493.
-activity_3507,2026-08-29T09:45:23Z,DISABLE_DATA_FLOW,deletion_worker,integration_service,data_flow_1368,SUCCESS,Policy action completed for data_flow_1368.
-activity_3508,2026-08-29T09:52:52Z,BLOCK_RESTORE,deletion_worker,backup_service,backup_7711,SUCCESS,Policy action completed for backup_7711.
-activity_3509,2026-08-29T09:57:18Z,DELETE_RECORD,deletion_worker,search_service,search_684,FAILED,Deletion worker received the final result for search_684 from search_service.
-activity_3510,2026-08-29T10:04:34Z,DELETE_RECORD,deletion_worker,export_service,export_4091,PARTIAL,Deletion worker received the final result for export_4091 from export_service.
-activity_3511,2026-08-29T10:47:38Z,CLASSIFY_REQUEST,privacy_intake,privacy_case_management,account_2176,SUCCESS,Privacy intake classified request for account_2176 as non-deletion; no destructive action was authorized.
-activity_3512,2026-08-29T10:48:19Z,CHECK_DATA_FLOW,deletion_worker,integration_service,data_flow_373,SUCCESS,Connector status check confirmed that data flow data_flow_373 remains enabled.
-activity_3513,2026-08-29T11:43:51Z,INDEX_RECORD,account_service,search_service,search_5022,SUCCESS,Customer search-index refresh processed search_5022.
-activity_3514,2026-08-29T12:18:48Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_1080,SUCCESS,Transactional email delivery processed email_delivery_1080.
-activity_3515,2026-08-29T14:06:35Z,INDEX_RECORD,account_service,search_service,search_2434,SUCCESS,Customer search-index refresh processed search_2434.
-activity_3516,2026-08-29T15:09:52Z,UPDATE_RECORD,profile_service,account_service,account_3418,SUCCESS,Profile preference update processed account_3418.
-activity_3517,2026-08-29T20:08:23Z,UPDATE_RECORD,support_platform,search_service,support_2456,SUCCESS,Support-case index update processed support_2456.
-activity_3518,2026-08-29T20:51:04Z,SYNC_RECORD,account_service,analytics_platform,analytics_6443,SUCCESS,Customer profile synchronization processed analytics_6443.
-activity_3519,2026-08-29T21:26:38Z,UPDATE_RECORD,support_platform,search_service,support_8342,SUCCESS,Support-case index update processed support_8342.
-activity_3520,2026-08-30T00:16:51Z,SYNC_RECORD,account_service,analytics_platform,analytics_406,SUCCESS,Customer profile synchronization processed analytics_406.
-activity_3521,2026-08-30T00:24:58Z,UPDATE_RECORD,support_platform,search_service,support_7306,SUCCESS,Support-case index update processed support_7306.
-activity_3522,2026-08-30T00:57:04Z,UPDATE_RECORD,support_platform,search_service,support_3310,SUCCESS,Support-case index update processed support_3310.
-activity_3523,2026-08-30T02:03:37Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_2127,SUCCESS,Transactional email delivery processed email_delivery_2127.
-activity_3524,2026-08-30T08:43:26Z,INDEX_RECORD,account_service,search_service,search_1872,SUCCESS,Customer search-index refresh processed search_1872.
-activity_3525,2026-08-30T08:45:29Z,INDEX_RECORD,account_service,search_service,search_7299,SUCCESS,Customer search-index refresh processed search_7299.
-activity_3526,2026-08-30T09:05:51Z,SYNC_RECORD,account_service,analytics_platform,analytics_4430,SUCCESS,Customer profile synchronization processed analytics_4430.
-activity_3527,2026-08-30T09:40:53Z,SYNC_RECORD,account_service,analytics_platform,analytics_454,SUCCESS,Customer profile synchronization processed analytics_454.
-activity_3528,2026-08-30T10:46:13Z,DELETE_RECORD,deletion_worker,account_service,account_5482,FAILED,Deletion worker submitted primary profile account_5482 to account_service.
-activity_3529,2026-08-30T10:57:28Z,DELETE_RECORD,deletion_worker,account_service,account_3866,SUCCESS,Deletion worker submitted primary profile account_3866 to account_service.
-activity_3530,2026-08-30T10:58:51Z,CLASSIFY_REQUEST,privacy_intake,privacy_case_management,account_9321,SUCCESS,Privacy intake classified request for account_9321 as non-deletion; no destructive action was authorized.
-activity_3531,2026-08-30T11:06:57Z,DELETE_RECORD,deletion_worker,account_service,account_7012,FAILED,Deletion worker submitted primary profile account_7012 to account_service.
-activity_3532,2026-08-30T11:31:09Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_4574,SUCCESS,Policy action completed for analytics_4574.
-activity_3533,2026-08-30T11:31:53Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_6077,SUCCESS,Policy action completed for analytics_6077.
-activity_3534,2026-08-30T11:38:23Z,REDACT_RECORD,deletion_worker,support_platform,support_2351,SUCCESS,Policy action completed for support_2351.
-activity_3535,2026-08-30T11:38:38Z,REDACT_RECORD,deletion_worker,support_platform,support_4707,SUCCESS,Policy action completed for support_4707.
-activity_3536,2026-08-30T11:45:08Z,DISABLE_DATA_FLOW,deletion_worker,integration_service,data_flow_2295,SUCCESS,Policy action completed for data_flow_2295.
-activity_3537,2026-08-30T11:45:52Z,DISABLE_DATA_FLOW,deletion_worker,integration_service,data_flow_2337,SUCCESS,Policy action completed for data_flow_2337.
-activity_3538,2026-08-30T11:52:22Z,BLOCK_RESTORE,deletion_worker,backup_service,backup_838,SUCCESS,Policy action completed for backup_838.
-activity_3539,2026-08-30T11:52:37Z,BLOCK_RESTORE,deletion_worker,backup_service,backup_5970,SUCCESS,Policy action completed for backup_5970.
-activity_3540,2026-08-30T12:57:49Z,CHECK_DATA_FLOW,deletion_worker,integration_service,data_flow_3827,SUCCESS,Connector status check confirmed that data flow data_flow_3827 remains enabled.
-activity_3541,2026-08-30T13:16:19Z,DELETE_RECORD,deletion_worker,search_service,search_1993,FAILED,Deletion worker received the final result for search_1993 from search_service.
-activity_3542,2026-08-30T13:35:48Z,REDACT_RECORD,deletion_worker,support_platform,support_5281,FAILED,Deletion worker received the final result for support_5281 from support_platform.
-activity_3543,2026-08-30T13:54:18Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_5208,FAILED,Deletion worker received the final result for analytics_5208 from analytics_platform.
-activity_3544,2026-08-30T17:08:20Z,DELETE_RECORD,deletion_worker,account_service,account_006,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: account_006.
-activity_3545,2026-08-30T17:21:43Z,DELETE_RECORD,deletion_worker,search_service,search_001,FAILED,Deletion worker stopped after the target system returned an error. Target resource: search_001.
-activity_3546,2026-08-30T19:10:09Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_9107,SUCCESS,Transactional email delivery processed email_delivery_9107.
-activity_3547,2026-08-30T20:49:40Z,CREATE_EXPORT,export_service,object_store,export_6639,SUCCESS,Scheduled account export processed export_6639.
-activity_3548,2026-08-30T23:48:09Z,UPDATE_RECORD,support_platform,search_service,support_5147,SUCCESS,Support-case index update processed support_5147.
-activity_3549,2026-08-31T04:41:12Z,UPDATE_RECORD,support_platform,search_service,support_1442,SUCCESS,Support-case index update processed support_1442.
-activity_3550,2026-08-31T09:20:21Z,RETAIN_RECORD,security_service,archive_service,audit_record_1828,SUCCESS,Security-event archival processed audit_record_1828.
-activity_3551,2026-08-31T11:06:22Z,CREATE_EXPORT,export_service,object_store,export_452,SUCCESS,Scheduled account export processed export_452.
-activity_3552,2026-08-31T13:44:21Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_6366,SUCCESS,Transactional email delivery processed email_delivery_6366.
-activity_3553,2026-08-31T13:48:58Z,DELETE_RECORD,deletion_worker,account_service,account_008,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: account_008.
-activity_3554,2026-08-31T13:49:22Z,DELETE_RECORD,deletion_worker,export_service,export_001,FAILED,Deletion worker stopped after the target system returned an error. Target resource: export_001.
-activity_3555,2026-08-31T14:12:15Z,SYNC_RECORD,account_service,analytics_platform,analytics_634,SUCCESS,Customer profile synchronization processed analytics_634.
-activity_3556,2026-08-31T14:56:45Z,INDEX_RECORD,account_service,search_service,search_9349,SUCCESS,Customer search-index refresh processed search_9349.
-activity_3557,2026-08-31T14:57:50Z,UPDATE_RECORD,profile_service,account_service,account_3344,SUCCESS,Profile preference update processed account_3344.
-activity_3558,2026-08-31T19:58:20Z,CREATE_EXPORT,export_service,object_store,export_9035,SUCCESS,Scheduled account export processed export_9035.
-activity_3559,2026-08-31T21:05:13Z,INDEX_RECORD,account_service,search_service,search_1859,SUCCESS,Customer search-index refresh processed search_1859.
-activity_3560,2026-08-31T22:20:14Z,RETAIN_RECORD,security_service,archive_service,audit_record_8282,SUCCESS,Security-event archival processed audit_record_8282.
-activity_3561,2026-09-01T01:08:18Z,INDEX_RECORD,account_service,search_service,search_527,PARTIAL,Customer search-index refresh processed search_527.
-activity_3562,2026-09-01T02:03:59Z,UPDATE_RECORD,support_platform,search_service,support_1573,SUCCESS,Support-case index update processed support_1573.
-activity_3563,2026-09-01T02:45:09Z,REFRESH_CACHE,account_service,cache_service,cache_4544,SUCCESS,Profile cache refresh processed cache_4544.
-activity_3564,2026-09-01T03:31:11Z,REFRESH_CACHE,account_service,cache_service,cache_147,PARTIAL,Profile cache refresh processed cache_147.
-activity_3565,2026-09-01T04:09:19Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_8068,SUCCESS,Transactional email delivery processed email_delivery_8068.
-activity_3566,2026-09-01T05:28:41Z,DELETE_RECORD,deletion_worker,marketing_platform,marketing_001,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: marketing_001.
-activity_3567,2026-09-01T05:29:18Z,DELETE_RECORD,deletion_worker,account_service,account_009,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: account_009.
-activity_3568,2026-09-01T06:45:51Z,SYNC_RECORD,account_service,analytics_platform,analytics_4923,FAILED,Customer profile synchronization processed analytics_4923.
-activity_3569,2026-09-01T07:51:23Z,DELETE_RECORD,deletion_worker,account_service,account_6138,SUCCESS,Deletion worker submitted primary profile account_6138 to account_service.
-activity_3570,2026-09-01T08:02:37Z,DELETE_RECORD,deletion_worker,account_service,account_902,FAILED,Deletion worker submitted primary profile account_902 to account_service.
-activity_3571,2026-09-01T08:11:10Z,DELETE_RECORD,deletion_worker,account_service,account_6633,SUCCESS,Deletion worker submitted primary profile account_6633 to account_service.
-activity_3572,2026-09-01T08:50:41Z,DELETE_RECORD,deletion_worker,account_service,account_994,FAILED,Deletion worker submitted primary profile account_994 to account_service.
-activity_3573,2026-09-01T09:01:56Z,DELETE_RECORD,deletion_worker,account_service,account_6829,PARTIAL,Deletion worker submitted primary profile account_6829 to account_service.
-activity_3574,2026-09-01T09:12:11Z,DELETE_RECORD,deletion_worker,account_service,account_4990,SUCCESS,Deletion worker submitted primary profile account_4990 to account_service.
-activity_3575,2026-09-01T09:40:29Z,CHECK_DATA_FLOW,deletion_worker,integration_service,data_flow_2406,SUCCESS,Connector status check confirmed that data flow data_flow_2406 remains enabled.
-activity_3576,2026-09-01T09:59:58Z,DELETE_RECORD,deletion_worker,search_service,search_2568,FAILED,Deletion worker received the final result for search_2568 from search_service.
-activity_3577,2026-09-01T10:03:45Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_6378,SUCCESS,Transactional email delivery processed email_delivery_6378.
-activity_3578,2026-09-01T10:41:33Z,SYNC_RECORD,account_service,account_replication_cluster,account_994,SUCCESS,Replication worker reported its final checkpoint for account_994.
-activity_3579,2026-09-01T10:50:03Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_4440,FAILED,Deletion worker received the final result for analytics_4440 from analytics_platform.
-activity_3580,2026-09-01T10:57:48Z,REDACT_RECORD,deletion_worker,support_platform,support_835,FAILED,Deletion worker received the final result for support_835 from support_platform.
-activity_3581,2026-09-01T11:00:03Z,DELETE_RECORD,deletion_worker,search_service,search_1007,SUCCESS,Deletion worker received the final result for search_1007 from search_service.
-activity_3582,2026-09-01T11:09:32Z,DELETE_RECORD,deletion_worker,search_service,search_8911,FAILED,Deletion worker received the final result for search_8911 from search_service.
-activity_3583,2026-09-01T11:16:18Z,DELETE_RECORD,deletion_worker,search_service,search_3995,FAILED,Deletion worker received the final result for search_3995 from search_service.
-activity_3584,2026-09-01T11:35:47Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_1738,FAILED,Deletion worker received the final result for analytics_1738 from analytics_platform.
-activity_3585,2026-09-01T11:54:17Z,CHECK_DATA_FLOW,deletion_worker,integration_service,data_flow_5080,SUCCESS,Connector status check confirmed that data flow data_flow_5080 remains enabled.
-activity_3586,2026-09-01T12:35:24Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_1146,SUCCESS,Transactional email delivery processed email_delivery_1146.
-activity_3587,2026-09-01T13:47:05Z,INDEX_RECORD,account_service,search_service,search_6357,SUCCESS,Customer search-index refresh processed search_6357.
-activity_3588,2026-09-01T14:02:05Z,INDEX_RECORD,account_service,search_service,search_2249,SUCCESS,Customer search-index refresh processed search_2249.
-activity_3589,2026-09-01T15:17:37Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_9664,SUCCESS,Transactional email delivery processed email_delivery_9664.
-activity_3590,2026-09-01T19:27:37Z,CREATE_EXPORT,export_service,object_store,export_393,SUCCESS,Scheduled account export processed export_393.
-activity_3591,2026-09-01T19:28:39Z,DELETE_RECORD,deletion_worker,account_service,account_007,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: account_007.
-activity_3592,2026-09-01T22:16:00Z,UPDATE_RECORD,support_platform,search_service,support_9271,SUCCESS,Support-case index update processed support_9271.
-activity_3593,2026-09-01T23:37:24Z,REFRESH_CACHE,account_service,cache_service,cache_1818,SUCCESS,Profile cache refresh processed cache_1818.
-activity_3594,2026-09-02T01:55:46Z,CREATE_EXPORT,export_service,object_store,export_4187,SUCCESS,Scheduled account export processed export_4187.
-activity_3595,2026-09-02T09:29:56Z,REFRESH_CACHE,account_service,cache_service,cache_4227,SUCCESS,Profile cache refresh processed cache_4227.
-activity_3596,2026-09-02T10:08:37Z,DELETE_RECORD,deletion_worker,account_service,account_010,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: account_010.
-activity_3597,2026-09-02T10:09:01Z,DELETE_RECORD,deletion_worker,support_platform,support_002,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: support_002.
-activity_3598,2026-09-02T10:48:27Z,DELETE_RECORD,deletion_worker,account_service,account_3136,FAILED,Deletion worker submitted primary profile account_3136 to account_service.
-activity_3599,2026-09-02T10:50:09Z,DELETE_RECORD,deletion_worker,account_service,account_4842,SUCCESS,Deletion worker submitted primary profile account_4842 to account_service.
-activity_3600,2026-09-02T10:59:41Z,DELETE_RECORD,deletion_worker,account_service,account_5334,SUCCESS,Deletion worker submitted primary profile account_5334 to account_service.
-activity_3601,2026-09-02T11:08:43Z,DELETE_RECORD,deletion_worker,account_service,account_5684,FAILED,Deletion worker submitted primary profile account_5684 to account_service.
-activity_3602,2026-09-02T11:10:25Z,DELETE_RECORD,deletion_worker,account_service,account_7225,SUCCESS,Deletion worker submitted primary profile account_7225 to account_service.
-activity_3603,2026-09-02T11:31:08Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_1895,SUCCESS,Policy action completed for analytics_1895.
-activity_3604,2026-09-02T11:31:24Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_4566,SUCCESS,Policy action completed for analytics_4566.
-activity_3605,2026-09-02T11:31:49Z,REDACT_RECORD,deletion_worker,identity_service,tombstone_3963,SUCCESS,Policy action completed for tombstone_3963.
-activity_3606,2026-09-02T11:38:53Z,REDACT_RECORD,deletion_worker,support_platform,support_4715,SUCCESS,Policy action completed for support_4715.
-activity_3607,2026-09-02T11:45:23Z,DISABLE_DATA_FLOW,deletion_worker,integration_service,data_flow_6244,SUCCESS,Policy action completed for data_flow_6244.
-activity_3608,2026-09-02T11:52:52Z,BLOCK_RESTORE,deletion_worker,backup_service,backup_3120,SUCCESS,Policy action completed for backup_3120.
-activity_3609,2026-09-02T12:45:33Z,SYNC_RECORD,account_service,account_replication_cluster,account_5334,SUCCESS,Replication worker reported its final checkpoint for account_5334.
-activity_3610,2026-09-02T12:47:17Z,REDACT_RECORD,deletion_worker,identity_service,tombstone_7389,FAILED,Deletion worker received the final result for tombstone_7389 from identity_service.
-activity_3611,2026-09-02T13:04:03Z,DELETE_RECORD,deletion_worker,search_service,search_5577,SUCCESS,Deletion worker received the final result for search_5577 from search_service.
-activity_3612,2026-09-02T17:46:44Z,RETAIN_RECORD,security_service,archive_service,audit_record_9756,SUCCESS,Security-event archival processed audit_record_9756.
-activity_3613,2026-09-02T19:14:24Z,UPDATE_RECORD,profile_service,account_service,account_9411,SUCCESS,Profile preference update processed account_9411.
-activity_3614,2026-09-02T20:41:31Z,SYNC_RECORD,account_service,analytics_platform,analytics_3577,SUCCESS,Customer profile synchronization processed analytics_3577.
-activity_3615,2026-09-03T04:10:01Z,INDEX_RECORD,account_service,search_service,search_7494,SUCCESS,Customer search-index refresh processed search_7494.
-activity_3616,2026-09-03T05:31:25Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_6754,SUCCESS,Transactional email delivery processed email_delivery_6754.
-activity_3617,2026-09-03T10:05:41Z,SYNC_RECORD,account_service,analytics_platform,analytics_6703,PARTIAL,Customer profile synchronization processed analytics_6703.
-activity_3618,2026-09-03T10:49:04Z,DELETE_RECORD,deletion_worker,account_service,account_4051,PARTIAL,Deletion worker submitted primary profile account_4051 to account_service.
-activity_3619,2026-09-03T11:09:05Z,CLASSIFY_REQUEST,privacy_intake,privacy_case_management,account_6486,SUCCESS,Privacy intake classified request for account_6486 as non-deletion; no destructive action was authorized.
+activity_3490,2026-08-28T12:55:03Z,DELETE_RECORD,deletion_worker,search_service,search_2329,FAILED,Deletion worker received the final result for search_2329 from search_service.
+activity_3491,2026-08-29T01:53:05Z,UPDATE_RECORD,profile_service,account_service,account_8597,SUCCESS,Profile preference update processed account_8597.
+activity_3492,2026-08-29T05:47:13Z,SYNC_RECORD,account_service,analytics_platform,analytics_8088,SUCCESS,Customer profile synchronization processed analytics_8088.
+activity_3493,2026-08-29T06:03:23Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_6334,SUCCESS,Transactional email delivery processed email_delivery_6334.
+activity_3494,2026-08-29T06:43:38Z,CREATE_EXPORT,export_service,object_store,export_9905,SUCCESS,Scheduled account export processed export_9905.
+activity_3495,2026-08-29T07:26:32Z,RETAIN_RECORD,security_service,archive_service,audit_record_6522,SUCCESS,Security-event archival processed audit_record_6522.
+activity_3496,2026-08-29T07:35:08Z,INDEX_RECORD,account_service,search_service,search_4825,SUCCESS,Customer search-index refresh processed search_4825.
+activity_3497,2026-08-29T07:49:42Z,DELETE_RECORD,deletion_worker,account_service,account_7643,PARTIAL,Deletion worker submitted primary profile account_7643 to account_service.
+activity_3498,2026-08-29T08:00:56Z,DELETE_RECORD,deletion_worker,account_service,account_1378,SUCCESS,Deletion worker submitted primary profile account_1378 to account_service.
+activity_3499,2026-08-29T08:01:35Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_2101,SUCCESS,Transactional email delivery processed email_delivery_2101.
+activity_3500,2026-08-29T08:48:28Z,DELETE_RECORD,deletion_worker,account_service,account_5715,FAILED,Deletion worker submitted primary profile account_5715 to account_service.
+activity_3501,2026-08-29T08:59:43Z,DELETE_RECORD,deletion_worker,account_service,account_1298,SUCCESS,Deletion worker submitted primary profile account_1298 to account_service.
+activity_3502,2026-08-29T09:10:27Z,DELETE_RECORD,deletion_worker,account_service,account_9862,FAILED,Deletion worker submitted primary profile account_9862 to account_service.
+activity_3503,2026-08-29T09:31:09Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_2572,SUCCESS,Policy action completed for analytics_2572.
+activity_3504,2026-08-29T09:31:24Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_8858,SUCCESS,Policy action completed for analytics_8858.
+activity_3505,2026-08-29T09:38:48Z,DELETE_RECORD,deletion_worker,support_platform,support_1370,FAILED,Deletion worker received the final result for support_1370 from support_platform.
+activity_3506,2026-08-29T09:38:53Z,REDACT_RECORD,deletion_worker,support_platform,support_7479,SUCCESS,Policy action completed for support_7479.
+activity_3507,2026-08-29T09:43:25Z,UPDATE_RECORD,profile_service,account_service,account_1493,SUCCESS,Profile preference update processed account_1493.
+activity_3508,2026-08-29T09:45:23Z,DISABLE_DATA_FLOW,deletion_worker,integration_service,data_flow_1368,SUCCESS,Policy action completed for data_flow_1368.
+activity_3509,2026-08-29T09:52:52Z,BLOCK_RESTORE,deletion_worker,backup_service,backup_7711,SUCCESS,Policy action completed for backup_7711.
+activity_3510,2026-08-29T09:57:18Z,DELETE_RECORD,deletion_worker,search_service,search_684,FAILED,Deletion worker received the final result for search_684 from search_service.
+activity_3511,2026-08-29T10:04:34Z,DELETE_RECORD,deletion_worker,export_service,export_4091,PARTIAL,Deletion worker received the final result for export_4091 from export_service.
+activity_3512,2026-08-29T10:47:38Z,CLASSIFY_REQUEST,privacy_intake,privacy_case_management,account_2176,SUCCESS,Privacy intake classified request for account_2176 as non-deletion; no destructive action was authorized.
+activity_3513,2026-08-29T10:48:19Z,CHECK_DATA_FLOW,deletion_worker,integration_service,data_flow_373,SUCCESS,Connector status check confirmed that data flow data_flow_373 remains enabled.
+activity_3514,2026-08-29T11:43:51Z,INDEX_RECORD,account_service,search_service,search_5022,SUCCESS,Customer search-index refresh processed search_5022.
+activity_3515,2026-08-29T12:18:48Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_1080,SUCCESS,Transactional email delivery processed email_delivery_1080.
+activity_3516,2026-08-29T14:06:35Z,INDEX_RECORD,account_service,search_service,search_2434,SUCCESS,Customer search-index refresh processed search_2434.
+activity_3517,2026-08-29T15:09:52Z,UPDATE_RECORD,profile_service,account_service,account_3418,SUCCESS,Profile preference update processed account_3418.
+activity_3518,2026-08-29T20:08:23Z,UPDATE_RECORD,support_platform,search_service,support_2456,SUCCESS,Support-case index update processed support_2456.
+activity_3519,2026-08-29T20:51:04Z,SYNC_RECORD,account_service,analytics_platform,analytics_6443,SUCCESS,Customer profile synchronization processed analytics_6443.
+activity_3520,2026-08-29T21:26:38Z,UPDATE_RECORD,support_platform,search_service,support_8342,SUCCESS,Support-case index update processed support_8342.
+activity_3521,2026-08-30T00:16:51Z,SYNC_RECORD,account_service,analytics_platform,analytics_406,SUCCESS,Customer profile synchronization processed analytics_406.
+activity_3522,2026-08-30T00:24:58Z,UPDATE_RECORD,support_platform,search_service,support_7306,SUCCESS,Support-case index update processed support_7306.
+activity_3523,2026-08-30T00:57:04Z,UPDATE_RECORD,support_platform,search_service,support_3310,SUCCESS,Support-case index update processed support_3310.
+activity_3524,2026-08-30T02:03:37Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_2127,SUCCESS,Transactional email delivery processed email_delivery_2127.
+activity_3525,2026-08-30T08:43:26Z,INDEX_RECORD,account_service,search_service,search_1872,SUCCESS,Customer search-index refresh processed search_1872.
+activity_3526,2026-08-30T08:45:29Z,INDEX_RECORD,account_service,search_service,search_7299,SUCCESS,Customer search-index refresh processed search_7299.
+activity_3527,2026-08-30T09:05:51Z,SYNC_RECORD,account_service,analytics_platform,analytics_4430,SUCCESS,Customer profile synchronization processed analytics_4430.
+activity_3528,2026-08-30T09:40:53Z,SYNC_RECORD,account_service,analytics_platform,analytics_454,SUCCESS,Customer profile synchronization processed analytics_454.
+activity_3529,2026-08-30T10:46:13Z,DELETE_RECORD,deletion_worker,account_service,account_5482,FAILED,Deletion worker submitted primary profile account_5482 to account_service.
+activity_3530,2026-08-30T10:57:28Z,DELETE_RECORD,deletion_worker,account_service,account_3866,SUCCESS,Deletion worker submitted primary profile account_3866 to account_service.
+activity_3531,2026-08-30T10:58:51Z,CLASSIFY_REQUEST,privacy_intake,privacy_case_management,account_9321,SUCCESS,Privacy intake classified request for account_9321 as non-deletion; no destructive action was authorized.
+activity_3532,2026-08-30T11:06:57Z,DELETE_RECORD,deletion_worker,account_service,account_7012,FAILED,Deletion worker submitted primary profile account_7012 to account_service.
+activity_3533,2026-08-30T11:31:09Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_4574,SUCCESS,Policy action completed for analytics_4574.
+activity_3534,2026-08-30T11:31:53Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_6077,SUCCESS,Policy action completed for analytics_6077.
+activity_3535,2026-08-30T11:38:23Z,REDACT_RECORD,deletion_worker,support_platform,support_2351,SUCCESS,Policy action completed for support_2351.
+activity_3536,2026-08-30T11:38:38Z,REDACT_RECORD,deletion_worker,support_platform,support_4707,SUCCESS,Policy action completed for support_4707.
+activity_3537,2026-08-30T11:45:08Z,DISABLE_DATA_FLOW,deletion_worker,integration_service,data_flow_2295,SUCCESS,Policy action completed for data_flow_2295.
+activity_3538,2026-08-30T11:45:52Z,DISABLE_DATA_FLOW,deletion_worker,integration_service,data_flow_2337,SUCCESS,Policy action completed for data_flow_2337.
+activity_3539,2026-08-30T11:52:22Z,BLOCK_RESTORE,deletion_worker,backup_service,backup_838,SUCCESS,Policy action completed for backup_838.
+activity_3540,2026-08-30T11:52:37Z,BLOCK_RESTORE,deletion_worker,backup_service,backup_5970,SUCCESS,Policy action completed for backup_5970.
+activity_3541,2026-08-30T12:57:49Z,CHECK_DATA_FLOW,deletion_worker,integration_service,data_flow_3827,SUCCESS,Connector status check confirmed that data flow data_flow_3827 remains enabled.
+activity_3542,2026-08-30T13:16:19Z,DELETE_RECORD,deletion_worker,search_service,search_1993,FAILED,Deletion worker received the final result for search_1993 from search_service.
+activity_3543,2026-08-30T13:35:48Z,REDACT_RECORD,deletion_worker,support_platform,support_5281,FAILED,Deletion worker received the final result for support_5281 from support_platform.
+activity_3544,2026-08-30T13:54:18Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_5208,FAILED,Deletion worker received the final result for analytics_5208 from analytics_platform.
+activity_3545,2026-08-30T17:08:20Z,DELETE_RECORD,deletion_worker,account_service,account_006,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: account_006.
+activity_3546,2026-08-30T17:21:43Z,DELETE_RECORD,deletion_worker,search_service,search_001,FAILED,Deletion worker stopped after the target system returned an error. Target resource: search_001.
+activity_3547,2026-08-30T19:10:09Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_9107,SUCCESS,Transactional email delivery processed email_delivery_9107.
+activity_3548,2026-08-30T20:49:40Z,CREATE_EXPORT,export_service,object_store,export_6639,SUCCESS,Scheduled account export processed export_6639.
+activity_3549,2026-08-30T23:48:09Z,UPDATE_RECORD,support_platform,search_service,support_5147,SUCCESS,Support-case index update processed support_5147.
+activity_3550,2026-08-31T04:41:12Z,UPDATE_RECORD,support_platform,search_service,support_1442,SUCCESS,Support-case index update processed support_1442.
+activity_3551,2026-08-31T09:20:21Z,RETAIN_RECORD,security_service,archive_service,audit_record_1828,SUCCESS,Security-event archival processed audit_record_1828.
+activity_3552,2026-08-31T11:06:22Z,CREATE_EXPORT,export_service,object_store,export_452,SUCCESS,Scheduled account export processed export_452.
+activity_3553,2026-08-31T13:44:21Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_6366,SUCCESS,Transactional email delivery processed email_delivery_6366.
+activity_3554,2026-08-31T13:48:58Z,DELETE_RECORD,deletion_worker,account_service,account_008,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: account_008.
+activity_3555,2026-08-31T13:49:22Z,DELETE_RECORD,deletion_worker,export_service,export_001,FAILED,Deletion worker stopped after the target system returned an error. Target resource: export_001.
+activity_3556,2026-08-31T14:12:15Z,SYNC_RECORD,account_service,analytics_platform,analytics_634,SUCCESS,Customer profile synchronization processed analytics_634.
+activity_3557,2026-08-31T14:56:45Z,INDEX_RECORD,account_service,search_service,search_9349,SUCCESS,Customer search-index refresh processed search_9349.
+activity_3558,2026-08-31T14:57:50Z,UPDATE_RECORD,profile_service,account_service,account_3344,SUCCESS,Profile preference update processed account_3344.
+activity_3559,2026-08-31T19:58:20Z,CREATE_EXPORT,export_service,object_store,export_9035,SUCCESS,Scheduled account export processed export_9035.
+activity_3560,2026-08-31T21:05:13Z,INDEX_RECORD,account_service,search_service,search_1859,SUCCESS,Customer search-index refresh processed search_1859.
+activity_3561,2026-08-31T22:20:14Z,RETAIN_RECORD,security_service,archive_service,audit_record_8282,SUCCESS,Security-event archival processed audit_record_8282.
+activity_3562,2026-09-01T01:08:18Z,INDEX_RECORD,account_service,search_service,search_527,PARTIAL,Customer search-index refresh processed search_527.
+activity_3563,2026-09-01T02:03:59Z,UPDATE_RECORD,support_platform,search_service,support_1573,SUCCESS,Support-case index update processed support_1573.
+activity_3564,2026-09-01T02:45:09Z,REFRESH_CACHE,account_service,cache_service,cache_4544,SUCCESS,Profile cache refresh processed cache_4544.
+activity_3565,2026-09-01T03:31:11Z,REFRESH_CACHE,account_service,cache_service,cache_147,PARTIAL,Profile cache refresh processed cache_147.
+activity_3566,2026-09-01T04:09:19Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_8068,SUCCESS,Transactional email delivery processed email_delivery_8068.
+activity_3567,2026-09-01T06:45:51Z,SYNC_RECORD,account_service,analytics_platform,analytics_4923,FAILED,Customer profile synchronization processed analytics_4923.
+activity_3568,2026-09-01T07:51:23Z,DELETE_RECORD,deletion_worker,account_service,account_6138,SUCCESS,Deletion worker submitted primary profile account_6138 to account_service.
+activity_3569,2026-09-01T08:02:37Z,DELETE_RECORD,deletion_worker,account_service,account_902,FAILED,Deletion worker submitted primary profile account_902 to account_service.
+activity_3570,2026-09-01T08:11:10Z,DELETE_RECORD,deletion_worker,account_service,account_6633,SUCCESS,Deletion worker submitted primary profile account_6633 to account_service.
+activity_3571,2026-09-01T08:50:41Z,DELETE_RECORD,deletion_worker,account_service,account_994,FAILED,Deletion worker submitted primary profile account_994 to account_service.
+activity_3572,2026-09-01T09:01:56Z,DELETE_RECORD,deletion_worker,account_service,account_6829,PARTIAL,Deletion worker submitted primary profile account_6829 to account_service.
+activity_3573,2026-09-01T09:12:11Z,DELETE_RECORD,deletion_worker,account_service,account_4990,SUCCESS,Deletion worker submitted primary profile account_4990 to account_service.
+activity_3574,2026-09-01T09:40:29Z,CHECK_DATA_FLOW,deletion_worker,integration_service,data_flow_2406,SUCCESS,Connector status check confirmed that data flow data_flow_2406 remains enabled.
+activity_3575,2026-09-01T09:59:58Z,DELETE_RECORD,deletion_worker,search_service,search_2568,FAILED,Deletion worker received the final result for search_2568 from search_service.
+activity_3576,2026-09-01T10:03:45Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_6378,SUCCESS,Transactional email delivery processed email_delivery_6378.
+activity_3577,2026-09-01T10:41:33Z,SYNC_RECORD,account_service,account_replication_cluster,account_994,SUCCESS,Replication worker reported its final checkpoint for account_994.
+activity_3578,2026-09-01T10:50:03Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_4440,FAILED,Deletion worker received the final result for analytics_4440 from analytics_platform.
+activity_3579,2026-09-01T10:57:48Z,REDACT_RECORD,deletion_worker,support_platform,support_835,FAILED,Deletion worker received the final result for support_835 from support_platform.
+activity_3580,2026-09-01T11:00:03Z,DELETE_RECORD,deletion_worker,search_service,search_1007,SUCCESS,Deletion worker received the final result for search_1007 from search_service.
+activity_3581,2026-09-01T11:09:32Z,DELETE_RECORD,deletion_worker,search_service,search_8911,FAILED,Deletion worker received the final result for search_8911 from search_service.
+activity_3582,2026-09-01T11:16:18Z,DELETE_RECORD,deletion_worker,search_service,search_3995,FAILED,Deletion worker received the final result for search_3995 from search_service.
+activity_3583,2026-09-01T11:35:47Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_1738,FAILED,Deletion worker received the final result for analytics_1738 from analytics_platform.
+activity_3584,2026-09-01T11:54:17Z,CHECK_DATA_FLOW,deletion_worker,integration_service,data_flow_5080,SUCCESS,Connector status check confirmed that data flow data_flow_5080 remains enabled.
+activity_3585,2026-09-01T12:35:24Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_1146,SUCCESS,Transactional email delivery processed email_delivery_1146.
+activity_3586,2026-09-01T13:47:05Z,INDEX_RECORD,account_service,search_service,search_6357,SUCCESS,Customer search-index refresh processed search_6357.
+activity_3587,2026-09-01T14:02:05Z,INDEX_RECORD,account_service,search_service,search_2249,SUCCESS,Customer search-index refresh processed search_2249.
+activity_3588,2026-09-01T15:17:37Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_9664,SUCCESS,Transactional email delivery processed email_delivery_9664.
+activity_3589,2026-09-01T19:27:37Z,CREATE_EXPORT,export_service,object_store,export_393,SUCCESS,Scheduled account export processed export_393.
+activity_3590,2026-09-01T19:28:39Z,DELETE_RECORD,deletion_worker,account_service,account_007,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: account_007.
+activity_3591,2026-09-01T22:16:00Z,UPDATE_RECORD,support_platform,search_service,support_9271,SUCCESS,Support-case index update processed support_9271.
+activity_3592,2026-09-01T23:37:24Z,REFRESH_CACHE,account_service,cache_service,cache_1818,SUCCESS,Profile cache refresh processed cache_1818.
+activity_3593,2026-09-02T01:55:46Z,CREATE_EXPORT,export_service,object_store,export_4187,SUCCESS,Scheduled account export processed export_4187.
+activity_3594,2026-09-02T09:29:56Z,REFRESH_CACHE,account_service,cache_service,cache_4227,SUCCESS,Profile cache refresh processed cache_4227.
+activity_3595,2026-09-02T10:08:37Z,DELETE_RECORD,deletion_worker,account_service,account_010,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: account_010.
+activity_3596,2026-09-02T10:09:01Z,DELETE_RECORD,deletion_worker,support_platform,support_002,SUCCESS,Deletion worker reported the requested operation as completed. Target resource: support_002.
+activity_3597,2026-09-02T10:48:27Z,DELETE_RECORD,deletion_worker,account_service,account_3136,FAILED,Deletion worker submitted primary profile account_3136 to account_service.
+activity_3598,2026-09-02T10:50:09Z,DELETE_RECORD,deletion_worker,account_service,account_4842,SUCCESS,Deletion worker submitted primary profile account_4842 to account_service.
+activity_3599,2026-09-02T10:59:41Z,DELETE_RECORD,deletion_worker,account_service,account_5334,SUCCESS,Deletion worker submitted primary profile account_5334 to account_service.
+activity_3600,2026-09-02T11:08:43Z,DELETE_RECORD,deletion_worker,account_service,account_5684,FAILED,Deletion worker submitted primary profile account_5684 to account_service.
+activity_3601,2026-09-02T11:10:25Z,DELETE_RECORD,deletion_worker,account_service,account_7225,SUCCESS,Deletion worker submitted primary profile account_7225 to account_service.
+activity_3602,2026-09-02T11:31:08Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_1895,SUCCESS,Policy action completed for analytics_1895.
+activity_3603,2026-09-02T11:31:24Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_4566,SUCCESS,Policy action completed for analytics_4566.
+activity_3604,2026-09-02T11:31:49Z,REDACT_RECORD,deletion_worker,identity_service,tombstone_3963,SUCCESS,Policy action completed for tombstone_3963.
+activity_3605,2026-09-02T11:38:53Z,REDACT_RECORD,deletion_worker,support_platform,support_4715,SUCCESS,Policy action completed for support_4715.
+activity_3606,2026-09-02T11:45:23Z,DISABLE_DATA_FLOW,deletion_worker,integration_service,data_flow_6244,SUCCESS,Policy action completed for data_flow_6244.
+activity_3607,2026-09-02T11:52:52Z,BLOCK_RESTORE,deletion_worker,backup_service,backup_3120,SUCCESS,Policy action completed for backup_3120.
+activity_3608,2026-09-02T12:45:33Z,SYNC_RECORD,account_service,account_replication_cluster,account_5334,SUCCESS,Replication worker reported its final checkpoint for account_5334.
+activity_3609,2026-09-02T12:47:17Z,REDACT_RECORD,deletion_worker,identity_service,tombstone_7389,FAILED,Deletion worker received the final result for tombstone_7389 from identity_service.
+activity_3610,2026-09-02T13:04:03Z,DELETE_RECORD,deletion_worker,search_service,search_5577,SUCCESS,Deletion worker received the final result for search_5577 from search_service.
+activity_3611,2026-09-02T17:46:44Z,RETAIN_RECORD,security_service,archive_service,audit_record_9756,SUCCESS,Security-event archival processed audit_record_9756.
+activity_3612,2026-09-02T19:14:24Z,UPDATE_RECORD,profile_service,account_service,account_9411,SUCCESS,Profile preference update processed account_9411.
+activity_3613,2026-09-02T20:41:31Z,SYNC_RECORD,account_service,analytics_platform,analytics_3577,SUCCESS,Customer profile synchronization processed analytics_3577.
+activity_3614,2026-09-03T04:10:01Z,INDEX_RECORD,account_service,search_service,search_7494,SUCCESS,Customer search-index refresh processed search_7494.
+activity_3615,2026-09-03T05:31:25Z,SEND_EMAIL,notification_service,email_delivery_service,email_delivery_6754,SUCCESS,Transactional email delivery processed email_delivery_6754.
+activity_3616,2026-09-03T10:05:41Z,SYNC_RECORD,account_service,analytics_platform,analytics_6703,PARTIAL,Customer profile synchronization processed analytics_6703.
+activity_3617,2026-09-03T10:49:04Z,DELETE_RECORD,deletion_worker,account_service,account_4051,PARTIAL,Deletion worker submitted primary profile account_4051 to account_service.
+activity_3618,2026-09-03T11:09:05Z,CLASSIFY_REQUEST,privacy_intake,privacy_case_management,account_6486,SUCCESS,Privacy intake classified request for account_6486 as non-deletion; no destructive action was authorized.
+activity_3619,2026-09-03T11:13:32Z,DELETE_RECORD,deletion_worker,account_service,account_7219,SUCCESS,Deletion worker submitted primary profile account_7219 to account_service.
 activity_3620,2026-09-03T11:31:44Z,ANONYMIZE_RECORD,deletion_worker,analytics_platform,analytics_6830,SUCCESS,Policy action completed for analytics_6830.
 activity_3621,2026-09-03T11:38:14Z,REDACT_RECORD,deletion_worker,support_platform,support_2667,SUCCESS,Policy action completed for support_2667.
 activity_3622,2026-09-03T11:45:43Z,DISABLE_DATA_FLOW,deletion_worker,integration_service,data_flow_2901,SUCCESS,Policy action completed for data_flow_2901.
@@ -3998,3 +3998,15 @@ activity_3996,2026-09-30T21:59:21Z,UPDATE_RECORD,profile_service,account_service
 activity_3997,2026-10-01T03:33:29Z,SYNC_RECORD,account_service,analytics_platform,analytics_7428,PARTIAL,Customer profile synchronization processed analytics_7428.
 activity_3998,2026-10-01T09:10:28Z,SYNC_RECORD,account_service,analytics_platform,analytics_3058,SUCCESS,Customer profile synchronization processed analytics_3058.
 activity_3999,2026-10-01T10:18:34Z,UPDATE_RECORD,profile_service,account_service,account_7263,SUCCESS,Profile preference update processed account_7263.
+activity_4000,2026-09-26T11:07:01Z,LINK_RESOURCE_IDENTITY,data_catalog,account_service,account_5762,SUCCESS,Data catalog linked account_5762 (account_5762) to haruka.s1838@zoho.com and user_11.
+activity_4001,2026-09-01T06:07:01Z,LINK_RESOURCE_IDENTITY,data_catalog,search_service,search_428,SUCCESS,Data catalog linked search_428 (search_428) to g.silva76@gmail.com and user_13.
+activity_4002,2026-08-07T08:07:01Z,LINK_RESOURCE_IDENTITY,data_catalog,integration_service,data_flow_1121,SUCCESS,Data catalog linked data_flow_1121 (data_flow_1121) to jain.aditi@gmail.com and user_14.
+activity_4003,2026-07-13T10:07:01Z,LINK_RESOURCE_IDENTITY,data_catalog,analytics_platform,analytics_7438,SUCCESS,Data catalog linked analytics_7438 (analytics_7438) to darwish.omar@icloud.com and user_20.
+activity_4004,2026-06-18T12:07:01Z,LINK_RESOURCE_IDENTITY,data_catalog,export_service,export_1260,SUCCESS,Data catalog linked export_1260 (export_1260) to ingrid.dahl@outlook.com and user_18.
+activity_4005,2026-05-24T07:07:01Z,LINK_RESOURCE_IDENTITY,data_catalog,support_platform,support_1034,SUCCESS,Data catalog linked support_1034 (support_1034) to kagyeman8947@fastmail.com and user_22.
+activity_4006,2026-04-29T09:07:01Z,LINK_RESOURCE_IDENTITY,data_catalog,backup_service,backup_9287,SUCCESS,Data catalog linked backup_9287 (backup_9287) to areed1433@gmail.com and user_16.
+activity_4007,2026-02-13T08:07:01Z,LINK_RESOURCE_IDENTITY,data_catalog,object_storage,object_19,SUCCESS,Attachment catalog confirmed object_19 (delivery_confirmation_19.pdf) belongs only to priya.raman@gmail.com and user_07; no other subject is linked.
+activity_4008,2026-09-16T07:27:01Z,LINK_RESOURCE_IDENTITY,data_catalog,marketing_platform,marketing_001,SUCCESS,Data catalog linked marketing_001 (marketing_001) to kwame-mensah@proton.me and user_09.
+activity_4009,2026-07-18T11:07:01Z,LINK_RESOURCE_IDENTITY,data_catalog,export_service,export_1842,SUCCESS,Data catalog linked export_1842 (NST-2026-0718-1842) to ingrid.dahl@outlook.com and user_18.
+activity_4010,2026-09-05T07:07:01Z,LINK_RESOURCE_IDENTITY,data_catalog,security_service,audit_record_003,SUCCESS,Data catalog linked audit_record_003 (audit_record_003) to oliver-bennett@gmail.com and user_03.
+activity_4011,2026-03-10T06:07:01Z,LINK_RESOURCE_IDENTITY,data_catalog,identity_service,tombstone_17,SUCCESS,Data catalog linked tombstone_17 (user_17) to leonie.g9352@outlook.com and user_17.

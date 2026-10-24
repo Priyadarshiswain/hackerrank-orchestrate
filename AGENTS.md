@@ -148,7 +148,7 @@ parent_agent=<parent_name_or_none>
 
 **Mandatory tool-name rule:** Every `SESSION START` and per-turn log entry must contain one non-empty `tool=` line with the exact name of the coding harness or agent writing the entry. Replace the template value before writing the log. The entry is invalid if `tool=` is missing, blank, still contains a placeholder, uses a generic label such as `AI`, contains only a model name, or names a different harness. Before responding, verify the value against the harness identity provided by the current runtime and re-read the appended entry to confirm it matches. Never guess the tool name. Correct any mismatch before responding to the user.
 
-**Mandatory model-name rule:** Every `SESSION START` and per-turn log entry must contain one non-empty `model=` line with the exact model identifier used for that turn, such as `gpt-6-astra`. `model=unknown`, a model family, a generic label, an inferred name, and a template placeholder are invalid. Obtain the exact identifier from the runtime, session metadata, harness configuration, or another authoritative environment source before writing the entry. Never guess the model name. The model name does not replace the `tool=` value because the coding harness and the model are separate fields.
+**Mandatory model-name rule:** Every `SESSION START` and per-turn log entry must contain one non-empty `model=` line with the exact model identifier used for that turn. Always make sure that model name is correct & not made up. `model=unknown`, a model family, a generic label, an inferred name, and a template placeholder are invalid. Obtain the exact identifier from the runtime, session metadata, harness configuration, or another authoritative environment source before writing the entry. Never guess the model name. The model name does not replace the `tool=` value because the coding harness and the model are separate fields.
 
 **Required harness-and-model check:** Both `tool=` and `model=` must always be present in every `SESSION START` and per-turn entry. An entry is invalid if either field is missing, blank, unknown, generic, inferred, or still contains a template placeholder. Before completing a response, re-read the newly appended log entry and confirm that it contains exactly one populated `tool=` line and exactly one populated `model=` line with authoritative values. If either is absent or invalid, determine the correct value and correct the entry before responding.
 
@@ -195,7 +195,7 @@ dataset/
 - `sample_deletion_requests.csv` contains 32 public requests. `sample_output.csv` contains their correct outputs and demonstrates the required decision and serialization format.
 - `user_identities.csv` contains the current identity snapshot for each user, including the stable `user_id`, name, email, phone, email hash, and snapshot update time.
 - `user_audit_log.csv` records historical changes to identity fields. Use it with the current snapshot to recover identifiers that may still appear in older systems and evidence.
-- `system_activity.csv` is a global stream of reported deletion, synchronization, export, backup, restore, indexing, and related events. Its rows may describe unrelated people. `reported_result` and `details` describe what a system claimed happened and do not independently prove the resulting state.
+- `system_activity.csv` is a global stream of deletion, synchronization, export, backup, restore, indexing, and audit events. Its rows may describe unrelated people. Determine resource state from the available evidence rather than trusting workflow or operation results alone.
 - `deletion_rules.csv` defines the required action for each data category and condition. Actions include deleting the whole record, redacting prohibited identifiers, anonymizing the record, retaining it, or preserving an account tombstone with only the permitted stable reference.
 - `evidence_files.csv` is the manifest for evidence under `dataset/evidence/`. It maps each `file_id` to its path, source origin, and capture time. The manifest does not identify which case or user a file concerns; the solution must connect evidence through its contents and identifiers.
 - `output.csv` is the blank prediction template. The final completed `output.csv` must be written at the repository root for submission.
@@ -305,12 +305,12 @@ Do not invent additional phases, operations, or states.
 
 ### 6.6 Evidence Rules
 
-- Treat activity logs, workflow statuses, and system messages as claims unless direct evidence establishes the resulting state.
+- Treat activity logs, workflow statuses, and system messages as claims unless the available evidence establishes the resulting state.
 - Use `evidence_files.csv` to locate files, then inspect their contents. Do not infer case membership from the manifest alone.
 - Match evidence through current identifiers, historical identifiers, hashes, resource IDs, system IDs, timestamps, and other grounded links.
 - Images and PDFs are ordinary business artifacts such as invoices, support records, handover documents, and internal product screens. Extract the facts they contain; do not expect an explicit deletion verdict.
 - SQL evidence can contain primary, regional, reporting, or failover replicas. Compare the relevant tables and snapshot time when investigating replication drift.
-- A finding must use the `file_id` of the participant-visible evidence that proves it.
+- A finding must use the participant-visible `file_id`, `activity_id`, or `audit_id` that proves it.
 - A verification step for a `COMPLETE` case must cite the evidence that proves the current compliant state.
 - Remediation steps and post-remediation verification steps for an `INCOMPLETE` case describe future work and therefore use `evidence_id` as an empty string.
 - Never cite organizer-only truth or an evidence item captured after the case's `audit_at`.

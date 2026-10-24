@@ -3,7 +3,7 @@ rule_01,USER_PROFILE,Always,DELETE
 rule_02,SECONDARY_IDENTIFIER,Always,DELETE
 rule_03,SEARCH_INDEX_ENTRY,Always,DELETE
 rule_04,CACHE_ENTRY,Always,DELETE
-rule_05,SUPPORT_MESSAGE,Message also contains another user's content,REDACT
+rule_05,SUPPORT_MESSAGE,"Conversation contains shared customer, agent, or order context that must be retained",REDACT
 rule_06,SUPPORT_ATTACHMENT,Attachment belongs only to the deletion subject,DELETE
 rule_07,ANALYTICS_PROFILE,Record is still attributable to a user,ANONYMIZE
 rule_08,PRODUCT_TELEMETRY,Record is still attributable to a user,ANONYMIZE
