@@ -1324,3 +1324,25 @@ repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
 
+## [2026-10-24T22:38:06Z] Commit extraction work; build stage 1 (evidence units) and stage 2 (evidence index)
+
+User Prompt (verbatim, secrets redacted):
+yes sign off, commit first then build stage 1
+
+Agent Response Summary:
+Committed the extraction work locally (5891834). Surveyed formats first: about 8 log line formats with trace ids shaped tr-* or rb-*; resource_id-holding JSON objects cover 100% of identifiers in all 28 JSON files. Built code/evidence_units.py (stage 1): uniform units for PDF pages, screenshots (from the cache), log lines plus multi-line trace groups, JSON resource objects with enclosing context, SQL rows via in-memory SQLite (JSON columns parsed, header comments and snapshot_scope as context), TXT lines and activity rows. Built code/evidence_index.py (stage 2): shared identifier extraction into an exact-match inverted index plus accent- and case-insensitive name lookup. A test exposed that evidence_90 is an empty snapshot covering account_service (proof of absence), so every SQL file now also gets a snapshot_scope unit with row counts. Result: 8,690 units and 10,453 tokens built in under 0.5s; case_09's trace link and case_10's old-email replica hit are found structurally; all tests pass.
+
+Actions:
+* git add/commit (5891834)
+* Ran python surveys of log formats, trace keys and JSON structures; inspected customer_data_inventory_20260905.sql
+* Created code/evidence_units.py, code/evidence_index.py, code/tests/test_evidence_index.py
+* Ran unittest discover and code/evidence_index.py with sample lookups
+
+Context:
+tool=Claude Code
+model=claude-opus-5-5[1m]
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+

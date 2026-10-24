@@ -15,4 +15,4 @@ code.zip
 agent-trace/
 agent-trace.zip
 sample_predictions.csv
-cache/*.tmp
+code/cache/*.tmp
