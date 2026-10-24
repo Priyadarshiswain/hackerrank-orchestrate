@@ -1,0 +1,17 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Environments and caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Packaging artifacts (built at submission time, never committed)
+code.zip
+agent-trace/
+agent-trace.zip
+sample_predictions.csv
