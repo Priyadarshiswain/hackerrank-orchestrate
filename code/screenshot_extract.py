@@ -8,7 +8,7 @@ Agreed design (build plan V1.0, option B):
     transcribed lines and compared; any difference is flagged, because one
     misread character can hide or invent a customer link.
   - Results are cached per (model, prompt version, sha256 of image bytes) in
-    cache/screenshot_cache.json, so re-runs need no model calls.
+    code/cache/screenshot_cache.json, so re-runs need no model calls.
   - Only extraction happens here; matching identifiers to people is done later
     with exact matching.
 
@@ -29,7 +29,7 @@ from classify import MODELS, PRICES, IntentCache
 from contract import DATASET_DIR, REPO_ROOT, read_csv
 from identifiers import extract_identifiers
 
-CACHE_PATH = REPO_ROOT / "cache" / "screenshot_cache.json"
+CACHE_PATH = REPO_ROOT / "code" / "cache" / "screenshot_cache.json"
 EFFORT = "medium"
 MAX_TOKENS = 8000
 

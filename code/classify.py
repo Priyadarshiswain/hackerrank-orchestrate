@@ -6,7 +6,7 @@ Agreed design (build plan V1.0):
   - Backends: "cli" (headless `claude -p`, for testing) and "api" (Anthropic
     SDK, ANTHROPIC_API_KEY from the environment, for the final run).
   - Results are cached per (model, prompt version, sha256(text)) in
-    cache/intent_cache.json, so a text is never sent to the same model and
+    code/cache/intent_cache.json, so a text is never sent to the same model and
     prompt twice and re-runs are repeatable.
     The cache stores no request text, only its hash.
   - A failed call or invalid reply is flagged; it never defaults to
@@ -34,7 +34,7 @@ MODELS = {"test": "claude-haiku-5-5", "control": "claude-sonnet-5-5"}
 # USD per million tokens (input, output), Anthropic first-party list prices.
 PRICES = {"claude-haiku-5-5": (0.10, 0.50), "claude-sonnet-5-5": (2.00, 10.00)}
 EFFORT = "low"
-CACHE_PATH = REPO_ROOT / "cache" / "intent_cache.json"
+CACHE_PATH = REPO_ROOT / "code" / "cache" / "intent_cache.json"
 INTENTS = ["DELETE", "ACCESS", "EXPORT", "CORRECTION", "OPT_OUT", "OTHER"]
 
 PROMPT_V1 = """\
