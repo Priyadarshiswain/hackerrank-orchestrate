@@ -54,7 +54,7 @@
           "resource_id": "analytics_3845"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "returning_customer",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -72,7 +72,7 @@
           "resource_id": "analytics_8091"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "mobile_browser",
           "customer_reference": null,
           "email": "noor-darwish83@gmail.com",
           "email_hash": null,
@@ -97,7 +97,7 @@
     "integration_service": {
       "connectors": [
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "search_profile_indexer",
           "customer_email": "sipho.mthembu@outlook.com",
           "customer_reference": null,
           "enabled": true,
@@ -231,28 +231,28 @@
     "security_service": {
       "audit_records": [
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "IDENTITY_CHANGE_RECORDED",
           "observed_at": "2026-03-20T04:56:54Z",
           "resource_id": "audit_record_1474",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2034-09-30T23:59:59Z",
           "subject_reference": "user_422"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "IDENTITY_CHANGE_RECORDED",
           "observed_at": "2026-03-20T07:16:21Z",
           "resource_id": "audit_record_5292",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2034-09-30T23:59:59Z",
           "subject_reference": "user_428"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "IDENTITY_CHANGE_RECORDED",
           "observed_at": "2026-03-20T05:28:57Z",
           "resource_id": "audit_record_8082",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2034-09-30T23:59:59Z",
           "subject_reference": "user_421"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "SUBJECT_REQUEST_AUDITED",
           "observed_at": "2026-03-20T04:57:38Z",
           "resource_id": "audit_record_999",
           "retention_until": "2033-12-31T23:59:59Z",
@@ -264,7 +264,7 @@
       "tickets": [
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer supplied contact details for a delivery query.",
           "observed_at": "2026-03-20T06:51:14Z",
           "requester_email": "noor-darwish83@gmail.com",
           "requester_name": null,
@@ -273,7 +273,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer contacted support about account access.",
           "observed_at": "2026-03-20T07:23:27Z",
           "requester_email": "lucas-almeida@proton.me",
           "requester_name": null,
@@ -282,7 +282,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer asked support to correct delivery details.",
           "observed_at": "2026-03-20T06:07:32Z",
           "requester_email": "aokeke238584@gmail.com",
           "requester_name": null,

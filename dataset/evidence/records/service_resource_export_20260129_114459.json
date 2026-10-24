@@ -51,7 +51,7 @@
     "analytics_platform": {
       "profiles": [
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "returning_customer",
           "customer_reference": null,
           "email": "chevalier.hugo@icloud.com",
           "email_hash": null,
@@ -60,7 +60,7 @@
           "resource_id": "analytics_131"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "mobile_browser",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -150,7 +150,7 @@
           "resource_id": "data_flow_6588"
         },
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "search_profile_indexer",
           "customer_email": null,
           "customer_reference": "user_530",
           "enabled": false,
@@ -257,24 +257,24 @@
     "security_service": {
       "audit_records": [
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "SUBJECT_REQUEST_AUDITED",
           "observed_at": "2026-01-29T11:09:44Z",
           "resource_id": "audit_record_2152",
           "retention_until": "2033-12-31T23:59:59Z",
           "subject_reference": "user_528"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "PRIVACY_REQUEST_ACCEPTED",
           "observed_at": "2026-01-29T10:21:46Z",
           "resource_id": "audit_record_4828",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2032-06-30T23:59:59Z",
           "subject_reference": "user_530"
         },
         {
           "event_code": "ACCOUNT_DELETION_RECORDED",
           "observed_at": "2026-01-29T08:49:08Z",
           "resource_id": "audit_record_5429",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2031-12-31T23:59:59Z",
           "subject_reference": "user_522"
         }
       ]
@@ -283,7 +283,7 @@
       "tickets": [
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer contacted support about account access.",
           "observed_at": "2026-01-29T10:19:28Z",
           "requester_email": "chevalier.hugo@icloud.com",
           "requester_name": null,
@@ -292,7 +292,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer asked support to correct delivery details.",
           "observed_at": "2026-01-29T09:02:47Z",
           "requester_email": "nzielinski0123@fastmail.com",
           "requester_name": null,
@@ -301,7 +301,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer contacted support about account access.",
           "observed_at": "2026-01-29T10:39:21Z",
           "requester_email": "jonas-lund@proton.me",
           "requester_name": null,
@@ -310,7 +310,7 @@
         },
         {
           "customer_reference": "user_530",
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer supplied contact details for a delivery query.",
           "observed_at": "2026-01-29T10:42:12Z",
           "requester_email": null,
           "requester_name": null,
@@ -319,7 +319,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer contacted support about account access.",
           "observed_at": "2026-01-29T09:39:11Z",
           "requester_email": "jonas-lund@proton.me",
           "requester_name": null,

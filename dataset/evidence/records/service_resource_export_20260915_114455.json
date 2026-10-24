@@ -51,7 +51,7 @@
     "analytics_platform": {
       "profiles": [
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "home_lifestyle",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -60,7 +60,7 @@
           "resource_id": "analytics_1895"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "returning_customer",
           "customer_reference": null,
           "email": "camille.bernard86@outlook.com",
           "email_hash": null,
@@ -69,7 +69,7 @@
           "resource_id": "analytics_3697"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "home_lifestyle",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -96,7 +96,7 @@
           "resource_id": "analytics_5208"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "returning_customer",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -158,7 +158,7 @@
     "integration_service": {
       "connectors": [
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "analytics_identity_bridge",
           "customer_email": null,
           "customer_reference": "user_27",
           "enabled": false,
@@ -167,7 +167,7 @@
           "resource_id": "data_flow_2295"
         },
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "support_profile_sync",
           "customer_email": null,
           "customer_reference": "user_28",
           "enabled": false,
@@ -176,7 +176,7 @@
           "resource_id": "data_flow_2337"
         },
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "analytics_identity_bridge",
           "customer_email": "noah.f438085@outlook.com",
           "customer_reference": null,
           "enabled": true,
@@ -283,35 +283,35 @@
     "security_service": {
       "audit_records": [
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "IDENTITY_CHANGE_RECORDED",
           "observed_at": "2026-09-15T09:59:10Z",
           "resource_id": "audit_record_3737",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2034-09-30T23:59:59Z",
           "subject_reference": "user_21"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "IDENTITY_CHANGE_RECORDED",
           "observed_at": "2026-09-15T09:31:23Z",
           "resource_id": "audit_record_3830",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2034-09-30T23:59:59Z",
           "subject_reference": "user_27"
         },
         {
           "event_code": "ACCOUNT_DELETION_RECORDED",
           "observed_at": "2026-09-15T10:07:33Z",
           "resource_id": "audit_record_451",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2031-12-31T23:59:59Z",
           "subject_reference": "user_25"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "PRIVACY_REQUEST_ACCEPTED",
           "observed_at": "2026-09-15T10:56:58Z",
           "resource_id": "audit_record_5416",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2032-06-30T23:59:59Z",
           "subject_reference": "user_26"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "SUBJECT_REQUEST_AUDITED",
           "observed_at": "2026-09-15T09:52:37Z",
           "resource_id": "audit_record_9265",
           "retention_until": "2033-12-31T23:59:59Z",
@@ -323,7 +323,7 @@
       "tickets": [
         {
           "customer_reference": "user_28",
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer supplied contact details for a delivery query.",
           "observed_at": "2026-09-15T10:51:49Z",
           "requester_email": null,
           "requester_name": null,
@@ -332,7 +332,7 @@
         },
         {
           "customer_reference": "user_27",
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer contacted support about account access.",
           "observed_at": "2026-09-15T10:48:30Z",
           "requester_email": null,
           "requester_name": null,
@@ -341,7 +341,7 @@
         },
         {
           "customer_reference": "user_26",
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer followed up about an order update.",
           "observed_at": "2026-09-15T10:00:05Z",
           "requester_email": null,
           "requester_name": null,
@@ -350,7 +350,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer followed up about an order update.",
           "observed_at": "2026-09-15T10:48:45Z",
           "requester_email": "noah.f438085@outlook.com",
           "requester_name": null,
@@ -359,7 +359,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer supplied contact details for a delivery query.",
           "observed_at": "2026-09-15T09:03:40Z",
           "requester_email": "camille.bernard86@outlook.com",
           "requester_name": null,

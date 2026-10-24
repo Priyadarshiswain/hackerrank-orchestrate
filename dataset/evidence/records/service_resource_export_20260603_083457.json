@@ -57,7 +57,7 @@
           "resource_id": "analytics_5923"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "home_lifestyle",
           "customer_reference": null,
           "email": "amelia.parker@gmail.com",
           "email_hash": null,
@@ -66,7 +66,7 @@
           "resource_id": "analytics_5959"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "mobile_browser",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -75,7 +75,7 @@
           "resource_id": "analytics_6191"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "home_lifestyle",
           "customer_reference": null,
           "email": "elena-nowak@gmail.com",
           "email_hash": null,
@@ -108,7 +108,7 @@
     "integration_service": {
       "connectors": [
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "support_profile_sync",
           "customer_email": null,
           "customer_reference": "user_275",
           "enabled": false,
@@ -117,7 +117,7 @@
           "resource_id": "data_flow_2439"
         },
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "search_profile_indexer",
           "customer_email": "amelia.parker@gmail.com",
           "customer_reference": null,
           "enabled": true,
@@ -126,7 +126,7 @@
           "resource_id": "data_flow_4629"
         },
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "support_profile_sync",
           "customer_email": "elena-nowak@gmail.com",
           "customer_reference": null,
           "enabled": true,
@@ -215,24 +215,24 @@
     "security_service": {
       "audit_records": [
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "SUBJECT_REQUEST_AUDITED",
           "observed_at": "2026-06-03T07:19:10Z",
           "resource_id": "audit_record_6398",
           "retention_until": "2033-12-31T23:59:59Z",
           "subject_reference": "user_272"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "IDENTITY_CHANGE_RECORDED",
           "observed_at": "2026-06-03T06:23:47Z",
           "resource_id": "audit_record_8228",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2034-09-30T23:59:59Z",
           "subject_reference": "user_275"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "PRIVACY_REQUEST_ACCEPTED",
           "observed_at": "2026-06-03T08:34:57Z",
           "resource_id": "audit_record_8323",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2032-06-30T23:59:59Z",
           "subject_reference": "user_274"
         }
       ]
@@ -241,7 +241,7 @@
       "tickets": [
         {
           "customer_reference": "user_275",
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer supplied contact details for a delivery query.",
           "observed_at": "2026-06-03T06:38:46Z",
           "requester_email": null,
           "requester_name": null,
@@ -250,7 +250,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer supplied contact details for a delivery query.",
           "observed_at": "2026-06-03T07:55:47Z",
           "requester_email": "elena-nowak@gmail.com",
           "requester_name": null,
@@ -259,7 +259,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer supplied contact details for a delivery query.",
           "observed_at": "2026-06-03T08:13:22Z",
           "requester_email": "gabriel-carvalho87@proton.me",
           "requester_name": null,
@@ -268,7 +268,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer followed up about an order update.",
           "observed_at": "2026-06-03T07:29:39Z",
           "requester_email": "amelia.parker@gmail.com",
           "requester_name": null,
@@ -277,7 +277,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer asked support to correct delivery details.",
           "observed_at": "2026-06-03T07:43:50Z",
           "requester_email": "nielsen.ingrid@gmail.com",
           "requester_name": null,
@@ -286,7 +286,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer supplied contact details for a delivery query.",
           "observed_at": "2026-06-03T07:50:33Z",
           "requester_email": "ohamdan2049@gmail.com",
           "requester_name": null,

@@ -27,7 +27,7 @@
     "analytics_platform": {
       "profiles": [
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "returning_customer",
           "customer_reference": null,
           "email": "andres-alvarez@proton.me",
           "email_hash": null,
@@ -36,7 +36,7 @@
           "resource_id": "analytics_1316"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "returning_customer",
           "customer_reference": null,
           "email": "chioma-eze@gmail.com",
           "email_hash": null,
@@ -45,7 +45,7 @@
           "resource_id": "analytics_6105"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "mobile_browser",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -82,7 +82,7 @@
     "integration_service": {
       "connectors": [
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "support_profile_sync",
           "customer_email": "t.lima5881@yahoo.com",
           "customer_reference": null,
           "enabled": true,
@@ -91,7 +91,7 @@
           "resource_id": "data_flow_047"
         },
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "analytics_identity_bridge",
           "customer_email": "maja.eriksen86@gmail.com",
           "customer_reference": null,
           "enabled": true,
@@ -234,7 +234,7 @@
     "security_service": {
       "audit_records": [
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "SUBJECT_REQUEST_AUDITED",
           "observed_at": "2026-09-01T03:39:53Z",
           "resource_id": "audit_record_8778",
           "retention_until": "2033-12-31T23:59:59Z",
@@ -246,7 +246,7 @@
       "tickets": [
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer contacted support about account access.",
           "observed_at": "2026-09-01T04:10:02Z",
           "requester_email": "nasser.mariam88@gmail.com",
           "requester_name": null,
@@ -255,7 +255,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer supplied contact details for a delivery query.",
           "observed_at": "2026-09-01T05:26:52Z",
           "requester_email": "t.lima5881@yahoo.com",
           "requester_name": null,
@@ -264,7 +264,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer contacted support about account access.",
           "observed_at": "2026-09-01T03:15:20Z",
           "requester_email": "eaddo6629@gmail.com",
           "requester_name": null,
@@ -273,7 +273,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer contacted support about account access.",
           "observed_at": "2026-09-01T03:30:27Z",
           "requester_email": "andres-alvarez@proton.me",
           "requester_name": null,
@@ -282,7 +282,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer asked support to correct delivery details.",
           "observed_at": "2026-09-01T04:13:52Z",
           "requester_email": "andres-alvarez@proton.me",
           "requester_name": null,
@@ -291,7 +291,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer contacted support about account access.",
           "observed_at": "2026-09-01T03:57:56Z",
           "requester_email": "mehta.neel82@icloud.com",
           "requester_name": null,

@@ -45,7 +45,7 @@
     "analytics_platform": {
       "profiles": [
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "home_lifestyle",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -63,7 +63,7 @@
           "resource_id": "analytics_689"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "returning_customer",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -116,7 +116,7 @@
     "integration_service": {
       "connectors": [
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "support_profile_sync",
           "customer_email": null,
           "customer_reference": "user_462",
           "enabled": false,
@@ -134,7 +134,7 @@
           "resource_id": "data_flow_8024"
         },
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "support_profile_sync",
           "customer_email": "jieun.c2902@zoho.com",
           "customer_reference": null,
           "enabled": true,
@@ -244,25 +244,25 @@
           "event_code": "ACCOUNT_DELETION_RECORDED",
           "observed_at": "2026-02-28T09:07:45Z",
           "resource_id": "audit_record_2706",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2031-12-31T23:59:59Z",
           "subject_reference": "user_468"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "PRIVACY_REQUEST_ACCEPTED",
           "observed_at": "2026-02-28T09:20:30Z",
           "resource_id": "audit_record_5183",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2032-06-30T23:59:59Z",
           "subject_reference": "user_462"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "PRIVACY_REQUEST_ACCEPTED",
           "observed_at": "2026-02-28T08:33:47Z",
           "resource_id": "audit_record_8444",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2032-06-30T23:59:59Z",
           "subject_reference": "user_461"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "SUBJECT_REQUEST_AUDITED",
           "observed_at": "2026-02-28T10:36:37Z",
           "resource_id": "audit_record_8992",
           "retention_until": "2033-12-31T23:59:59Z",
@@ -274,7 +274,7 @@
       "tickets": [
         {
           "customer_reference": "user_461",
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer followed up about an order update.",
           "observed_at": "2026-02-28T09:21:44Z",
           "requester_email": null,
           "requester_name": null,
@@ -283,7 +283,7 @@
         },
         {
           "customer_reference": "user_462",
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer supplied contact details for a delivery query.",
           "observed_at": "2026-02-28T08:56:33Z",
           "requester_email": null,
           "requester_name": null,
@@ -292,7 +292,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer asked support to correct delivery details.",
           "observed_at": "2026-02-28T08:17:14Z",
           "requester_email": "lopez.camila@gmail.com",
           "requester_name": null,

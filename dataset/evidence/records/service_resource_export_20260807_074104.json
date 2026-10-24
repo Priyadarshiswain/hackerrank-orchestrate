@@ -27,7 +27,7 @@
     "analytics_platform": {
       "profiles": [
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "mobile_browser",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -45,7 +45,7 @@
           "resource_id": "analytics_5886"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "home_lifestyle",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -90,7 +90,7 @@
     "integration_service": {
       "connectors": [
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "support_profile_sync",
           "customer_email": null,
           "customer_reference": "user_149",
           "enabled": false,
@@ -108,7 +108,7 @@
           "resource_id": "data_flow_4889"
         },
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "search_profile_indexer",
           "customer_email": "gabriel.c7146@zoho.com",
           "customer_reference": null,
           "enabled": true,
@@ -215,24 +215,24 @@
     "security_service": {
       "audit_records": [
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "SUBJECT_REQUEST_AUDITED",
           "observed_at": "2026-08-07T07:19:45Z",
           "resource_id": "audit_record_1584",
           "retention_until": "2033-12-31T23:59:59Z",
           "subject_reference": "user_148"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "IDENTITY_CHANGE_RECORDED",
           "observed_at": "2026-08-07T05:22:56Z",
           "resource_id": "audit_record_3579",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2034-09-30T23:59:59Z",
           "subject_reference": "user_150"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "PRIVACY_REQUEST_ACCEPTED",
           "observed_at": "2026-08-07T04:48:17Z",
           "resource_id": "audit_record_8905",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2032-06-30T23:59:59Z",
           "subject_reference": "user_149"
         }
       ]
@@ -241,7 +241,7 @@
       "tickets": [
         {
           "customer_reference": "user_149",
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer followed up about an order update.",
           "observed_at": "2026-08-07T06:50:56Z",
           "requester_email": null,
           "requester_name": null,
@@ -250,7 +250,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer contacted support about account access.",
           "observed_at": "2026-08-07T07:11:08Z",
           "requester_email": "CARTER.AMELIA92@GMAIL.COM",
           "requester_name": null,
@@ -259,7 +259,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer contacted support about account access.",
           "observed_at": "2026-08-07T07:06:13Z",
           "requester_email": "haruka-ito87@proton.me",
           "requester_name": null,

@@ -42,7 +42,7 @@
           "resource_id": "analytics_1488"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "returning_customer",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -51,7 +51,7 @@
           "resource_id": "analytics_2601"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "returning_customer",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -60,7 +60,7 @@
           "resource_id": "analytics_4229"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "home_lifestyle",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -69,7 +69,7 @@
           "resource_id": "analytics_5532"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "mobile_browser",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -94,7 +94,7 @@
     "integration_service": {
       "connectors": [
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "support_profile_sync",
           "customer_email": "ethan-morgan@gmail.com",
           "customer_reference": null,
           "enabled": true,
@@ -219,28 +219,28 @@
     "security_service": {
       "audit_records": [
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "SUBJECT_REQUEST_AUDITED",
           "observed_at": "2026-05-14T11:35:50Z",
           "resource_id": "audit_record_3201",
           "retention_until": "2033-12-31T23:59:59Z",
           "subject_reference": "user_320"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "IDENTITY_CHANGE_RECORDED",
           "observed_at": "2026-05-14T09:59:53Z",
           "resource_id": "audit_record_7020",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2034-09-30T23:59:59Z",
           "subject_reference": "user_311"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "IDENTITY_CHANGE_RECORDED",
           "observed_at": "2026-05-14T11:02:53Z",
           "resource_id": "audit_record_7337",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2034-09-30T23:59:59Z",
           "subject_reference": "user_317"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "SUBJECT_REQUEST_AUDITED",
           "observed_at": "2026-05-14T11:33:14Z",
           "resource_id": "audit_record_7893",
           "retention_until": "2033-12-31T23:59:59Z",
@@ -252,7 +252,7 @@
       "tickets": [
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer asked support to correct delivery details.",
           "observed_at": "2026-05-14T10:34:13Z",
           "requester_email": "alvarez.elena@gmail.com",
           "requester_name": null,
@@ -261,7 +261,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer followed up about an order update.",
           "observed_at": "2026-05-14T09:52:02Z",
           "requester_email": "ethan-morgan@gmail.com",
           "requester_name": null,
@@ -270,7 +270,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer asked support to correct delivery details.",
           "observed_at": "2026-05-14T10:50:39Z",
           "requester_email": "mrousseau7133@gmail.com",
           "requester_name": null,

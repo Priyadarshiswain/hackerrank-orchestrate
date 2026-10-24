@@ -48,7 +48,7 @@
           "resource_id": "analytics_1544"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "returning_customer",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -57,7 +57,7 @@
           "resource_id": "analytics_2501"
         },
         {
-          "audience_cohort": "general_shopper",
+          "audience_cohort": "returning_customer",
           "customer_reference": null,
           "email": null,
           "email_hash": null,
@@ -94,7 +94,7 @@
     "integration_service": {
       "connectors": [
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "support_profile_sync",
           "customer_email": "neel.singh@outlook.com",
           "customer_reference": null,
           "enabled": true,
@@ -103,7 +103,7 @@
           "resource_id": "data_flow_1140"
         },
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "support_profile_sync",
           "customer_email": "mariam.najjar@gmail.com",
           "customer_reference": null,
           "enabled": true,
@@ -112,7 +112,7 @@
           "resource_id": "data_flow_2516"
         },
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "analytics_identity_bridge",
           "customer_email": null,
           "customer_reference": "user_229",
           "enabled": false,
@@ -121,7 +121,7 @@
           "resource_id": "data_flow_2576"
         },
         {
-          "connector_name": "customer_events_connector",
+          "connector_name": "search_profile_indexer",
           "customer_email": "iulia.d2342@zoho.com",
           "customer_reference": null,
           "enabled": true,
@@ -228,21 +228,21 @@
     "security_service": {
       "audit_records": [
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "SUBJECT_REQUEST_AUDITED",
           "observed_at": "2026-06-28T04:27:47Z",
           "resource_id": "audit_record_4425",
           "retention_until": "2033-12-31T23:59:59Z",
           "subject_reference": "user_229"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "PRIVACY_REQUEST_ACCEPTED",
           "observed_at": "2026-06-28T05:56:04Z",
           "resource_id": "audit_record_9389",
-          "retention_until": "2033-12-31T23:59:59Z",
+          "retention_until": "2032-06-30T23:59:59Z",
           "subject_reference": "user_223"
         },
         {
-          "event_code": "ACCOUNT_DELETION_RECORDED",
+          "event_code": "SUBJECT_REQUEST_AUDITED",
           "observed_at": "2026-06-28T05:52:58Z",
           "resource_id": "audit_record_9964",
           "retention_until": "2033-12-31T23:59:59Z",
@@ -254,7 +254,7 @@
       "tickets": [
         {
           "customer_reference": "user_229",
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer supplied contact details for a delivery query.",
           "observed_at": "2026-06-28T04:32:57Z",
           "requester_email": null,
           "requester_name": null,
@@ -263,7 +263,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer contacted support about account access.",
           "observed_at": "2026-06-28T04:59:12Z",
           "requester_email": "arthur-fontaine83@proton.me",
           "requester_name": null,
@@ -272,7 +272,7 @@
         },
         {
           "customer_reference": null,
-          "message_excerpt": "Customer contacted support about an account request.",
+          "message_excerpt": "Customer supplied contact details for a delivery query.",
           "observed_at": "2026-06-28T06:15:30Z",
           "requester_email": "gyasi.efua@gmail.com",
           "requester_name": null,
