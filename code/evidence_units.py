@@ -195,17 +195,22 @@ def png_units(sources, backend="cli"):
                  "captured_at": s["captured_at"]} for s in sources]
     if not manifest:
         return []
-    results = extract_all(backend=backend, manifest=manifest)
+    # the pipeline climbs the model ladder (escalate.py) from claude-haiku-5-5;
+    # the old test/control comparison is an evaluation tool only
+    results = extract_all(backend=backend, manifest=manifest, ladder=True)
     units = []
     for s in sources:
         r = results[s["source_id"]]
-        answer = r.get("test") or r.get("control")
+        answer = r.get("answer")
         if answer is None:
             continue  # transcription failed; screenshot_extract reports the flag
         units.append(_unit(s, "png", "screenshot", "\n".join(answer["lines"]),
                            context={"screen_title": answer["screen_title"],
                                     "shown_timestamp": answer["shown_timestamp"],
-                                    "flags": r["flags"]}))
+                                    "flags": r["flags"], "model": r.get("model", ""),
+                                    "model_confidence": r.get("confidence"),
+                                    "attempts": [{k: a[k] for k in ("model", "confidence", "passed", "problems")}
+                                                 for a in r.get("attempts", [])]}))
     return units
 
 

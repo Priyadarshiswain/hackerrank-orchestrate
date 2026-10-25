@@ -203,6 +203,16 @@ function accountRule(a) {
     ${a.linked ? `linked <b class="mono">${esc(a.linked)}</b> (only one left after elimination)` : `${tag("not linked", "warn")} (more than one or none left)`}</p>`;
 }
 
+function ladder(attempts) {
+  if (!attempts || !attempts.length) return "";
+  return `<p class="muted">Model ladder (move up when confidence &lt; 0.90 or a check fails):</p>
+    <table><tr><th>Model</th><th>Confidence</th><th>Result</th><th>Tokens in / out</th><th>Request id</th></tr>` +
+    attempts.map((a) => `<tr><td class="mono">${esc(a.model)}</td><td>${a.confidence == null ? "—" : esc(Number(a.confidence).toFixed(2))}</td>
+      <td>${a.passed ? tag("accepted", "ok") : a.error ? tag("failed", "bad") : tag("moved up", "warn")} ${esc((a.problems || []).join(", "))}</td>
+      <td>${esc((a.usage || {}).input_tokens ?? "—")} / ${esc((a.usage || {}).output_tokens ?? "—")}</td>
+      <td class="mono">${esc((a.usage || {}).request_id || "")}</td></tr>`).join("") + `</table>`;
+}
+
 function unitLinkSource(sourceId) {
   return `<a class="unit" data-source="${esc(sourceId)}">${esc(sourceId)}</a>`;
 }
@@ -226,7 +236,8 @@ function renderCase(c) {
     <div>Tokens</div><div>in ${esc(u.input_tokens ?? "—")} · out ${esc(u.output_tokens ?? "—")} · est. $${u.cost_usd != null ? Number(u.cost_usd).toFixed(5) : "—"}</div>
     <div>Authorizes deletion</div><div>${yn(a.authorizes_deletion)} ${a.intent ? tag(a.intent, "na") : ""} ${a.language ? `<span class="muted">language ${esc(a.language)}</span>` : ""}</div>
     <div>Model's reason</div><div>${esc(a.reason)}</div>
-    <div>Flags</div><div>${(it.flags || []).map((f) => tag(f, "bad")).join(" ") || `<span class="muted">none</span>`}</div></div>`, true));
+    <div>Flags</div><div>${(it.flags || []).map((f) => tag(f, "bad")).join(" ") || `<span class="muted">none</span>`}</div></div>
+    ${ladder(it.attempts)}`, true));
 
   const id = c.identity || {};
   parts.push(card(3, "Identity resolution", `<div class="kv"><div>User</div><div class="mono">${esc(id.user_id || "not found")} ${esc(id.name || "")}</div>
@@ -303,8 +314,8 @@ function showUnit(id, sourceId) {
     $("#unit-body").innerHTML = `<div class="kv"><div>File</div><div class="mono">${esc(u.source_id)} · ${esc(u.file_path || "system_activity.csv")}</div>
       <div>Kind</div><div>${esc(u.kind)} · ${esc(u.locator)} · origin ${esc(u.origin)}</div>
       <div>Captured at</div><div>${esc(u.captured_at)}</div><div>Observed at</div><div>${esc(u.observed_at)}</div>
-      ${u.screen ? `<div>Transcription</div><div>${tag("AI model", "aitag")} ${esc(u.screen.models.test)} (control ${esc(u.screen.models.control)}) · "${esc(u.screen.title)}" · flags: ${esc((u.screen.flags || []).join(", ") || "none")}</div>` : ""}
-      </div><pre>${esc(u.text)}${u.truncated ? "\n…" : ""}</pre>`;
+      ${u.screen ? `<div>Transcription</div><div>${tag("AI model", "aitag")} ${esc(u.screen.model)} (confidence ${esc(u.screen.confidence ?? "—")}) · "${esc(u.screen.title)}" · flags: ${esc((u.screen.flags || []).join(", ") || "none")}</div>` : ""}
+      </div>${u.screen ? ladder(u.screen.attempts) : ""}<pre>${esc(u.text)}${u.truncated ? "\n…" : ""}</pre>`;
   }
   $("#unit").showModal();
 }

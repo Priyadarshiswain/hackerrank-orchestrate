@@ -2,10 +2,12 @@
 
 Run: python3 -m unittest discover -s code/tests
 """
+import os
 import sys
 import unittest
 from pathlib import Path
 
+os.environ.setdefault("GHOST_OFFLINE", "1")  # tests never call a model
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from categories import gold_action, stated_system  # noqa: E402
 from contract import DATASET_DIR  # noqa: E402

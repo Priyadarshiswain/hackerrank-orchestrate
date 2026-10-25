@@ -304,3 +304,10 @@ V1 shipped with known gaps (no account rule; screenshots gave presence only).
 I stopped two Fable runs that took too long. Later reviews are scoped to about 15 minutes and must return a ranked list, not a full re-grading.
 **Why:** the reviewer's job is to find the next fix, not to redo the pipeline.
 **Breaks when:** a short review misses a bug that is slow to find.
+
+## 47. The real run: API only, one model per task
+The real run uses the Anthropic API only. Intent and screenshots each use one model (`claude-haiku-5-5`). The control model (`claude-sonnet-5-5`) does not run in the pipeline; it stays as an optional evaluation tool.
+**Why:** the real run should be simple, cheap and traceable. Every API answer now stores Anthropic's message id and request id, so a cached answer can be traced to a real call (this reduces security finding MEDIUM 2). Without a control model, there is no "ignored disagreement" (MEDIUM 1).
+**Rejected:** a control model in the real run — it doubles screenshot cost (about USD 0.15 of USD 0.23), and its only job was to flag; it never changed an answer.
+**Breaks when:** the one model misreads a screenshot. Nothing cross-checks it in the real run.
+

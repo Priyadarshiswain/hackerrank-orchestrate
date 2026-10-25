@@ -2,10 +2,12 @@
 
 Run: python3 -m unittest discover -s code/tests
 """
+import os
 import sys
 import unittest
 from pathlib import Path
 
+os.environ.setdefault("GHOST_OFFLINE", "1")  # tests never call a model
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from contract import DATASET_DIR  # noqa: E402
 from pdf_extract import extract_all, join_split_times  # noqa: E402

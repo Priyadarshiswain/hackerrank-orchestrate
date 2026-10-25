@@ -28,12 +28,13 @@ import tempfile
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-from config import cache_path, cli_env
+from config import cache_path, check_model_call, cli_env
 from contract import DATASET_DIR, case_sort_key, read_csv
 
 MODELS = {"test": "claude-haiku-5-5", "control": "claude-sonnet-5-5"}
 # USD per million tokens (input, output), Anthropic first-party list prices.
-PRICES = {"claude-haiku-5-5": (0.10, 0.50), "claude-sonnet-5-5": (2.00, 10.00)}
+PRICES = {"claude-haiku-5-5": (0.10, 0.50), "claude-sonnet-5-5": (2.00, 10.00),
+          "claude-opus-5-5": (4.00, 20.00), "claude-fable-5-1": (10.00, 50.00)}
 EFFORT = "low"
 INTENTS = ["DELETE", "ACCESS", "EXPORT", "CORRECTION", "OPT_OUT", "OTHER"]
 
@@ -160,8 +161,17 @@ deletion starts removing data the person wants to keep. Decide only from what
 the person actually asks for, not from the company's history.
 """, 1)
 
-PROMPTS = {"v1": PROMPT_V1, "v2": PROMPT_V2, "v3": PROMPT_V3, "v4": PROMPT_V4}
-ACTIVE_PROMPT = "v4"
+PROMPT_V5 = PROMPT_V4.replace(
+    "Reply with the JSON object only.",
+    """confidence is your probability, from 0 to 1, that authorizes_deletion is
+correct. Give 0.9 or more only when the request is clear. Give less when it
+is ambiguous, mixes several asks, depends on a condition, is negated, or you
+are unsure about the language. An honest low value is useful: the request is
+then checked by a stronger model.
+Reply with the JSON object only.""")
+
+PROMPTS = {"v1": PROMPT_V1, "v2": PROMPT_V2, "v3": PROMPT_V3, "v4": PROMPT_V4, "v5": PROMPT_V5}
+ACTIVE_PROMPT = "v5"
 
 SCHEMA = {
     "type": "object",
@@ -174,6 +184,12 @@ SCHEMA = {
     "required": ["authorizes_deletion", "intent", "language", "reason"],
     "additionalProperties": False,
 }
+# v5 adds the model's confidence, used by the model ladder (escalate.py); the API does
+# not accept minimum/maximum on numbers, so validate() checks the 0-1 range
+SCHEMA_V5 = {**SCHEMA,
+             "properties": {**SCHEMA["properties"], "confidence": {"type": "number"}},
+             "required": SCHEMA["required"] + ["confidence"]}
+SCHEMAS = {"v1": SCHEMA, "v2": SCHEMA, "v3": SCHEMA, "v4": SCHEMA, "v5": SCHEMA_V5}
 
 
 def text_key(text):
@@ -183,7 +199,7 @@ def text_key(text):
 def prompt_id(version):
     """Version name plus a hash of everything sent besides the text, so an
     edited prompt can never reuse answers cached for the old wording."""
-    basis = json.dumps([PROMPTS[version], SCHEMA, EFFORT], sort_keys=True)
+    basis = json.dumps([PROMPTS[version], SCHEMAS[version], EFFORT], sort_keys=True)
     return f"{version}-{hashlib.sha256(basis.encode('utf-8')).hexdigest()[:10]}"
 
 
@@ -191,9 +207,9 @@ def user_message(text):
     return f"Request text:\n{text.strip()}"
 
 
-def validate(answer):
-    """Return the answer if it matches SCHEMA, else raise ValueError."""
-    if not isinstance(answer, dict) or set(answer) != set(SCHEMA["required"]):
+def validate(answer, schema=SCHEMA):
+    """Return the answer if it matches the schema, else raise ValueError."""
+    if not isinstance(answer, dict) or set(answer) != set(schema["required"]):
         raise ValueError(f"unexpected fields: {answer!r}")
     if not isinstance(answer["authorizes_deletion"], bool):
         raise ValueError("authorizes_deletion is not a boolean")
@@ -204,13 +220,17 @@ def validate(answer):
         raise ValueError(f"language is not an ISO 639-1 code: {lang!r}")
     if not isinstance(answer["reason"], str):
         raise ValueError("reason is not a string")
+    if "confidence" in schema["required"]:
+        c = answer["confidence"]
+        if isinstance(c, bool) or not isinstance(c, (int, float)) or not 0 <= c <= 1:
+            raise ValueError(f"confidence is not a number from 0 to 1: {c!r}")
     return answer
 
 
-def call_cli(model, text, system_prompt):
+def call_cli(model, text, system_prompt, schema=SCHEMA):
     """Headless Claude Code, isolated from this repo (empty cwd, no tools/settings)."""
     cmd = ["claude", "-p", user_message(text), "--model", model, "--effort", EFFORT,
-           "--system-prompt", system_prompt, "--json-schema", json.dumps(SCHEMA),
+           "--system-prompt", system_prompt, "--json-schema", json.dumps(schema),
            "--output-format", "json", "--tools", "", "--strict-mcp-config",
            "--setting-sources", "", "--no-session-persistence"]
     with tempfile.TemporaryDirectory() as cwd:
@@ -221,7 +241,7 @@ def call_cli(model, text, system_prompt):
     if out.get("is_error"):
         raise RuntimeError(f"claude error: {str(out.get('result'))[:200]}")
     usage = out.get("usage", {})
-    return validate(out.get("structured_output")), {
+    return validate(out.get("structured_output"), schema), {
         "input_tokens": usage.get("input_tokens", 0)
         + usage.get("cache_creation_input_tokens", 0) + usage.get("cache_read_input_tokens", 0),
         "output_tokens": usage.get("output_tokens", 0),
@@ -232,7 +252,7 @@ def call_cli(model, text, system_prompt):
 _client = None
 
 
-def call_api(model, text, system_prompt):
+def call_api(model, text, system_prompt, schema=SCHEMA):
     """Anthropic Messages API with a JSON-schema output format."""
     global _client
     if _client is None:
@@ -243,17 +263,20 @@ def call_api(model, text, system_prompt):
         max_tokens=4096,  # adaptive thinking is on by default for these models
         system=system_prompt,
         messages=[{"role": "user", "content": user_message(text)}],
-        output_config={"effort": EFFORT, "format": {"type": "json_schema", "schema": SCHEMA}},
+        output_config={"effort": EFFORT, "format": {"type": "json_schema", "schema": schema}},
     )
     if response.stop_reason != "end_turn":
         raise RuntimeError(f"stop_reason={response.stop_reason}")
     body = next(b.text for b in response.content if b.type == "text")
     price_in, price_out = PRICES[model]
     usage = response.usage
-    return validate(json.loads(body)), {
+    return validate(json.loads(body), schema), {
         "input_tokens": usage.input_tokens,
         "output_tokens": usage.output_tokens,
         "cost_usd": (usage.input_tokens * price_in + usage.output_tokens * price_out) / 1e6,
+        # provenance: ties the cached answer to a real API call
+        "message_id": response.id,
+        "request_id": getattr(response, "_request_id", None) or "",
     }
 
 
@@ -301,7 +324,8 @@ def classify_texts(texts, model, backend, cache, workers, version=ACTIVE_PROMPT)
         last_error = None
         for _ in range(2):
             try:
-                answer, usage = BACKENDS[backend](model, text, system_prompt)
+                check_model_call()
+                answer, usage = BACKENDS[backend](model, text, system_prompt, SCHEMAS[version])
                 entry = {"answer": answer, "usage": usage, "backend": backend}
                 cache.put(ns, key, entry)
                 return key, entry
@@ -337,6 +361,15 @@ def classify_requests(requests, roles=("test", "control"), backend="cli", worker
                 row["flags"].append("MODEL_DISAGREEMENT")
         rows.append(row)
     return rows, calls
+
+
+def classify_escalating(text, backend="cli", cache=None, version=ACTIVE_PROMPT):
+    """Intent for one request text up the model ladder (escalate.py): the
+    cheapest model whose answer is valid and at least 90% confident wins."""
+    from escalate import escalate
+    cache = cache or IntentCache()
+    key = text_key(text)
+    return escalate(lambda model: classify_texts([text], model, backend, cache, 1, version)[0][key])
 
 
 def summarize(rows, requests, roles, calls, cache, version=ACTIVE_PROMPT):

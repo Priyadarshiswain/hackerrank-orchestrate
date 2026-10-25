@@ -9,6 +9,7 @@ Case sets:
 Usage:
     python3 code/evaluation/intent_eval.py --prompt v1
     python3 code/evaluation/intent_eval.py --prompt v2 --roles test
+    python3 code/evaluation/intent_eval.py --ladder --backend api   # model ladder (v5)
 Cached answers are reused; only new (model, prompt, text) combinations call a model.
 """
 import argparse
@@ -18,6 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import classify  # noqa: E402
+import config  # noqa: E402
 from contract import DATASET_DIR, read_csv  # noqa: E402
 
 SYNTHETIC_PATH = Path(__file__).resolve().parent / "intent_eval_cases.csv"
@@ -35,15 +37,20 @@ def load_cases():
 
 
 def main(argv=None):
+    config.load_env()
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--prompt", choices=sorted(classify.PROMPTS), default=classify.ACTIVE_PROMPT)
     ap.add_argument("--roles", default="test,control")
     ap.add_argument("--backend", choices=sorted(classify.BACKENDS), default="cli")
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--ladder", action="store_true",
+                    help="score the model ladder (escalate.py) instead of fixed roles")
     args = ap.parse_args(argv)
     roles = tuple(r for r in args.roles.split(",") if r)
 
     cases = load_cases()
+    if args.ladder:
+        return ladder_eval(cases, args.backend, args.workers)
     rows, calls = classify.classify_requests(cases, roles, args.backend, args.workers,
                                              version=args.prompt)
     by_id = {c["case_id"]: c for c in cases}
@@ -77,6 +84,42 @@ def main(argv=None):
             got = "FAILED" if a is None else f"{a['authorizes_deletion']} {a['intent']} - {a['reason']}"
             print(f"  {role}: {got}")
     return 1 if errors else 0
+
+
+def ladder_eval(cases, backend, workers):
+    """Run every case up the model ladder; report accuracy, which model
+    answered, and whether moving up changed the answer."""
+    from concurrent.futures import ThreadPoolExecutor
+    from collections import Counter
+    cache = classify.IntentCache()
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        results = list(pool.map(lambda c: classify.classify_escalating(c["request_text"], backend, cache), cases))
+    final_ok = first_ok = 0
+    answered_by, changed, wrong = Counter(), [], []
+    for c, r in zip(cases, results):
+        a, first = r["answer"], r["attempts"][0]
+        answered_by[r["model"] + (" (below 0.90)" if r["flags"] else "")] += 1
+        final_ok += bool(a) and a["authorizes_deletion"] == c["expected"]
+        first_answer = classify.classify_texts([c["request_text"]], first["model"], backend, cache, 1)[0][
+            classify.text_key(c["request_text"])].get("answer")
+        first_ok += bool(first_answer) and first_answer["authorizes_deletion"] == c["expected"]
+        if len(r["attempts"]) > 1:
+            changed.append((c, r, first_answer))
+        if not a or a["authorizes_deletion"] != c["expected"]:
+            wrong.append((c, r))
+    print(f"prompt {classify.prompt_id(classify.ACTIVE_PROMPT)} | {len(cases)} cases | ladder threshold 0.90")
+    print(f"correct with the first model only: {first_ok}/{len(cases)} | with the ladder: {final_ok}/{len(cases)}")
+    print("answered by:", dict(answered_by))
+    print(f"\nmoved up the ladder: {len(changed)} case(s)")
+    for c, r, first_answer in changed:
+        steps = " -> ".join(f"{a['model'].replace('claude-', '')} {a['confidence']}" for a in r["attempts"])
+        flip = "" if not first_answer or first_answer["authorizes_deletion"] == r["answer"]["authorizes_deletion"] \
+            else "  ANSWER CHANGED"
+        print(f"  {c['case_id']} [{c['category']}] expected={c['expected']} final={r['answer']['authorizes_deletion'] if r['answer'] else None} | {steps}{flip}")
+    print(f"\nwrong: {len(wrong)}")
+    for c, r in wrong:
+        print(f"  {c['case_id']} expected={c['expected']} got={r['answer']} {c['request_text'][:120]}")
+    return 1 if wrong else 0
 
 
 if __name__ == "__main__":

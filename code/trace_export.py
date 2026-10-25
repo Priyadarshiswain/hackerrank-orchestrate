@@ -19,7 +19,6 @@ from collections import Counter
 import config
 from contract import DATASET_DIR, REPO_ROOT, STEP_FIELDS, read_csv
 from plan import Auditor
-from screenshot_extract import MODELS as SCREENSHOT_MODELS
 
 VIEWER = REPO_ROOT / "code" / "ui" / "viewer.html"
 OUT_DIR = REPO_ROOT / "trace"
@@ -34,7 +33,9 @@ def unit_view(unit, manifest):
             "text": unit["text"][:SNIPPET], "truncated": len(unit["text"]) > SNIPPET,
             "screen": {"title": unit["context"].get("screen_title", ""),
                        "flags": unit["context"].get("flags", []),
-                       "models": SCREENSHOT_MODELS} if unit["kind"] == "png" else None}
+                       "model": unit["context"].get("model", ""),
+                       "confidence": unit["context"].get("model_confidence"),
+                       "attempts": unit["context"].get("attempts", [])} if unit["kind"] == "png" else None}
 
 
 def referenced_units(trace):
