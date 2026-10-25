@@ -1,6 +1,6 @@
 # Usage Report — Ghost Data Still Exists
 
-**Version: V1** (phase-1 build, 2026-10-25)
+**Version: V1.1** (phase-1 build, 2026-10-25)
 
 ## Final full-dataset run
 
