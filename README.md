@@ -174,6 +174,18 @@ deletion_requests.csv
 
 Details and known limitations are in `code/evaluation/evaluation_report.md`.
 
+## Known security issues
+
+These come from an adversarial security audit (see `decisions.md`, entry 40). None of them affects how `output.csv` is produced or evaluated: the evaluation runs `code/main.py`, and the viewer server is an optional local tool.
+
+| Severity | Issue | Status |
+|---|---|---|
+| HIGH | **The live viewer server (`code/server.py`) has no Host, Origin or token check.** While it runs, a web page open in the same browser could send `POST /api/run` and start a run. With `MODEL_BACKEND=api` that run is billed, and it rewrites `output.csv`. | **Accepted for this submission and documented.** No host restriction is added, so the viewer works from any host the organizers use. **Must be fixed before production:** add a Host/Origin allow-list and a per-start secret token required on `/api/run`, or run the viewer only without an API key. |
+| MEDIUM | SQL evidence was run with no limits (ATTACH could reach files on disk; no time limit). | **Fixed:** ATTACH/DETACH, `load_extension` and every PRAGMA except `foreign_keys` are blocked; there is a 10 s limit per snapshot and a 20 MB limit per file; a file that breaks a limit or fails to parse is skipped with a warning, and the run continues. |
+| MEDIUM | When the two screenshot models disagree, the test model's identifiers are still used. | Open: use only the identifiers both models agree on. One screenshot is affected today (a misspelt name, not an identifier). |
+| MEDIUM | The shipped answer cache (`code/cache/`) is trusted without proof of where each answer came from. | Open: store the API request id per answer and a checksum of the final run's cache. |
+| LOW | Server robustness (request size, number of open event streams). | Open, same scope as the HIGH item. |
+
 ## Packaging
 
 ```bash

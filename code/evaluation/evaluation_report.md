@@ -208,4 +208,5 @@ Fixed in V2: the screenshot state (V1 item 2) and the service-export omission (p
 2. **Absence by omission is still used from JSON bundles.** The sample answers do cite a bundle (case_31) when no SQL capture qualifies.
 3. **Records linked through reused emails can belong to a later period** than the case's audit_at. This affects about 8 cases.
 4. **Unknown states default to COMPLETE**, because a finding needs evidence.
-5. **27 cases whose workflow reported NOT_STARTED are answered COMPLETE.** case_63 has no steps at all: no file ties any record to the person. These are the natural group for an LLM-assisted review in a later version.
+5. **Known security issue (accepted):** the optional live viewer server has no Host, Origin or token check; see README "Known security issues". It does not affect `output.csv`.
+6. **27 cases whose workflow reported NOT_STARTED are answered COMPLETE.** case_63 has no steps at all: no file ties any record to the person. These are the natural group for an LLM-assisted review in a later version.

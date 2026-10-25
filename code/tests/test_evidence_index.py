@@ -73,6 +73,38 @@ COMMIT;"""
         self.assertEqual(profile["context"]["database_topology"], "primary")
 
 
+class SqlLimitTests(unittest.TestCase):
+    def test_attach_and_unknown_pragma_are_blocked(self):
+        import sqlite3
+        for script in ("ATTACH DATABASE ':memory:' AS other;", "PRAGMA writable_schema=ON;"):
+            with self.assertRaises(sqlite3.DatabaseError):
+                sql_units(SRC, script)
+        self.assertEqual(len(sql_units(SRC, "PRAGMA foreign_keys=ON; CREATE TABLE t (resource_id TEXT);")), 1)
+
+    def test_endless_query_is_stopped(self):
+        import sqlite3
+        import evidence_units
+        saved, evidence_units.SQL_TIME_LIMIT = evidence_units.SQL_TIME_LIMIT, 0.5
+        try:
+            with self.assertRaises(sqlite3.OperationalError):
+                sql_units(SRC, "WITH RECURSIVE c(x) AS (SELECT 1 UNION ALL SELECT x+1 FROM c) SELECT count(*) FROM c;")
+        finally:
+            evidence_units.SQL_TIME_LIMIT = saved
+
+    def test_bad_file_is_skipped_not_fatal(self):
+        import tempfile
+        from unittest import mock
+        import evidence_units
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "bad.json").write_text("[" * 100000, encoding="utf-8")
+            (Path(d) / "good.txt").write_text("contact a@x.com", encoding="utf-8")
+            manifest = [{"file_id": "evidence_bad", "file_path": "bad.json", "origin": "o", "captured_at": "t"},
+                        {"file_id": "evidence_good", "file_path": "good.txt", "origin": "o", "captured_at": "t"}]
+            with mock.patch.object(evidence_units, "DATASET_DIR", Path(d)):
+                units = evidence_units.build_units(manifest=manifest, activity=[])
+        self.assertEqual({u["source_id"] for u in units}, {"evidence_good"})
+
+
 class IndexTests(unittest.TestCase):
     def test_lookup_normalises_and_keeps_lookalikes_apart(self):
         units = [{**SRC, "unit_id": "u1", "kind": "txt", "event_time": "", "locator": "line=1",
