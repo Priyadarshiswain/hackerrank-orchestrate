@@ -45,6 +45,22 @@ class ObserveTests(unittest.TestCase):
                     "search_052", PERSON)
         self.assertFalse(o["present"])
 
+    def test_screen_detail_panel_gives_flow_state_and_exposure(self):
+        screen = ("Connections\nConnector | Destination | Selector | Mode\n"
+                  "data_flow_1 | warehouse | a@x.com | Continuous\ndata_flow_1\nStatus: Healthy\n"
+                  "Selector: a@x.com\nActivity\n07:59 124 events delivered")
+        o = observe(unit("png", screen), "data_flow_1", PERSON)
+        self.assertEqual((o["flow_active"], o["direct"]), (True, ["page"]))
+
+    def test_screen_backup_restore_open_unless_blocked(self):
+        base = "Recovery Manager\nRecent restores\nbackup_7 | a@x.com\nbackup_7\nAccount: a@x.com\n{}Activity\n"
+        self.assertTrue(observe(unit("png", base.format("")), "backup_7", PERSON)["restore_open"])
+        self.assertFalse(observe(unit("png", base.format("Restore: Blocked\n")), "backup_7", PERSON)["restore_open"])
+
+    def test_header_line_opens_the_detail_panel(self):
+        screen = "support_9 · Ana Lima · Normal priority\nCustomer: Ana Lima\nEmail: a@x.com\nActivity\n"
+        self.assertEqual(observe(unit("png", screen), "support_9", PERSON)["direct"], ["page"])
+
     def test_activity_rows_are_claims(self):
         self.assertIsNone(observe(unit("activity", "resource_id=account_7 reported_result=SUCCESS"), "account_7"))
 

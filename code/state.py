@@ -7,7 +7,9 @@ Agreed design (Part C plan, user sign-off 2026-10-25):
     resource proves the resource absent there at the snapshot's time.
     It is used only when no unit observes the record itself before
     audit_at, and only for DELETE / REDACT / ANONYMIZE records: it can prove
-    a required absence, never a violation.
+    a required absence, never a violation. Not used: service exports (they
+    list only the lookups that were run) and records the deletion worker
+    deletes after audit_at (they still existed at audit_at).
   - C4 combine, using only observations made at or before audit_at:
       * a copy (location) is the owning system's primary store, or a named
         replica (a SQL table or log service with replica/failover/reporting
@@ -37,6 +39,7 @@ from collections import Counter, defaultdict
 from observe import new_obs, observe
 
 REPLICA = re.compile(r"replica|failover|reporting")
+DELETION_EVENTS = {"DELETE_RECORD", "REDACT_RECORD", "ANONYMIZE_RECORD"}
 
 
 def location(unit, obs):
@@ -99,7 +102,7 @@ class Omissions:
 
 
 def _json_groups(data, file_captured_at):
-    """Yield (system, captured_at, resource ids) for each snapshot/export group."""
+    """Yield (system, captured_at, resource ids) for each snapshot group."""
     def ids_in(node):
         return set(re.findall(r'"resource_id": "([a-z]+(?:_[a-z]+)*_\d+)"', json.dumps(node)))
 
@@ -107,10 +110,8 @@ def _json_groups(data, file_captured_at):
         for snap in data.get("snapshots", []) or []:
             if isinstance(snap, dict) and snap.get("data_store") and isinstance(snap.get("records"), list):
                 yield snap["data_store"], snap.get("captured_at", file_captured_at), ids_in(snap["records"])
-        exports = data.get("service_exports")
-        if isinstance(exports, dict):
-            for system, body in exports.items():
-                yield system, data.get("captured_at", file_captured_at), ids_in(body)
+        # service_exports list only the lookups that were run, not the whole
+        # system, so a missing row there proves nothing (Fable review v1).
 
 
 def combine(observations, audit_at):
@@ -181,7 +182,13 @@ class StateReader:
         # prove an absence the policy wants: a missing row in a partial
         # extract is never the evidence for a violation (retained audit
         # records missing from an extract still exist later).
-        if not direct and info["required_action"] in ("DELETE", "REDACT", "ANONYMIZE"):
+        # A deletion submitted after audit_at means the record still existed
+        # at audit_at; the claim only vetoes omission, it never makes a finding.
+        later_delete = any(self.disc.index.units[e["unit_id"]]["kind"] == "activity"
+                           and self.disc.index.units[e["unit_id"]]["fields"].get("event_type") in DELETION_EVENTS
+                           and self.disc.index.units[e["unit_id"]]["observed_at"] > audit_at
+                           for e in evidence)
+        if not direct and not later_delete and info["required_action"] in ("DELETE", "REDACT", "ANONYMIZE"):
             template = {"captured_at": "", "fields": {}, "context": {}}
             for obs in self.omissions.absent_obs(rid, info["system_id"], template):
                 obs["location"] = "primary"
