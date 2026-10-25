@@ -2858,3 +2858,72 @@ repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
 
+## [2026-10-25T10:59:48Z] SESSION START
+
+tool=Claude Code
+model=claude-fable-5-1
+Repo Root: /Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+Branch: main
+Worktree: main
+Parent Agent: Claude Code (claude-opus-5-5[1m])
+Language: py
+Time Remaining: not configured
+
+## [2026-10-25T11:05:33Z] Fable final pre-submission review of v3 (8af71c2): SUBMIT
+
+User Prompt (verbatim, secrets redacted):
+You are Fable, the adversarial reviewer, doing the FINAL PRE-SUBMISSION REVIEW. First read /Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26/.claude/agents/fable-reviewer.md and follow it, including the HARD logging requirement: append a SESSION START entry and a per-turn entry to the root log.txt in the AGENTS.md §5 format (tool=Claude Code, model=claude-fable-5-1, parent_agent=Claude Code (claude-opus-5-5[1m])); title ≤ 80 chars, summary 2–5 sentences, blank line after the entry; put the full task prompt verbatim (secrets redacted) under "User Prompt". Read-only: do NOT edit any repo file, output.csv, code.zip or caches (log.txt append only). NO model calls and NO API calls: run everything with `GHOST_OFFLINE=1` (any uncached model call is then refused). Do not read or print .env. Scratch work in /private/tmp/claude-501/-Users-priyadarshiswain-Projects-hackerrank-orchestrate-october26/b8dcad2b-5c86-4d87-a4af-56a50c812069/scratchpad (unzip into a NEW folder there). Python: .venv/bin/python. Aim to finish in about 15 minutes.
+
+The user will submit if you find no SERIOUS issue. Submission = code.zip + output.csv + log.txt (chat transcript) to HackerRank (AGENTS.md §6.9), plus an AI interview. The candidate is git tag v3 (commit 8af71c2); code.zip at the repo root was built by `code/package.py` from that state.
+
+Check, with evidence, and classify each finding BLOCKER (must fix before submitting) / MAJOR (should fix if quick) / MINOR (note only):
+1. output.csv contract (AGENTS.md §6.3–6.6): header, 518 rows, sort, valid JSON, step numbering, allowed phase/operation/state, evidence rules (findings cite valid ids; COMPLETE verifications cite proof; INCOMPLETE remediation/verification cite ""; nothing captured after audit_at), NOT_APPLICABLE = []. Run code/validate_output.py and check independently.
+2. code.zip (AGENTS.md §6.7–6.9, the organizers' original README `git show 4e5f6ef:README.md`): required files (README.md with setup/run, code/evaluation/evaluation_report.md and usage_report.md, also evaluation/ copies), nothing forbidden (dataset/, venv, __pycache__, nested archives, .env, keys, sensitive config), runnable from a clean unzip next to dataset/ with GHOST_OFFLINE=1 and reproducing output.csv and output_confidence.csv byte for byte, tests passing.
+3. Reports: every required item present (§6.8) and every number re-checkable — recompute key ones (sample metrics via code/evaluation/main.py and stage_report.py; usage via code/evaluation/usage_summary.py code/cache; status split, steps, account counts, confidence bands from the output files). Flag any number that does not match.
+4. log.txt (§5): every entry has exactly one non-empty tool= and model= line; SESSION START fields; append-only vs git history; no secrets.
+5. README.md / decisions.md: any claim that is false for the v3 code, any stale text from earlier versions (e.g. "control model", "prompt v4", old counts), anything an AI interviewer would catch.
+6. Anything else that could make the submission fail or look like a contract violation (e.g. use of organizer-only files, hardcoded labels, gold read by the pipeline, non-determinism).
+
+Output: a short verdict line first ("SUBMIT" or "FIX FIRST"), then findings grouped BLOCKER / MAJOR / MINOR with evidence (file:line, row, numbers) and the exact fix for each. Keep it compact.
+
+Agent Response Summary:
+Reviewed the v3 submission package read-only and offline. output.csv passes the validator and an independent contract check (518 rows, natural case_id order, 0 problems across 2,987 steps, within-phase order matches the problem statement); a clean unzip of code.zip reproduces output.csv and output_confidence.csv byte for byte with 4 and 1 workers, 95 tests pass, and all report numbers I recomputed match (sample metrics, usage totals, status split, 341 accounts, confidence bands, intent ladder 70/70). log.txt is append-only across all 19 commits, every entry has one tool= and one model= line, no secrets. No blocker. One MAJOR: code/main.py:44-49 crashes with the documented --out option (str has no with_name); plus minor stale text (evaluation_report §3.1 "prompt v4"/"(control)" table, screenshot_extract.py docstring, README links to files not in the zip). Verdict: SUBMIT.
+
+Actions:
+* Read .claude/agents/fable-reviewer.md, README.md, code/evaluation/evaluation_report.md, code/evaluation/usage_report.md, decisions.md (tail), code/main.py (lines 36-56), git show 4e5f6ef:README.md
+* Ran GHOST_OFFLINE=1 code/validate_output.py; independent contract check script (scratchpad/chk.py)
+* Unzipped code.zip into scratchpad/clean and scratchpad/clean2; ran code/main.py (workers 4 and 1), validate_output.py, unittest discover (95 OK), main.py --sample, evaluation/main.py, stage_report.py, usage_summary.py code/cache, intent_eval.py --ladder; cmp against repo output files
+* Recomputed status split, account counts, confidence bands, distinct request texts, cache provenance from output.csv, output_confidence.csv, code/cache/intent_cache.json
+* Audited log.txt entries (tool=/model= lines, required fields, timestamps) and append-only history over every commit touching log.txt
+* Grepped zip and code for forbidden files, secrets, organizer-only references, hardcoded case ids, stale "control model"/"prompt v4" text
+
+Context:
+tool=Claude Code
+model=claude-fable-5-1
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=Claude Code (claude-opus-5-5[1m])
+
+
+## [2026-10-25T11:07:47Z] Fable final review: SUBMIT; quick fixes applied as v3.1
+
+User Prompt (verbatim, secrets redacted):
+(no new user message; background Fable final pre-submission review requested earlier completed)
+
+Agent Response Summary:
+Fable's final review returned SUBMIT with no blocker: output.csv passes every contract check, the clean unzip reproduces output.csv and output_confidence.csv offline, every report number matches, and all 140 log entries are well formed and append-only. Applied the one MAJOR fix (main.py --out/--requests crashed on a string path; now converted to Path) and the minor text fixes (V2-history labels on the prompt v4/control table in the evaluation report, the screenshot_extract docstring, exact wording about the doubled accounts). output.csv is unchanged, 95 tests pass, code.zip was rebuilt and re-verified from a clean unzip; committed and tagged v3.1.
+
+Actions:
+* Edited code/main.py, code/evaluation/evaluation_report.md, code/screenshot_extract.py
+* Ran main.py with --out, unit tests, package.py; clean unzip check with GHOST_OFFLINE=1
+* git commit and git tag v3.1
+
+Context:
+tool=Claude Code
+model=claude-opus-5-5[1m]
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
