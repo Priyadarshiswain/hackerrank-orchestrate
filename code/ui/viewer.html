@@ -249,6 +249,7 @@ function renderCase(c) {
     parts.push(card(4, "Discovery", `<p class="muted">Hop 1 finds units holding the person's identifiers (${(d.hop1 || []).length} units); hop 2 gathers every unit that names each record found.</p>
       <table><tr><th>Record</th><th>Linked to the person by</th><th>Evidence about it</th></tr>${rows || `<tr><td colspan="3" class="muted">No records found.</td></tr>`}</table>
       ${accountRule(c.account_rule)}
+      ${Object.entries(c.catalog_rule || {}).map(([rid, l]) => `<p>${tag("catalog rule", "na")} ${unitLink(l.row)} links <b class="mono">${esc(rid)}</b> to this person inside the case window; confirmed by ${l.confirmed_by.map(unitLink).join(", ")} (shows ${esc(l.label.join(" / "))}).</p>`).join("")}
       ${(d.weak || []).length ? `<p>${tag("not listed", "warn")} linked only by activity claims: <span class="mono">${d.weak.map(esc).join(", ")}</span></p>` : ""}
       ${(d.ambiguous || []).length ? `<p>${tag("ambiguous", "warn")} units naming another known person: ${d.ambiguous.map(unitLink).join(", ")}</p>` : ""}
       <details><summary class="muted">Hop-1 units</summary><p>${(d.hop1 || []).map(unitLink).join(" · ")}</p></details>`));
