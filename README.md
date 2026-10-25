@@ -1,6 +1,6 @@
 # Ghost Data Still Exists — Deletion-Audit Agent
 
-**Version: V2** (2026-10-25) · HackerRank Orchestrate, October 2026
+**Version: V3** (2026-10-25) · HackerRank Orchestrate, October 2026
 
 For each request in `dataset/deletion_requests.csv`, the agent:
 1. decides whether the person actually asked for deletion;
@@ -32,13 +32,13 @@ python3 -m venv .venv
 | `api` (default; the real run) | Anthropic SDK; each answer records its `message_id` and `request_id` | `ANTHROPIC_API_KEY` set in the environment or `.env` (see `.env.example`; never commit `.env`) |
 | `cli` | Headless Claude Code, `claude -p` in an isolated temporary directory, no tools, settings or MCP; used while building | A logged-in `claude` CLI |
 
-The pipeline uses one model per task: `claude-haiku-5-5` for intent and for screenshots. No control model runs in the pipeline.
+Every AI call (intent, screenshots) climbs a model ladder: `claude-haiku-5-5` first, then `claude-sonnet-5-5`, `claude-opus-5-5` and `claude-fable-5-1` only when the answer fails a check or the model reports less than 0.90 confidence (`code/escalate.py`). No separate control model runs in the pipeline.
 
 ### Anthropic API setup (optional)
 
 1. Install the requirements: `.venv/bin/pip install -r requirements.txt` (this includes `anthropic==2.3.0`).
 2. Copy `.env.example` to `.env`, which git ignores, and set `ANTHROPIC_API_KEY`. Set `MODEL_BACKEND=api` to use the SDK for uncached calls.
-3. Check the setup: `.venv/bin/python code/check_api.py` (add `--all` to also check the control model). It sends one synthetic request, prints the answer, tokens and estimated cost, and never prints the key.
+3. Check the setup: `.venv/bin/python code/check_api.py` (add `--all` to also check `claude-sonnet-5-5`). It sends one synthetic request, prints the answer, tokens and estimated cost, and never prints the key.
 4. For a fresh, fully measured API run, point `GHOST_CACHE_DIR` at an empty folder (e.g. `code/cache_api`) so every call is made and its usage recorded.
 
 The `cli` backend never passes `ANTHROPIC_API_KEY` to `claude -p`, so it keeps using the Claude Code login.
@@ -53,8 +53,8 @@ From the repository root (the folder that contains `dataset/`):
 .venv/bin/python code/main.py --sample            # 32 samples -> ./sample_predictions.csv
 .venv/bin/python code/evaluation/main.py sample_predictions.csv   # score against sample_output.csv
 .venv/bin/python code/evaluation/stage_report.py                   # per-stage accuracy on the samples
-.venv/bin/python code/evaluation/intent_eval.py --prompt v4        # 70 intent cases (38 synthetic)
-.venv/bin/python -m unittest discover -s code/tests                # 71 unit tests
+.venv/bin/python code/evaluation/intent_eval.py --ladder           # 70 intent cases (38 synthetic) on the ladder
+.venv/bin/python -m unittest discover -s code/tests                # 95 unit tests (offline)
 ```
 
 ### Live viewer (run from the browser)
@@ -94,7 +94,7 @@ Options for `code/main.py`:
 - `--backend api` uses the SDK for any uncached model call (default: `MODEL_BACKEND`, else `cli`);
 - `--verbose` prints each case as it finishes; `--workers N` runs N cases at the same time (default 4). Each case still runs through the whole pipeline on its own, and `output.csv` is rewritten, sorted, after every case, so the result does not depend on the worker count.
 
-A full run takes a few seconds with the cache. The submitted `output.csv` came from a run on the Anthropic API with a fresh cache: 518 requests, 397 model calls, 1 min 34 s with 8 workers (see `code/evaluation/usage_report.md`). Its answers ship in `code/cache/`, so the commands above reproduce it exactly. Each request goes through the whole pipeline on its own, and the output is deterministic: rows are sorted by `case_id`, steps follow the contract order, and JSON is serialized with sorted keys.
+A full run takes a few seconds with the cache. The submitted `output.csv` came from a run on the Anthropic API with an empty cache and the model ladder: 518 requests, 399 model calls, about USD 0.35, 1 min 59 s with 8 workers (see `code/evaluation/usage_report.md`). Its answers ship in `code/cache/`, so the commands above reproduce it exactly; `GHOST_OFFLINE=1` proves it by refusing any model call. Each run also writes `output_confidence.csv` (see below). Each request goes through the whole pipeline on its own, and the output is deterministic: rows are sorted by `case_id`, steps follow the contract order, and JSON is serialized with sorted keys.
 
 ---
 
@@ -103,14 +103,17 @@ A full run takes a few seconds with the cache. The submitted `output.csv` came f
 ```text
 deletion_requests.csv
    │
-   ├─ classify.py        intent: does the text authorize deletion? (claude-haiku-5-5, prompt v4,
-   │                     JSON-schema output; text treated as data, never as instructions)
+   ├─ classify.py        intent: does the text authorize deletion? (prompt v5, JSON-schema
+   │                     output with a confidence; text treated as data, never as instructions)
+   ├─ escalate.py        model ladder for every AI call: claude-haiku-5-5 -> sonnet-5-5 ->
+   │                     opus-5-5 -> fable-5-1; stop at the first valid answer with
+   │                     confidence >= 0.90
    ├─ identity.py        exact, case-insensitive email match on current + historical emails
    │                     (user_audit_log cut at audit_at); phones, email hashes, user_id
    │
    │  evidence (built once for all cases)
    ├─ evidence_units.py  every evidence file -> uniform units: PDF pages (pdf_extract.py),
-   │                     screenshots (screenshot_extract.py, haiku + sonnet control),
+   │                     screenshots (screenshot_extract.py, prompt v2, model ladder),
    │                     log lines + trace groups, JSON records, SQL rows (SQLite) + snapshot
    │                     scopes, text lines, system_activity rows
    ├─ evidence_index.py  one shared identifier extraction (identifiers.py) -> inverted index
@@ -120,8 +123,11 @@ deletion_requests.csv
    │                     the resources found. Pages count whole only if they show no one else.
    │                     Activity-only links are claims and are not listed.
    ├─ account_rule.py    the main account when only a deletion-worker row names it: request-to-
-   │                     report window, worker result = reported status, cross-case elimination,
-   │                     linked only when one candidate is left (built once for all requests)
+   │                     report window, worker result = reported status, no other person in its
+   │                     evidence, linked only when one candidate is left (atomic: this request
+   │                     and the evidence only)
+   ├─ catalog_rule.py    a data-catalog link counts only inside this case's request-to-audit
+   │                     window and when a file saved within the hour before it shows the record
    ├─ categories.py      owning system (from the evidence), data category, required action
    ├─ observe.py         one observation per unit: present/absent, exposed identifiers,
    │                     stable links, flow active, restore open
@@ -129,8 +135,9 @@ deletion_requests.csv
    │                     present if any copy is present; absence by omission only as proof
    │                     of a required absence, from a snapshot taken after the record's last
    │                     deletion step; compliance per required action
-   └─ plan.py            status + steps: findings cite the latest citable evidence; remediation
-                         and future verification cite ""; COMPLETE verifications cite proof
+   ├─ plan.py            status + steps: findings cite the latest citable evidence; remediation
+   │                     and future verification cite ""; COMPLETE verifications cite proof
+   └─ confidence.py      how well each answer is proven -> output_confidence.csv
    │
    main.py -> output.csv (contract.py: ordering, numbering, serialization)
 ```
@@ -140,6 +147,8 @@ deletion_requests.csv
 - **Time.** Linking a record to the person uses all evidence. State uses only observations at or before `audit_at`. Citations use only files captured at or before `audit_at`.
 - **No proof from claims.** Reported statuses and activity results never prove a state. A finding needs evidence that can be cited.
 - **No shortcuts.** No fuzzy matching (lookalike decoy emails stay separate), no hardcoded labels, no case-specific rules.
+- **Each case is atomic.** A case's answer uses only its own request and the evidence, never other requests.
+- **Status follows the evidence; doubt goes to a separate file.** A proven problem makes a case INCOMPLETE. How well a COMPLETE answer is proven is shown in `output_confidence.csv` (columns `case_id, deletion_status, confidence, band, reasons`). `output.csv` keeps exactly the three contract columns.
 - **Remediation order** follows the operation table: disable flows and block restores, then delete, redact and anonymize.
 
 ## Repository layout
@@ -148,8 +157,11 @@ deletion_requests.csv
 |---|---|
 | `code/main.py` | entry point |
 | `code/*.py` | pipeline modules (see Architecture) |
-| `code/classify.py` | intent prompts (v1–v4, active v4) and output schema |
-| `code/screenshot_extract.py` | screenshot transcription prompt and schema |
+| `code/classify.py` | intent prompts (v1–v5, active v5) and output schemas |
+| `code/escalate.py` | the model ladder used by every AI call |
+| `code/account_rule.py`, `code/catalog_rule.py` | linking rules for records that only activity rows name |
+| `code/confidence.py`, `output_confidence.csv` | per-case confidence score (separate from `output.csv`) |
+| `code/screenshot_extract.py` | screenshot transcription prompts (v1–v2, active v2) and schemas |
 | `code/cache/` | cached model answers (intent, screenshots) |
 | `code/evaluation/main.py` | scorer (status, step P/R/F1, field and sequence accuracy) |
 | `code/evaluation/intent_eval.py`, `intent_eval_cases.csv` | 70-case intent evaluation (38 synthetic) |
@@ -162,17 +174,19 @@ deletion_requests.csv
 | `code/config.py`, `code/check_api.py` | `.env` loading, backend and cache settings; API smoke test |
 | `code/trace_export.py`, `code/ui/viewer.html` | per-case trace export and the viewer page |
 | `code/server.py` | live viewer server: run the pipeline from the browser |
-| `code/tests/` | unit tests |
+| `code/tests/` | 95 unit tests (offline: they never call a model) |
 
 ## Results (32 labelled samples)
 
-| Metric | V1 | V2 |
-|---|---|---|
-| Status accuracy | 1.000 | 1.000 |
-| Step precision | 0.994 | 0.994 |
-| Step recall | 0.865 | 0.896 |
-| Step F1 | 0.925 | 0.943 |
-| Sequence accuracy | 0.344 | 0.438 |
+| Metric | V1 | V2 | V3 (final) |
+|---|---|---|---|
+| Status accuracy | 1.000 | 1.000 | 1.000 |
+| Step precision | 0.994 | 0.994 | 0.994 |
+| Step recall | 0.865 | 0.896 | 0.891 |
+| Step F1 | 0.925 | 0.943 | 0.940 |
+| Sequence accuracy | 0.344 | 0.438 | 0.406 |
+
+V3 is slightly below V2 because the account rule became atomic (no dependency between cases).
 
 Details and known limitations are in `code/evaluation/evaluation_report.md`.
 
@@ -184,7 +198,7 @@ These come from an adversarial security audit (see `decisions.md`, entry 40). No
 |---|---|---|
 | HIGH | **The live viewer server (`code/server.py`) has no Host, Origin or token check.** While it runs, a web page open in the same browser could send `POST /api/run` and start a run. With `MODEL_BACKEND=api` that run is billed, and it rewrites `output.csv`. | **Accepted for this submission and documented.** No host restriction is added, so the viewer works from any host the organizers use. **Must be fixed before production:** add a Host/Origin allow-list and a per-start secret token required on `/api/run`, or run the viewer only without an API key. |
 | MEDIUM | SQL evidence was run with no limits (ATTACH could reach files on disk; no time limit). | **Fixed:** ATTACH/DETACH, `load_extension` and every PRAGMA except `foreign_keys` are blocked; there is a 10 s limit per snapshot and a 20 MB limit per file; a file that breaks a limit or fails to parse is skipped with a warning, and the run continues. |
-| MEDIUM | A screenshot transcription could be wrong or steered by hidden text, and nothing cross-checks it. | **Accepted by design:** the real run uses one model per task (no control model). The control model stays available as an evaluation tool (`screenshot_extract.py --roles test,control`). |
+| MEDIUM | A screenshot transcription could be wrong or steered by hidden text, and no second model cross-checks it. | **Reduced:** a model that reports less than 0.90 confidence hands the screenshot to a stronger model (the ladder); a fixed test/control comparison is still available as an evaluation tool (`screenshot_extract.py --roles test,control`). A wrong answer given with high confidence is not caught. |
 | MEDIUM | The shipped answer cache (`code/cache/`) could be edited by hand without anyone noticing. | **Reduced:** the real run uses the Anthropic API, and every API answer now records Anthropic's `message_id` and `request_id`, so it can be traced to a real call. A rerun with an empty `GHOST_CACHE_DIR` reproduces the answers from the API. |
 | LOW | Server robustness (request size, number of open event streams). | Open, same scope as the HIGH item. |
 

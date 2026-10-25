@@ -183,12 +183,15 @@ def observe_inventory(unit, rid):
 
 def _detail_panel(lines, rid):
     """Lines of the screen's detail panel for rid: from a header naming the
-    record ("rid", "rid · ...", "... · rid") to the next "Activity" line."""
+    record ("rid", "rid · ...", "... · rid") to the activity feed, i.e. the
+    last "Activity" heading. Not the first one: a transcription may list the
+    screen's tabs ("Conversation", "Internal notes", "Activity") right under
+    the header (evidence_28 in the V3 run)."""
     for i, line in enumerate(lines):
         head = line.strip()
         if head == rid or head.startswith(f"{rid} ·") or head.endswith(f"· {rid}"):
-            end = next((j for j in range(i + 1, len(lines)) if lines[j].strip() == "Activity"), len(lines))
-            return lines[i:end]
+            ends = [j for j in range(i + 1, len(lines)) if lines[j].strip() == "Activity"]
+            return lines[i:ends[-1] if ends else len(lines)]
     return []
 
 

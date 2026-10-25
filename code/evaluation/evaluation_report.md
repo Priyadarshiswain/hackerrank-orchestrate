@@ -1,6 +1,6 @@
 # Evaluation Report — Ghost Data Still Exists
 
-**Version: V2** (2026-10-25; V1 numbers kept for comparison)
+**Version: V3** (2026-10-25; V1 and V2 numbers kept for comparison)
 
 ## 1. How we measure
 
@@ -13,8 +13,8 @@
   python3 code/evaluation/main.py sample_predictions.csv
   python3 code/evaluation/stage_report.py               # per-stage table (section 2)
   python3 code/main.py && python3 code/validate_output.py
-  python3 code/evaluation/intent_eval.py --prompt v4    # intent cases (section 3)
-  python3 -m unittest discover -s code/tests            # 80 unit tests
+  python3 code/evaluation/intent_eval.py --ladder       # intent cases on the model ladder (section 3)
+  python3 -m unittest discover -s code/tests            # 95 unit tests, no model calls
   ```
 
 ### Metric definitions (`code/evaluation/main.py`)
@@ -28,44 +28,46 @@
 
 ## 2. Results on the 32 samples
 
-| Metric | V1 | V2 |
-|---|---|---|
-| Case status accuracy | 1.000 (32/32) | **1.000** (32/32) |
-| Step precision | 0.994 | **0.994** |
-| Step recall | 0.865 | **0.896** |
-| Step F1 | 0.925 | **0.943** |
-| Sequence accuracy | 0.344 (11/32) | **0.438** (14/32) |
+| Metric | V1 | V2 | V3 (final) |
+|---|---|---|---|
+| Case status accuracy | 1.000 (32/32) | 1.000 (32/32) | **1.000** (32/32) |
+| Step precision | 0.994 | 0.994 | **0.994** |
+| Step recall | 0.865 | 0.896 | **0.891** |
+| Step F1 | 0.925 | 0.943 | **0.940** |
+| Sequence accuracy | 0.344 (11/32) | 0.438 (14/32) | **0.406** (13/32) |
 
-| Field | V1 | V2 |
-|---|---|---|
-| step_no | 0.865 | 0.896 |
-| phase | 0.865 | 0.896 |
-| system_id | 0.653 | 0.736 |
-| resource_id | 0.653 | 0.736 |
-| operation | 0.705 | 0.777 |
-| state | 0.705 | 0.777 |
-| evidence_id | 0.865 | 0.896 |
+| Field | V1 | V2 | V3 |
+|---|---|---|---|
+| step_no | 0.865 | 0.896 | 0.891 |
+| phase | 0.865 | 0.896 | 0.891 |
+| system_id | 0.653 | 0.736 | 0.720 |
+| resource_id | 0.653 | 0.736 | 0.720 |
+| operation | 0.705 | 0.777 | 0.762 |
+| state | 0.705 | 0.777 | 0.762 |
+| evidence_id | 0.865 | 0.896 | 0.891 |
+
+V3 is slightly below V2 on purpose. The account rule became atomic: each case is decided from its own request and the evidence only, with no elimination across cases. That loses one correct sample link (case_02) in exchange for no cross-case dependency (section 4, row 20).
 
 How to read these numbers:
-- **Field accuracy is position-based.** One missing step shifts every later step, so `resource_id` (0.736) is lower than step recall (0.896) even though the steps we do emit are almost all correct.
+- **Field accuracy is position-based.** One missing step shifts every later step, so `resource_id` (0.720) is lower than step recall (0.891) even though the steps we do emit are almost all correct.
 - **Wrong steps.** We emit 1 wrong step: a `VERIFY_RECORD_ABSENT` for `account_6523` in case_17. That record has no evidence it ever existed.
-- **Missing steps.** All other differences are steps for 20 records the pipeline doesn't link to the person:
-  - 11 main accounts: the account rule found more than one candidate, or none (account_004 appears in no file at all);
+- **Missing steps.** All other differences are steps for 21 records the pipeline doesn't link to the person:
+  - 12 main accounts: the account rule found more than one candidate, or none (account_004 appears in no file at all);
   - 7 anonymised analytics records that appear only in unattributed deletion-worker activity rows;
   - 2 audit records that appear in no participant-visible file.
 - **Citations.** Every citation we emit matches the gold citation.
 
 ### Results by pipeline stage (samples, `code/evaluation/stage_report.py`)
 
-| Stage | Measure | V1 | V2 |
-|---|---|---|---|
-| Intent classification | NOT_APPLICABLE decided correctly | 32/32 | 32/32 |
-| Identity resolution | case → user_id resolved | 32/32 | 32/32 |
-| Discovery | gold resources found (recall) | 85/111 = 0.77 | 91/111 = 0.82 |
-| Discovery | found resources that are gold (precision) | 85/86 = 0.99 | 91/92 = 0.99 |
-| Account rule | links where no file names the account | — | 6 correct, 0 wrong |
-| Categories (C1) | owning system / required action correct | 85/85 / 85/85 | 91/91 / 91/91 |
-| State (C2–C4) | compliant-vs-violating agrees with gold | 85/85 | 91/91 |
+| Stage | Measure | V1 | V2 | V3 |
+|---|---|---|---|---|
+| Intent classification | NOT_APPLICABLE decided correctly | 32/32 | 32/32 | 32/32 |
+| Identity resolution | case → user_id resolved | 32/32 | 32/32 | 32/32 |
+| Discovery | gold resources found (recall) | 85/111 = 0.77 | 91/111 = 0.82 | 90/111 = 0.81 |
+| Discovery | found resources that are gold (precision) | 85/86 = 0.99 | 91/92 = 0.99 | 90/91 = 0.99 |
+| Account rule | links where no file names the account | — | 6 correct, 0 wrong | 5 correct, 0 wrong (atomic) |
+| Categories (C1) | owning system / required action correct | 85/85 / 85/85 | 91/91 / 91/91 | 90/90 / 90/90 |
+| State (C2–C4) | compliant-vs-violating agrees with gold | 85/85 | 91/91 | 90/90 |
 
 ## 3. Additional evaluation cases created by the team
 
@@ -113,10 +115,13 @@ Results with prompt v4 (both models answer from cache):
 | sample-derived | 32/32 | 32/32 |
 | **Total** | **70/70** | **70/70** |
 
+**Model ladder (V3, prompt v5, Anthropic API):** with Haiku alone, 70/70 are correct; with the ladder, also 70/70. 68 cases stop at Haiku (confidence of 0.90 or more). Two sample cases (case_06 and case_15) climb to Fable: Haiku said 0.85, Fable 0.90 and 0.93, with the same answer. No answer changed by climbing.
+
 Prompt history:
 - **v1:** 63/70. It missed verify/audit follow-ups.
 - **v3:** 70/70. Adds the 8 fixes from the adversarial review: request text treated as data, follow-ups, negation, conditional deletion, and questions about held data.
 - **v4:** 70/70. v3 plus a business-context paragraph.
+- **v5 (final):** 70/70. v4 plus a `confidence` field for the model ladder.
 
 ### 3.2 Pipeline cases (synthetic)
 
@@ -152,7 +157,7 @@ Three end-to-end cases for the status and step logic, written by us. Each runs a
 - *Why.* That file can't be cited (AGENTS.md 6.6), and a finding needs citable evidence.
 - *Result.* Pass.
 
-`code/tests/` holds 80 tests in all. These synthetic cases each check one deletion-audit rule:
+`code/tests/` holds 95 tests in all; they run with `GHOST_OFFLINE=1` and never call a model. These synthetic cases each check one deletion-audit rule:
 
 | Case | Rule checked |
 |---|---|
@@ -189,24 +194,36 @@ Three end-to-end cases for the status and step logic, written by us. Each runs a
 | 14 | Omission from service exports, which list only the lookups that were run, "proved" absence (case_55 cited evidence_71 for an account deleted after audit_at) | adversarial review | No omission from service exports; a deletion after audit_at means the record existed at audit_at |
 | 15 | The main account was missing in 262 of 508 cases | adversarial review | Account rule (V2): worker result must match `reported_status`, inside the request–report window, with cross-case elimination, linked only when one candidate is left. Sample: 6 correct, 0 wrong; agrees with the evidence 117 times in 118; adds the account to 113 more evaluation cases |
 | 16 | Absence proof cited a snapshot taken before the deletion, and missed account-table SQL captures (case_02, case_31) | sample citations | A missing row proves absence only in a snapshot taken after the record's last deletion step; single-record-type SQL tables count as sources; SQL captures are preferred over JSON extracts (sample F1 0.937 → 0.943) |
+| 17 | A log export nested its fields in a quoted message (`resource_id=\"account_7107\"`), so the 8 June 2026 deletion wave was judged only from missing rows | adversarial review of the 518 | Unescape quotes before reading log lines; 7 cases in that wave became INCOMPLETE with findings citing `evidence_25` |
+| 18 | Data-catalog link rows pointed to records that only a screenshot or PDF showed (cases 61, 63, 33, 46) | adversarial review | Catalog rule: a link counts only inside the case's own request-to-audit window and when a file saved within the hour before it shows the record; cases 61 and 63 became INCOMPLETE |
+| 19 | A record seen in an old snapshot inside a later file had no proof of absence although a full SQL capture taken just before audit_at lacked it (case_126) | adversarial review | After a sighting, a later full SQL capture of the owning system (not a JSON extract) may prove absence |
+| 20 | The account rule eliminated candidates across requests, so one request could change another person's answer (an injection window) | security audit and the user's "each case is atomic" principle | Account rule made atomic: own request and evidence only. Sample 5 correct / 0 wrong (was 6 / 0); 105 links in the 518 (about 10 fewer); two accounts are now listed in two cases each |
+| 21 | SQL evidence ran with no limits (ATTACH could reach files on disk; no time limit) | security audit | SQLite authorizer blocks ATTACH/DETACH, load_extension and PRAGMAs other than `foreign_keys`; 10 s per snapshot; 20 MB per file; a bad file is skipped with a warning |
+| 22 | Doubt about COMPLETE answers was invisible | user requirement ("COMPLETE only when we are sure") | A separate `output_confidence.csv` (certain / high / medium / low with reasons); weights from an adversarial check of all 153 COMPLETE answers, which found none that should flip |
+| 23 | One model per call, with no way to use a stronger model when unsure | user requirement | Model ladder for every AI call: haiku → sonnet → opus → fable, stop at the first valid answer with confidence of 0.90 or more |
+| 24 | In the final API run a screenshot transcription listed the screen's tabs ("Activity") under the record header, which cut the detail panel short and hid an exposed email (case_53 briefly flipped to COMPLETE) | diff of the V3 run against the previous output | The detail panel now runs to the last "Activity" heading, the activity feed, not the first one; case_53 is INCOMPLETE again and nothing else changed |
+| 25 | The dataset tests made real model calls when a new prompt version was not cached yet | noticed during the ladder work | Tests run with `GHOST_OFFLINE=1`; any uncached model call is refused |
 
 ## 5. Evaluation-set checks (518 requests, no labels)
 
-- **Contract.** The validator passes: 518 rows, sorted, valid JSON, phases and states consistent, no remediation evidence, no citation captured after audit_at. The only warning is case_63: COMPLETE with no steps, because no file ties a record to the person.
-- **Final run.** Done on the Anthropic API with a fresh cache (see `usage_report.md`). Its output is byte-for-byte identical to the headless-CLI run.
-- **Status split (V2).** 162 COMPLETE, 346 INCOMPLETE, 10 NOT_APPLICABLE; 2,935 steps. V1 had 165 / 343 / 10.
+- **Contract.** The validator passes: 518 rows, sorted, valid JSON, phases and states consistent, no remediation evidence, no citation captured after audit_at.
+- **Final run (V3).** Done on the Anthropic API with an empty cache and the model ladder: 399 calls, 0 errors (see `usage_report.md`). The shipped cache reproduces it with no model access.
+- **Status split (V3).** 153 COMPLETE, 355 INCOMPLETE, 10 NOT_APPLICABLE; 2,987 steps. V2 had 162 / 346 / 10, and V1 had 165 / 343 / 10.
   - All 10 NOT_APPLICABLE texts are genuine non-deletion requests.
-  - 159 cases whose workflow reported COMPLETE are INCOMPLETE on the evidence.
-  - 350 of the 508 deletion cases list their main account (V1: 237).
-- **Independent review (Fable).** A stratified hand check of about 20 evaluation cases plus dataset-wide probes. It confirms that ordering, citation timing, tombstones, legal holds, replicas and analytics rules are handled. Known weak spots are listed in section 6.
+  - 163 cases whose workflow reported COMPLETE are INCOMPLETE on the evidence.
+  - 341 of the 508 deletion cases list their main account (V2: 350 with the cross-case account rule; V1: 237).
+- **Confidence (`output_confidence.csv`).** COMPLETE: 59 certain, 86 high, 4 medium, 4 low; every INCOMPLETE and NOT_APPLICABLE answer is high. No model answer ended below 0.90 on the ladder.
+- **Independent reviews (Fable).**
+  - A stratified hand check of about 20 evaluation cases plus dataset-wide probes; an odd-case review of the 518; a check of every COMPLETE answer; a security audit.
+  - They confirm ordering, citation timing, tombstones, legal holds, replicas and analytics rules.
+  - Their findings are rows 13–24 above; remaining weak spots are listed in section 6.
 
 ## 6. Known limitations
 
-Fixed in V2: the screenshot state (V1 item 2) and the service-export omission (part of V1 item 3), and the account rule now covers part of V1 item 1. Still open:
-
-1. **The main account is still missing in 158 of 508 evaluation cases.** The account rule leaves them unlinked because two or three candidates remain after elimination. A constraint solver over each wave could resolve more; a language model adds no signal there.
-2. **Absence by omission is still used from JSON bundles.** The sample answers do cite a bundle (case_31) when no SQL capture qualifies.
-3. **Records linked through reused emails can belong to a later period** than the case's audit_at. This affects about 8 cases.
-4. **Unknown states default to COMPLETE**, because a finding needs evidence.
-5. **Known security issue (accepted):** the optional live viewer server has no Host, Origin or token check; see README "Known security issues". It does not affect `output.csv`.
-6. **27 cases whose workflow reported NOT_STARTED are answered COMPLETE.** case_63 has no steps at all: no file ties any record to the person. These are the natural group for an LLM-assisted review in a later version.
+1. **The main account is missing in 167 of 508 evaluation cases (61 of them COMPLETE).** Two to six accounts were deleted in the same time window, and nothing in the evidence ties one to the person. A model adds no signal: 388 of the 411 candidates appear only in activity rows with no identifier. The confidence file marks these cases.
+2. **Two accounts are listed in two cases each** (`account_5091`: cases 53 and 255; `account_3584`: cases 61 and 456). This is a cost of the atomic account rule; one link in each pair is wrong.
+3. **Absence by omission is still used from JSON bundles** when no SQL capture qualifies. The sample answers do the same (case_31).
+4. **Records linked through reused emails can belong to a later period** than the case's audit_at (about 8 early cases). Fixing it would need other requests, which the atomic principle rules out.
+5. **Unknown states default to COMPLETE**, because a finding needs evidence. The confidence file shows them (case_46 0.35, case_403 0.40).
+6. **26 cases whose workflow reported NOT_STARTED are answered COMPLETE.** The reported status is a claim, not proof; the confidence file shows how well each is proven.
+7. **Known security issue (accepted):** the optional live viewer server has no Host, Origin or token check; see README "Known security issues". It does not affect `output.csv`.

@@ -70,6 +70,11 @@ class ObserveTests(unittest.TestCase):
         screen = "support_9 · Ana Lima · Normal priority\nCustomer: Ana Lima\nEmail: a@x.com\nActivity\n"
         self.assertEqual(observe(unit("png", screen), "support_9", PERSON)["direct"], ["page"])
 
+    def test_tab_labels_do_not_cut_the_detail_panel(self):
+        screen = ("support_9 · Ana Lima · Normal priority\nConversation\nInternal notes\nActivity\n"
+                  "Customer: Ana Lima\nEmail: a@x.com\nActivity\n22 May | Order confirmed")
+        self.assertEqual(observe(unit("png", screen), "support_9", PERSON)["direct"], ["page"])
+
     def test_activity_rows_are_claims(self):
         self.assertIsNone(observe(unit("activity", "resource_id=account_7 reported_result=SUCCESS"), "account_7"))
 
