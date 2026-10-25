@@ -25,6 +25,8 @@ snapshot_scope or enclosing JSON values).
 import json
 import re
 import sqlite3
+import sys
+import time
 
 from contract import DATASET_DIR, read_csv
 
@@ -32,6 +34,26 @@ LINE_TIME = re.compile(r"^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)\b")
 TRACE = re.compile(r"\b(?:tr|rb)-[0-9a-z]+(?:-[0-9a-z]+)*\b")
 SQL_HEADER = re.compile(r"^--\s*([A-Za-z ]+):\s*(.+)$")
 SQL_COMMENT_KV = re.compile(r"^--\s*([a-z_]+)=(\S+)\s*$")
+
+# Limits for untrusted evidence (security audit, user sign-off 2026-10-25).
+# A file that breaks a limit or fails to parse is skipped with a warning;
+# the other files and all cases still run.
+MAX_EVIDENCE_BYTES = 20 * 1024 * 1024   # the largest supplied file is about 0.2 MB
+SQL_TIME_LIMIT = 10.0                   # seconds per SQL snapshot
+SQL_PRAGMAS_ALLOWED = {"foreign_keys"}  # the only PRAGMA the supplied snapshots use
+
+
+def _sql_authorizer(action, arg1, arg2, db_name, trigger):
+    """Block statements that reach outside the in-memory database:
+    ATTACH/DETACH (could create or read files on disk), PRAGMAs other than
+    foreign_keys, and load_extension."""
+    if action in (sqlite3.SQLITE_ATTACH, sqlite3.SQLITE_DETACH):
+        return sqlite3.SQLITE_DENY
+    if action == sqlite3.SQLITE_PRAGMA and (arg1 or "").lower() not in SQL_PRAGMAS_ALLOWED:
+        return sqlite3.SQLITE_DENY
+    if action == sqlite3.SQLITE_FUNCTION and (arg2 or "").lower() == "load_extension":
+        return sqlite3.SQLITE_DENY
+    return sqlite3.SQLITE_OK
 
 
 def _unit(source, kind, locator, text, event_time="", fields=None, context=None,
@@ -120,7 +142,14 @@ def sql_units(source, script):
         if m:
             context[m.group(1).strip().lower().replace(" ", "_")] = m.group(2).strip()
     db = sqlite3.connect(":memory:")
-    db.executescript(script)
+    db.set_authorizer(_sql_authorizer)
+    deadline = time.monotonic() + SQL_TIME_LIMIT
+    db.set_progress_handler(lambda: int(time.monotonic() > deadline), 100_000)  # non-zero aborts
+    try:
+        db.executescript(script)
+    except sqlite3.Error:
+        db.close()
+        raise
     tables = [t for (t,) in db.execute(
         "SELECT name FROM sqlite_master WHERE type='table' ORDER BY rowid")]
     if "snapshot_scope" in tables:
@@ -200,20 +229,26 @@ def build_units(manifest=None, activity=None, screenshot_backend="cli"):
                   "captured_at": row["captured_at"], "file_path": row["file_path"]}
         path = DATASET_DIR / row["file_path"]
         ext = path.suffix.lower()
-        if ext == ".png":
-            screenshots.append(source)
-        elif ext == ".pdf":
-            units += pdf_units(source, path)
-        elif ext == ".log":
-            units += log_units(source, path.read_text(encoding="utf-8"))
-        elif ext == ".json":
-            units += json_units(source, json.loads(path.read_text(encoding="utf-8")))
-        elif ext == ".sql":
-            units += sql_units(source, path.read_text(encoding="utf-8"))
-        elif ext == ".txt":
-            units += text_units(source, path.read_text(encoding="utf-8"))
-        else:
-            raise ValueError(f"{row['file_id']}: unsupported evidence type {ext}")
+        try:
+            if path.stat().st_size > MAX_EVIDENCE_BYTES:
+                raise ValueError(f"larger than {MAX_EVIDENCE_BYTES} bytes")
+            if ext == ".png":
+                screenshots.append(source)
+            elif ext == ".pdf":
+                units += pdf_units(source, path)
+            elif ext == ".log":
+                units += log_units(source, path.read_text(encoding="utf-8"))
+            elif ext == ".json":
+                units += json_units(source, json.loads(path.read_text(encoding="utf-8")))
+            elif ext == ".sql":
+                units += sql_units(source, path.read_text(encoding="utf-8"))
+            elif ext == ".txt":
+                units += text_units(source, path.read_text(encoding="utf-8"))
+            else:
+                raise ValueError(f"unsupported evidence type {ext}")
+        except (OSError, ValueError, RecursionError, sqlite3.Error) as e:
+            # one bad or hostile file must not stop the other files and cases
+            print(f"warning: evidence {row['file_id']} skipped: {type(e).__name__}: {e}", file=sys.stderr)
     units += png_units(screenshots, screenshot_backend)
     units += activity_units(activity)
     return units

@@ -46,6 +46,7 @@ emails_json lists every current and historical email with its source (user_ident
 **Why:** 101 of 518 users are gone from current identities — actually deleted — and reachable only via old emails. Provenance is needed to cite evidence later.
 **Rejected:** current identities only — leaves a fifth unresolved.
 **Breaks when:** the audit log is also silent; evidence files are the fallback.
+**Update (fact check, 2026-10-25):** recounted, 100 of the 518 requests use an old (historical) email, and every resolved user_id is still in `user_identities.csv`. So these users changed their email; they were not removed from the snapshot. The decision itself is unchanged.
 
 ## 6. Phones and hashes: both forms kept, name included (step 2)
 Phones stored trimmed plus digits-only for PDFs/images; hashes from the audit log plus sha256(email), halting on mismatch; current name from the snapshot.
@@ -139,7 +140,7 @@ Identifiers must match exactly after simple cleaning (lowercase, digits-only pho
 1. Linking a record to the person: all evidence, at any time.
 2. The record's state at audit_at: only what was seen at or before audit_at; the latest wins.
 3. Citing evidence: only files saved at or before audit_at.
-**Why:** some records are tied to the person only in later files (sample case_27); later files also contain planted "still active" snapshots. Each rule follows AGENTS.md §6.2 and §6.6.
+**Why:** some records are tied to the person only in later files (sample case_27). Later files can also show a record as still active, and those are traps. Each rule follows AGENTS.md §6.2 and §6.6.
 **Rejected:** one cutoff for everything — loses true links, or lets the traps in.
 **Breaks when:** a later file is the only proof of something earlier. We then cannot cite it (decision 27).
 
@@ -152,7 +153,7 @@ A link that rests only on an activity row (a claim) does not list the record.
 ## 23. No linking by time alone
 **Why:** linking deletion rows to cases only by time added 55 wrong records for 23 right ones. A wrong record in someone's answer is worse than a missing one.
 **Rejected:** time-window linking.
-**Breaks when:** — . Decision 30 later added a much stricter, tested rule.
+**Breaks when:** a true record is linked only by time (the 23 right ones we now miss). Decision 30 later added a much stricter, tested rule.
 
 ## 24. A page counts as one person's only when it shows only that person
 On a PDF page or screen, all records count for the person only if every email, phone and hash on it is theirs. Otherwise only records on the same line count.
@@ -162,7 +163,7 @@ On a PDF page or screen, all records count for the person only if every email, p
 
 ## 25. System and category come from the evidence
 The owning system is the one the evidence itself names. The category comes, in order, from: a label written next to the record; an `opt_in` field (marketing); attachment or message words (support); the usual category for that kind of id; a short fixed list. The action comes from `deletion_rules.csv`.
-**Why:** activity rows name sync targets, not owners. 91/91 right on the samples.
+**Why:** activity rows name sync targets, not owners. 90/90 right on the samples.
 **Rejected:** the system from activity rows; one category per id prefix with no exceptions.
 **Breaks when:** a record type appears that the data never labels.
 
@@ -192,7 +193,7 @@ Findings, then fixes, then checks. Inside a phase: the order of the operation ta
 NOT_STARTED does not mean INCOMPLETE, and COMPLETE does not mean COMPLETE.
 **Why:** AGENTS.md lines 31, 298 and 308. Samples: 3 NOT_STARTED cases are COMPLETE, and 11 COMPLETE claims are INCOMPLETE.
 **Rejected:** using it as a shortcut.
-**Breaks when:** — . It is still a useful hint in the confidence file (decision 37).
+**Breaks when:** a dataset where the reported status is reliable; we would still ignore it.
 
 ## 30. Account rule, made atomic
 When only a deletion-worker row names the main account, we link it only if:
@@ -201,37 +202,39 @@ When only a deletion-worker row names the main account, we link it only if:
 - the account's evidence shows no other person;
 - exactly one candidate is left.
 No other request is used.
-**Why:** about half the cases had no account step, but every sample answer has one. The first version also removed accounts claimed by other cases. That broke decision 36, so we removed that step.
-**Numbers:** samples 5 correct, 0 wrong; 105 links in the 518 (115 with the cross-case step).
+**Why:** about half the cases had no account step, but every sample answer has one. The first version also used other people's requests to rule out accounts. That broke decision 36 (each case stands alone), so we removed it.
+**Numbers:** samples 5 correct, 0 wrong; 105 links in the 518 (about 10 more with the cross-case step).
 **Rejected:** ordering candidates by time (right only half the time); the cross-case step.
-**Breaks when:** two people's deletions overlap with one candidate each — 2 known pairs list the same account in two cases.
+**Breaks when:** two people's deletions overlap with one candidate each. Two known pairs list the same account in two cases: `account_5091` in cases 53 and 255, and `account_3584` in cases 61 and 456. One link in each pair is wrong.
 
 ## 31. Group D: no guessing
-157 cases still list no account, because 2–6 accounts were deleted at the same time and nothing ties one to the person. We do not guess, and a model would not help: 366 of 386 candidates appear only in rows with no identifier.
+167 deletion cases list no account (61 of them are COMPLETE), because 2–6 accounts were deleted at the same time and nothing ties one to the person. We do not guess, and a model would not help: 388 of their 411 candidate accounts appear only in rows with no identifier.
 **Why:** a guess puts wrong records into answers, and makes runs different each time.
-**Rejected:** making these cases INCOMPLETE — in all 17 similar sample cases the account was deleted, and INCOMPLETE needs a finding we do not have.
-**Breaks when:** — . The confidence file marks these cases as less sure.
+**Rejected:** making these cases INCOMPLETE. In the samples, the 14 accounts named in no evidence file are all deleted in the answers, and INCOMPLETE needs a finding we do not have.
+**Breaks when:** the hidden answers list the account for these cases; we lose that step each time. The confidence file marks these cases as less sure.
 
 ## 32. Catalog rule
-A data-catalog row ("record X belongs to this person") counts only if it falls inside this case's own request-to-audit window, and a file saved within the hour before it shows the record. The record's state is then read from that file.
+A data-catalog row ("record X belongs to this person") counts only if it was written between this request and its audit time, and a file saved within the hour before it shows the record. The record's state is then read from that file.
 **Why:** this fixes cases 61 and 63 (now INCOMPLETE), and 33 and 46 (missing steps). The window keeps sample cases 07 and 17 right.
 **Rejected:** trusting catalog rows alone.
 **Breaks when:** the confirming file is a decoy.
 
 ## 33. Read what the files really say
 - Screenshots: the detail panel of the selected record gives its state (flow on or off, restore blocked, data shown). This fixed cases 39, 53 and 55.
-- Logs: quotes nested inside a message field are unescaped before reading. This fixed the 8 June group: 7 cases are now INCOMPLETE.
+- Logs: quotes nested inside a message field are unescaped before reading. This fixed the wave of deletions on 8 June 2026 (`evidence_25`): 7 cases are now INCOMPLETE.
 **Why:** both were reading errors, found by Fable on the 518.
 **Breaks when:** a new format appears. Fable's odd-case reviews are how we find these.
 
 ## 34. Final run on the API with an empty cache
-The submitted `output.csv` came from a full API run (397 calls, about USD 0.23, 0 errors). It is identical to the headless-CLI run. Its answers ship in `code/cache/`, so the package gives the same output with no model access.
+The model answers in `output.csv` come from a full API run made for V2 (397 calls, about USD 0.23, 0 errors); its output was identical to the headless-CLI run. The answers ship in `code/cache/`, so the package gives the same output with no model access. Later fixes (decisions 30, 32, 33) re-ran the pipeline from that cache, so the current `output.csv` differs from the V2 file in 32 rows (9 statuses).
 **Why:** the usage report must describe a real final run.
 **Rejected:** reporting the cached CLI run as the final run.
+**Breaks when:** the usage report is read as describing the current file. A final API re-run before packaging closes this gap.
 
 ## 35. Package for both readings of the rules
 Both `code/evaluation/` and `evaluation/` reports ship. Each release is tagged (v1, v1.1, v2). A clean unzip must give the same `output.csv`.
 **Why:** AGENTS.md and the organizers' README name different paths.
+**Breaks when:** the graders accept only one path and judge the extra copy as clutter.
 
 ## 36. Each case is atomic
 A case's answer uses only its own request and the evidence, never other requests.
@@ -241,9 +244,10 @@ A case's answer uses only its own request and the evidence, never other requests
 
 ## 37. Status follows the evidence; doubt goes in a separate file
 If a problem is proven, the case is INCOMPLETE. If none is proven, it stays COMPLETE. How sure we are goes into `output_confidence.csv` (certain / high / medium / low, with reasons). `output.csv` keeps exactly the three required columns.
-**Why:** INCOMPLETE needs findings. The samples have 10 correct COMPLETE answers, but only 2 of them count as "certain" under our score (3 under Fable's checks). So "not sure → INCOMPLETE" would turn 7–8 correct answers into wrong ones. Fable's check of our 153 COMPLETE answers found none that should flip: 42 are fully proven, 95 are sound by the dataset's own standard, and 16 rest on gaps that only cost steps.
+**Why:** INCOMPLETE needs findings. The samples have 10 correct COMPLETE answers, but only 3 of them count as "certain". So "not sure → INCOMPLETE" would turn 7 correct answers into wrong ones. Fable's check of our 153 COMPLETE answers found none that should flip: 42 are fully proven, 95 are sound by the dataset's own standard, and 16 rest on gaps that only cost steps.
 **Rejected:** making all uncertain COMPLETE cases INCOMPLETE; adding a column to `output.csv`.
 **Breaks when:** a truly incomplete case has no visible problem. The confidence file shows these cases for review.
+**How we got here:** I first wrote "if we are 100% sure we keep it incomplete", then corrected it to "if we are *not* 100% sure", and chose option (a): keep evidence-based statuses, show doubt in the confidence file.
 
 ## 38. A live viewer, and parallel cases
 A local page shows every stage of every case, including each model call. Runs can be started from the page. Cases run in parallel; the output does not depend on the number of workers.
@@ -252,13 +256,51 @@ A local page shows every stage of every case, including each model call. Runs ca
 
 ## 39. API key handling
 The key lives only in `.env`, which git ignores and the package leaves out. The CLI backend never receives it. `check_api.py` tests it without printing it.
-**Why:** AGENTS.md §4.4. A key leaked into `claude -p` would bill the API by accident.
+**Why:** AGENTS.md §4, rule 4. A key leaked into `claude -p` would bill the API by accident.
+**Breaks when:** `.env` is copied somewhere else, or the viewer server is open to other web pages (decision 40).
 
 ## 40. Security audit (Fable)
-No critical problem was found. Request text and model output are treated as data; the subprocess calls use no shell; the viewer escapes evidence text.
+No critical problem was found. Request text and model output are treated as data. The `claude -p` calls are started without a shell, so text cannot become a command. The viewer escapes evidence text.
 **To fix, highest first:**
 - the local server needs Host, Origin and token checks, or a web page could start a paid run;
 - SQL evidence must not be allowed to ATTACH files, and needs a time limit;
 - screenshot identifiers should come only from what both models agree on;
 - the shipped cache needs proof of where each answer came from.
-**Status:** findings accepted; fixes pending my approval.
+**Status (my decision):**
+- HIGH, the viewer server: **accepted as a known issue, not fixed.** A Host check could block the organizers if they run the viewer from another host, and the evaluation never uses the server. It is listed in the README as "must be fixed before production".
+- MEDIUM, SQL limits: **fixed.** ATTACH and unknown PRAGMAs are blocked, with a time limit per snapshot and a size limit per file; a bad file is skipped with a warning instead of stopping the run.
+- The other MEDIUM items (screenshot agreement, cache provenance) are open.
+**Breaks when:** someone runs the viewer server with an API key in `.env` while browsing other sites.
+
+## 41. Headless CLI to build, the API for the final run
+During development every model call went through `claude -p` (the Claude Code login). The final measured run used the Anthropic API with an empty cache.
+**Why:** the CLI let us try things for free; the usage report needs real API token counts.
+**Rejected:** the API from day one — it costs money while the prompts still change.
+**Breaks when:** the CLI and API answers differ. We checked: all 375 intent answers agree.
+
+## 42. Reasons come from the challenge files, not outside law
+When the agent used GDPR as an argument, I asked where it came from. It was the agent's own framing; the challenge files never mention GDPR. We argue only from `problem_statement.md`, AGENTS.md and the data.
+**Why:** the grader scores the dataset's rules, nothing else.
+**Breaks when:** a rule in the data is unclear and outside knowledge would help. We then say so openly.
+
+## 43. Explanations in simple English
+Technical turns are explained again in simple English before I decide.
+**Why:** I must understand each step to defend it.
+**Rejected:** accepting a summary I did not follow.
+**Breaks when:** the simple version hides a detail that matters.
+
+## 44. The sample answers are read only by the scorer
+Once, in a walkthrough, the agent took a link (`account_001` in case_01) from `sample_output.csv` and then "found" it in the activity rows. That is circular. The pipeline never reads the answer file; only the scorer and the stage report do.
+**Why:** otherwise our sample score means nothing.
+**Breaks when:** a rule is tuned by hand until the samples pass. The 518 cases then show the truth, which is why Fable checks them.
+
+## 45. Finish the whole pipeline first, improve in V2
+V1 shipped with known gaps (no account rule; screenshots gave presence only).
+**Why:** a valid `output.csv` early; the odd cases of a full run showed what to fix.
+**Rejected:** perfecting each stage before building the next.
+**Breaks when:** a V1 shortcut is forgotten. The evaluation report lists them.
+
+## 46. Reviews have a time budget
+I stopped two Fable runs that took too long. Later reviews are scoped to about 15 minutes and must return a ranked list, not a full re-grading.
+**Why:** the reviewer's job is to find the next fix, not to redo the pipeline.
+**Breaks when:** a short review misses a bug that is slow to find.

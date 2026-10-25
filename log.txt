@@ -2706,3 +2706,88 @@ repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
 
+## [2026-10-25T10:29:06Z] Fable review of decisions.md (entries 1-40) against code, data, outputs and log
+
+User Prompt (verbatim, secrets redacted):
+You are Fable, the adversarial reviewer. First read .claude/agents/fable-reviewer.md and follow it, including the HARD logging requirement (SESSION START + per-turn entry in the AGENTS.md section 5 format, tool=Claude Code, model=claude-fable-5-1, parent_agent=Claude Code (claude-opus-5-5[1m])). Read-only: do NOT edit decisions.md or any other file (report suggested edits instead). No model calls. Aim to finish in about 10-15 minutes. Another Fable instance may still be evaluating COMPLETE cases; do not touch its scratch files. Review decisions.md. Entries 1-11 are the user's hand-written decisions (keep their wording; only check facts and the "Update:" lines added to 10 and 11). Entries 12-40 were just added by the coding agent in simple (CEFR B1) English. Check: (1) every factual claim and number against the code, data, output.csv / output_confidence.csv and log.txt, recomputing where possible; (2) missing decisions from log.txt; (3) wrong or misleading statements, contradictions, weak "Breaks when"; (4) B1 readability. Output: short verdict, numbered required corrections (entry, wrong text, corrected text, evidence), missing decisions drafted in the same format, optional readability edits. Keep the report compact.
+
+Agent Response Summary:
+Read-only review of decisions.md against the working tree (atomic account rule, confidence.py), the dataset, output.csv, output_confidence.csv, sample_confidence.csv, the reports and log.txt; no model calls, no file edited except this log. Verified most numbers (70/70 intent, 10 NOT_APPLICABLE, 397 calls / USD 0.23, 40 certain COMPLETE, 7 flips in the 2026-06-08 wave, cases 39/53/55/61/63 statuses, 5 correct / 0 wrong account links on the samples, 2 cross-person account pairs, user_18's two audit_at times, 4 PDFs with text layers, AGENTS.md lines 31/298/308). Found stale or wrong figures: group D is now 167 deletion cases without an account step (entry 31 says 157; 366/386 was also measured before the atomic rule), categories/state on the samples are now 90/90 not 91/91 (entry 25), entry 37's "2 of the 7 correct COMPLETE answers" should be 3 of the 10 sample COMPLETE answers (sample_confidence.csv), entry 34's claim that the submitted output.csv came from the API run is misleading (32 rows and 9 statuses changed since tag v2 via cache-only runs), entry 39 cites a non-existent AGENTS.md section 4.4, and entry 5's "101 users gone" is 100 requests that use a historical email while every user_id is still in user_identities.csv. Listed missing decisions (headless CLI for development and API for the final run, no outside-law framing such as GDPR, B1 explanations, gold answers read only by the scorer, ship V1 whole then refine, stop long reviews, the "not 100% sure" motto correction) with drafts, plus readability edits. Verdict: usable after the numbered corrections.
+
+Actions:
+* Read .claude/agents/fable-reviewer.md, decisions.md, README.md, code/evaluation/evaluation_report.md, code/evaluation/usage_report.md, code/account_rule.py, code/config.py, code/plan.py (Auditor), code/contract.py (ordering), code/confidence.py and code/catalog_rule.py (grep), code/state.py (grep)
+* Ran read-only python checks over output.csv, output_confidence.csv, sample_confidence.csv, dataset/deletion_requests.csv, sample_output.csv, user_identities.csv, user_audit_log.csv; pypdf text-length check of the 4 PDFs; grep -rlw of sample account ids over dataset/evidence
+* Ran code/evaluation/stage_report.py (cache only); git tag; git show v2:output.csv diffed against the working-tree output.csv (saved in the scratchpad only)
+* Grepped and read log.txt entries on models, GDPR, case_01 admission, V1/V2 scope, fixes A/C, catalog rule, atomic rule, motto, security audit, certainty evaluation
+* Appended this entry to log.txt
+
+Context:
+tool=Claude Code
+model=claude-fable-5-1
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=Claude Code (claude-opus-5-5[1m])
+
+
+## [2026-10-25T10:31:24Z] Apply Fable's review of decisions.md
+
+User Prompt (verbatim, secrets redacted):
+(no new user message; background Fable review of decisions.md requested earlier completed)
+
+Agent Response Summary:
+Recomputed the disputed numbers on the current code (167 deletion cases without an account step, 61 of them COMPLETE; 388 of 411 candidates only in activity rows; 90/90 sample stages; 105 account-rule links; 100 requests use a historical email and no resolved user_id is missing from the snapshot) and applied Fable's corrections to entries 21, 25, 30, 31, 33, 34, 37 and 39, plus a fact-check note on the user's entry 5. Filled every empty "Breaks when", named the two doubled account pairs, recorded the motto wording, and added entries 41-46 (CLI then API, no outside law, simple English, gold read only by the scorer, finish then improve, review time budget). Noted that evaluation_report.md and usage_report.md still carry V2 numbers and need a refresh at the next package.
+
+Actions:
+* Ran a python recount over output.csv, the pipeline traces and the identity files; stage_report.py
+* Edited decisions.md
+
+Context:
+tool=Claude Code
+model=claude-opus-5-5[1m]
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
+
+## [2026-10-25T10:35:20Z] Accept HIGH server issue as documented; add SQL and file limits
+
+User Prompt (verbatim, secrets redacted):
+I agree on the high severity issue but add the the fix should not block the evalution , how will we let the organizer know about this host thing , they may run from separate host. I say we accept it but add as a known security issue that needs to be plugged before moving to prod. but i agree to fix the medium issue, we need to have limits
+
+Agent Response Summary:
+Accepted the HIGH viewer-server issue without a fix, documented as a known security issue that must be fixed before production in a new README section, decisions.md entry 40 and the evaluation report. Fixed the MEDIUM SQL issue in evidence_units.py: an SQLite authorizer blocks ATTACH/DETACH, load_extension and every PRAGMA except foreign_keys (the only one the supplied snapshots use), a 10-second limit per snapshot and a 20 MB limit per file, and any file that breaks a limit or fails to parse is skipped with a warning while the run continues. Probes confirmed ATTACH, other PRAGMAs and an endless query are blocked; the real run prints no warnings and output.csv is unchanged; 94 tests pass.
+
+Actions:
+* Edited code/evidence_units.py, code/tests/test_evidence_index.py, README.md, decisions.md, code/evaluation/evaluation_report.md
+* Ran SQL probes, main.py with stderr capture, cmp of output.csv, unit tests
+
+Context:
+tool=Claude Code
+model=claude-opus-5-5[1m]
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
+
+## [2026-10-25T10:36:32Z] Commit limits and docs; explain the two open MEDIUM issues
+
+User Prompt (verbatim, secrets redacted):
+yes commit and tell me about the other 2 medium issues
+
+Agent Response Summary:
+Committed the SQL and file limits, the known-security-issues documentation and the decisions.md updates. Explained the two open MEDIUM findings in simple English: screenshot identifiers are taken from the test model even when the control model disagrees (one screenshot affected today, by a name only), and the shipped answer cache is trusted without proof of where each answer came from; for each, gave the risk, the effect on today's output and a proposed fix for the user to decide.
+
+Actions:
+* git add and git commit; read code/evidence_units.py and the screenshot cache flags
+
+Context:
+tool=Claude Code
+model=claude-opus-5-5[1m]
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
