@@ -29,8 +29,10 @@ python3 -m venv .venv
 
 | Backend | How it runs | What it needs |
 |---|---|---|
-| `cli` (default) | Headless Claude Code, `claude -p` in an isolated temporary directory, no tools, settings or MCP | A logged-in `claude` CLI |
-| `api` | Anthropic SDK | `.venv/bin/pip install anthropic` and `ANTHROPIC_API_KEY` set in the environment (see `.env.example`; never commit `.env`) |
+| `api` (default; the real run) | Anthropic SDK; each answer records its `message_id` and `request_id` | `ANTHROPIC_API_KEY` set in the environment or `.env` (see `.env.example`; never commit `.env`) |
+| `cli` | Headless Claude Code, `claude -p` in an isolated temporary directory, no tools, settings or MCP; used while building | A logged-in `claude` CLI |
+
+The pipeline uses one model per task: `claude-haiku-5-5` for intent and for screenshots. No control model runs in the pipeline.
 
 ### Anthropic API setup (optional)
 
@@ -182,8 +184,8 @@ These come from an adversarial security audit (see `decisions.md`, entry 40). No
 |---|---|---|
 | HIGH | **The live viewer server (`code/server.py`) has no Host, Origin or token check.** While it runs, a web page open in the same browser could send `POST /api/run` and start a run. With `MODEL_BACKEND=api` that run is billed, and it rewrites `output.csv`. | **Accepted for this submission and documented.** No host restriction is added, so the viewer works from any host the organizers use. **Must be fixed before production:** add a Host/Origin allow-list and a per-start secret token required on `/api/run`, or run the viewer only without an API key. |
 | MEDIUM | SQL evidence was run with no limits (ATTACH could reach files on disk; no time limit). | **Fixed:** ATTACH/DETACH, `load_extension` and every PRAGMA except `foreign_keys` are blocked; there is a 10 s limit per snapshot and a 20 MB limit per file; a file that breaks a limit or fails to parse is skipped with a warning, and the run continues. |
-| MEDIUM | When the two screenshot models disagree, the test model's identifiers are still used. | Open: use only the identifiers both models agree on. One screenshot is affected today (a misspelt name, not an identifier). |
-| MEDIUM | The shipped answer cache (`code/cache/`) is trusted without proof of where each answer came from. | Open: store the API request id per answer and a checksum of the final run's cache. |
+| MEDIUM | A screenshot transcription could be wrong or steered by hidden text, and nothing cross-checks it. | **Accepted by design:** the real run uses one model per task (no control model). The control model stays available as an evaluation tool (`screenshot_extract.py --roles test,control`). |
+| MEDIUM | The shipped answer cache (`code/cache/`) could be edited by hand without anyone noticing. | **Reduced:** the real run uses the Anthropic API, and every API answer now records Anthropic's `message_id` and `request_id`, so it can be traced to a real call. A rerun with an empty `GHOST_CACHE_DIR` reproduces the answers from the API. |
 | LOW | Server robustness (request size, number of open event streams). | Open, same scope as the HIGH item. |
 
 ## Packaging

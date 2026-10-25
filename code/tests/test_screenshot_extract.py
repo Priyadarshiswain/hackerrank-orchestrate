@@ -2,11 +2,14 @@
 
 Run: python3 -m unittest discover -s code/tests
 """
+import os
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
+os.environ.setdefault("GHOST_OFFLINE", "1")  # tests never call a model
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import screenshot_extract as se  # noqa: E402
 from classify import IntentCache  # noqa: E402
@@ -45,7 +48,12 @@ class CompareTests(unittest.TestCase):
 
 
 class ExtractTests(unittest.TestCase):
+    """Fake backends only: model calls are allowed inside these tests."""
+
     def setUp(self):
+        self.online = mock.patch.dict(os.environ, {"GHOST_OFFLINE": "0"})
+        self.online.start()
+        self.addCleanup(self.online.stop)
         self.tmp = tempfile.TemporaryDirectory()
         root = Path(self.tmp.name)
         (root / "a.png").write_bytes(b"fake-image-a")
@@ -55,7 +63,7 @@ class ExtractTests(unittest.TestCase):
         self.calls = []
         self.answers = {}
 
-        def fake(model, image, system_prompt):
+        def fake(model, image, system_prompt, schema=None):
             self.calls.append(model)
             return dict(self.answers.get(model, GOOD)), {"input_tokens": 1, "output_tokens": 1, "cost_usd": 0.0}
 
@@ -67,7 +75,7 @@ class ExtractTests(unittest.TestCase):
         self.tmp.cleanup()
 
     def run_extract(self):
-        return se.extract_all(backend="cli", workers=1, cache=self.cache, manifest=self.manifest)
+        return se.extract_all(backend="cli", workers=1, cache=self.cache, manifest=self.manifest, version="v1")
 
     def test_agreeing_models_have_no_flags_and_cache_is_reused(self):
         r = self.run_extract()["evidence_x"]

@@ -2,11 +2,14 @@
 
 Run: python3 -m unittest discover -s code/tests
 """
+import os
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
+os.environ.setdefault("GHOST_OFFLINE", "1")  # tests never call a model
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import classify  # noqa: E402
 
@@ -26,13 +29,18 @@ class ValidateTests(unittest.TestCase):
 
 
 class PipelineTests(unittest.TestCase):
+    """Fake backends only: model calls are allowed inside these tests."""
+
     def setUp(self):
+        self.online = mock.patch.dict(os.environ, {"GHOST_OFFLINE": "0"})
+        self.online.start()
+        self.addCleanup(self.online.stop)
         self.tmp = tempfile.TemporaryDirectory()
         self.cache = classify.IntentCache(Path(self.tmp.name) / "cache.json")
         self.calls = []
         self.answers = {}
 
-        def fake(model, text, system_prompt):
+        def fake(model, text, system_prompt, schema=None):
             self.calls.append((model, text))
             if text == "boom":
                 raise RuntimeError("model down")

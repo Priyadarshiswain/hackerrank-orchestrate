@@ -3,10 +3,12 @@ case on its own (atomic: other requests are never read).
 
 Run: python3 -m unittest discover -s code/tests
 """
+import os
 import sys
 import unittest
 from pathlib import Path
 
+os.environ.setdefault("GHOST_OFFLINE", "1")  # tests never call a model
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from account_rule import AccountLinker  # noqa: E402
 

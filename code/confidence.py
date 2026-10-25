@@ -46,18 +46,32 @@ def _band(score, certain):
 
 
 def case_confidence(trace):
-    """(score, band, reasons) for one case trace from Auditor.run."""
+    """(score, band, reasons) for one case trace from Auditor.run. A model
+    answer that stayed below 90% even at the top of the model ladder caps the
+    score (intent: 0.50; a screenshot the case relies on: -0.20)."""
+    score, band, reasons = _case_confidence(trace)
+    flags = (trace.get("intent") or {}).get("flags", [])
+    if "LOW_MODEL_CONFIDENCE" in flags or "ALL_MODELS_FAILED" in flags:
+        score = min(score, 0.50)
+        reasons = reasons + ["intent: no model on the ladder reached 90% confidence"]
+    if trace.get("screen_flags"):
+        score = max(score - 0.20, 0.05)
+        reasons = reasons + [f"screenshot below 90% model confidence: {', '.join(trace['screen_flags'])}"]
+    if score != _case_confidence(trace)[0]:
+        band = "high" if score >= 0.80 else "medium" if score >= 0.60 else "low"
+    return round(score, 2), band, reasons
+
+
+def _case_confidence(trace):
     status, reasons = trace["status"], []
     request = trace["request"]
     audit_at = request["audit_at"]
     if status == "NOT_APPLICABLE":
         if not trace["identity"]["user_id"]:
             return 0.90, "high", ["email matches no user, current or historical"]
-        flags = trace["intent"]["flags"]
         answer = trace["intent"]["answer"] or {}
-        if "MODEL_DISAGREEMENT" in flags:
-            return 0.60, "medium", ["intent models disagree"]
-        return 0.95, "high", [f"intent model: not a deletion request ({answer.get('intent', '?')})"]
+        model = trace["intent"].get("model", "")
+        return 0.95, "high", [f"intent model {model}: not a deletion request ({answer.get('intent', '?')})"]
 
     states = trace.get("states", [])
     if status == "INCOMPLETE":

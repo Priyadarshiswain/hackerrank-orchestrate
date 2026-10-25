@@ -4,9 +4,10 @@ Usage:
     python3 code/evaluation/usage_summary.py [CACHE_DIR] [REQUESTS.csv]
 
 CACHE_DIR defaults to code/cache, REQUESTS to dataset/deletion_requests.csv.
-Counts the model calls a run over REQUESTS needs from that cache: one intent
-call per distinct request text (active prompt, test model) and the screenshot
-transcriptions (test and control model). Usage is what each call recorded
+Counts the model calls a run over REQUESTS needs from that cache: the intent
+calls per distinct request text on every rung of the model ladder that was
+used (active prompt), and the screenshot transcriptions (active prompt, every
+rung used). Usage is what each call recorded
 (Anthropic API usage for the api backend, the CLI's report for cli).
 """
 import json
@@ -15,7 +16,9 @@ from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from classify import ACTIVE_PROMPT, MODELS, namespace, text_key  # noqa: E402
+from classify import ACTIVE_PROMPT, namespace, text_key  # noqa: E402
+from escalate import LADDER  # noqa: E402
+from screenshot_extract import ACTIVE_PROMPT as SCREENSHOT_PROMPT, prompt_id as screenshot_prompt_id  # noqa: E402
 from contract import DATASET_DIR, REPO_ROOT, read_csv  # noqa: E402
 
 
@@ -25,16 +28,19 @@ def summarize(cache_dir, requests_path):
     shots = json.loads((cache_dir / "screenshot_cache.json").read_text(encoding="utf-8"))
     requests = read_csv(requests_path)
     rows = []
-    model = MODELS["test"]
-    entries = intent.get(namespace(model, ACTIVE_PROMPT), {})
     keys = {text_key(r["request_text"].strip()) for r in requests}
-    used = [entries[k] for k in keys if k in entries]
-    rows.append(("intent classification", model, used, len(keys) - len(used)))
+    for model in LADDER:  # each rung of the model ladder that was called
+        entries = intent.get(namespace(model, ACTIVE_PROMPT), {})
+        used = [entries[k] for k in keys if k in entries]
+        if used or model == LADDER[0]:
+            rows.append(("intent classification", model, used, len(keys) - len(used) if model == LADDER[0] else 0))
+    shot_prompt = screenshot_prompt_id(SCREENSHOT_PROMPT)
     for ns, by_image in sorted(shots.items()):
-        rows.append(("screenshot transcription", ns.split("|")[0], list(by_image.values()), 0))
+        if ns.endswith("|" + shot_prompt):
+            rows.append(("screenshot transcription", ns.split("|")[0], list(by_image.values()), 0))
     table = []
     for task, model, used, missing in rows:
-        u = [e.get("usage", {}) for e in used]
+        u = [a for e in used for a in e.get("attempts", [e.get("usage", {})])]
         table.append({"task": task, "model": model, "calls": len(used), "missing": missing,
                       "backends": sorted({e.get("backend", "") for e in used}),
                       "input_tokens": sum(x.get("input_tokens", 0) for x in u),

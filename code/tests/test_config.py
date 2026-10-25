@@ -9,6 +9,7 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
+os.environ.setdefault("GHOST_OFFLINE", "1")  # tests never call a model
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import config  # noqa: E402
 

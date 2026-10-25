@@ -28,7 +28,7 @@ from concurrent.futures import ThreadPoolExecutor
 from account_rule import ACCOUNT, AccountLinker
 from catalog_rule import CatalogLinker
 from categories import build_categorizer
-from classify import ACTIVE_PROMPT, MODELS, IntentCache, classify_requests, namespace, prompt_id
+from classify import ACTIVE_PROMPT, IntentCache, classify_escalating, prompt_id
 from contract import finalize_steps, make_step
 from discover import build_discoverer, person_tokens
 from identity import load_and_resolve
@@ -144,14 +144,14 @@ class Auditor:
         self.catalog = CatalogLinker(self.disc.index)
 
     def classify(self, request):
-        """Intent for one request (model call, or its cached answer) with the call record."""
-        rows, _ = classify_requests([request], roles=("test",), cache=self.cache,
-                                    backend=self.backend, workers=1)
-        model = MODELS["test"]
-        entry = self.cache.get(namespace(model, ACTIVE_PROMPT), rows[0]["text_key"]) or {}
-        return {"model": model, "prompt": ACTIVE_PROMPT, "prompt_id": prompt_id(ACTIVE_PROMPT),
-                "answer": rows[0]["test"], "flags": rows[0]["flags"],
-                "backend": entry.get("backend", ""), "usage": entry.get("usage", {})}
+        """Intent for one request up the model ladder (escalate.py), with every
+        attempt recorded (model, confidence, tokens, API request id)."""
+        result = classify_escalating(request["request_text"], self.backend, self.cache)
+        usage = {k: sum(a["usage"].get(k, 0) for a in result["attempts"])
+                 for k in ("input_tokens", "output_tokens", "cost_usd")}
+        return {"model": result["model"], "prompt": ACTIVE_PROMPT, "prompt_id": prompt_id(ACTIVE_PROMPT),
+                "answer": result["answer"], "confidence": result["confidence"], "flags": result["flags"],
+                "attempts": result["attempts"], "backend": self.backend, "usage": usage}
 
     def _add_catalog(self, request, found, audit_at):
         """Catalog rule: add records a confirmed catalog row links to this case.
@@ -223,6 +223,10 @@ class Auditor:
         done("state", f"{sum(s['compliant'] is False for s in states)} violations")
         status, steps = case_steps(states, audit_at)
         trace.update(status=status, steps=steps)
+        # screenshots this case relies on whose model ladder ended below 90%
+        trace["screen_flags"] = sorted({
+            o["source_id"] for st in states for o in st["observations"] if o["kind"] == "png"
+            and "LOW_MODEL_CONFIDENCE" in self.disc.index.units[o["unit_id"]]["context"].get("flags", [])})
         done("steps", f"{status} · {len(steps)} steps")
         return trace
 

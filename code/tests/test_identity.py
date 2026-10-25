@@ -2,10 +2,12 @@
 
 Run: python3 -m unittest discover -s code/tests
 """
+import os
 import sys
 import unittest
 from pathlib import Path
 
+os.environ.setdefault("GHOST_OFFLINE", "1")  # tests never call a model
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from identity import (EMAIL_NOT_VALID_AT_AUDIT, SNAPSHOT_SOURCE, UNMATCHED_EMAIL,  # noqa: E402
                       build_histories, email_sha256, resolve_cases)

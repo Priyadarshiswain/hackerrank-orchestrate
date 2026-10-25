@@ -2791,3 +2791,47 @@ repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
 
+
+## [2026-10-25T10:38:30Z] Real run: API only, one model per task; record API request ids
+
+User Prompt (verbatim, secrets redacted):
+no in real run we will use apis only and not use control model
+
+Agent Response Summary:
+Applied the user's decision: the pipeline now transcribes screenshots with the test model only (the control model remains an optional evaluation tool), the default backend is api (cached answers still need no key), and every API answer records Anthropic's message_id and request_id for provenance. This removes MEDIUM 1 (no ignored disagreement) and reduces MEDIUM 2 (answers traceable to real calls; a rerun with an empty cache reproduces them). output.csv is unchanged and tests pass; README, .env.example and decisions.md (new entry 47) are updated. The user's own .env still sets MODEL_BACKEND from the earlier template and should be set to api.
+
+Actions:
+* Edited code/evidence_units.py, code/config.py, code/classify.py, code/screenshot_extract.py, .env.example, README.md, decisions.md
+* Ran main.py, cmp of output.csv, unit tests; checked the default backend
+
+Context:
+tool=Claude Code
+model=claude-opus-5-5[1m]
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
+
+## [2026-10-25T10:50:22Z] Model ladder for every AI call; measured on the API
+
+User Prompt (verbatim, secrets redacted):
+lets do this way vision model use can we have a confidence score, and if confidence is below say 90% we move to a better model, can we do this practice for all ai model call. we start with haiku< sonet< opus< fable
+yes do it
+(mid-turn) if the confidence is above 0.9 the ladder stops
+
+Agent Response Summary:
+Built code/escalate.py: every intent and screenshot call climbs claude-haiku-5-5, sonnet-5-5, opus-5-5, fable-5-1 and stops at the first valid answer with self-reported confidence of 0.90 or more; otherwise the most confident answer is kept and flagged LOW_MODEL_CONFIDENCE, which lowers the case's confidence score. Added intent prompt v5 and screenshot prompt v2 with a confidence field (the API rejects minimum/maximum on numbers, so the range is checked in code), every rung is cached per model and prompt, and the trace, viewer and usage script show the ladder. Mistake: the dataset tests made real headless-CLI calls (about USD 0.18) before an offline switch existed; tests now set GHOST_OFFLINE=1 and cannot call a model. On the API: the 70 intent cases are 70/70 with Haiku alone and with the ladder (68 stop at Haiku, 2 climb to Fable with the same answer); 10 of 11 screenshots climb (9 to Sonnet, 1 to Opus); the sample score is unchanged (F1 0.940) and the sample run cost about USD 0.26.
+
+Actions:
+* Created code/escalate.py; edited code/classify.py, code/screenshot_extract.py, code/evidence_units.py, code/plan.py, code/confidence.py, code/config.py, code/trace_export.py, code/ui/viewer.html, code/evaluation/usage_summary.py, code/evaluation/intent_eval.py and the tests
+* Ran intent_eval.py --ladder --backend api, main.py --sample --backend api, usage_summary.py, unit tests
+
+Context:
+tool=Claude Code
+model=claude-opus-5-5[1m]
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
