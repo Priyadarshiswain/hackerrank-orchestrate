@@ -5,21 +5,18 @@ Usage:
     python3 code/main.py --sample              # 32 sample cases -> sample_predictions.csv
     python3 code/main.py --requests PATH --out PATH
 
-SCAFFOLD: audit_case() is a placeholder until the pipeline (request
-classification, identity resolution, evidence parsing, policy application,
-step planning) is built. It currently marks every case NOT_APPLICABLE so the
-end-to-end run, validator and evaluator can be exercised.
+Pipeline: intent classification (classify.py) -> identity resolution
+(identity.py) -> evidence units and index (evidence_units.py,
+evidence_index.py) -> discovery (discover.py) -> categories, observations and
+state at audit_at (categories.py, observe.py, state.py) -> status and steps
+(plan.py). Model calls go through classify.py / screenshot_extract.py and are
+cached under code/cache/.
 """
 import argparse
 import sys
 
-from contract import DATASET_DIR, OUTPUT_PATH, REPO_ROOT, finalize_steps, read_csv, write_output
-
-
-def audit_case(request):
-    """Return (deletion_status, steps) for one request. Placeholder."""
-    steps = []
-    return "NOT_APPLICABLE", finalize_steps(steps)
+from contract import DATASET_DIR, OUTPUT_PATH, REPO_ROOT, read_csv, write_output
+from plan import Auditor
 
 
 def main(argv=None):
@@ -27,6 +24,8 @@ def main(argv=None):
     ap.add_argument("--sample", action="store_true", help="run on the 32 sample requests")
     ap.add_argument("--requests", help="requests CSV path")
     ap.add_argument("--out", help="output CSV path")
+    ap.add_argument("--backend", default="cli", choices=("cli", "api"),
+                    help="model backend for uncached intent calls")
     args = ap.parse_args(argv)
 
     if args.sample:
@@ -38,7 +37,9 @@ def main(argv=None):
     requests_path = args.requests or requests_path
     out_path = args.out or out_path
 
-    rows = [(r["case_id"], *audit_case(r)) for r in read_csv(requests_path)]
+    requests = read_csv(requests_path)
+    auditor = Auditor(requests, requests_path, backend=args.backend)
+    rows = [(r["case_id"], *auditor.audit(r)) for r in requests]
     write_output(rows, out_path)
     print(f"wrote {len(rows)} rows to {out_path}")
     return 0
