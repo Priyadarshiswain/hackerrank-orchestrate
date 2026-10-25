@@ -29,12 +29,10 @@ from account_rule import ACCOUNT, AccountLinker
 from catalog_rule import CatalogLinker
 from categories import build_categorizer
 from classify import ACTIVE_PROMPT, MODELS, IntentCache, classify_requests, namespace, prompt_id
-from contract import DATASET_DIR, finalize_steps, make_step, read_csv
+from contract import finalize_steps, make_step
 from discover import build_discoverer, person_tokens
 from identity import load_and_resolve
 from state import StateReader
-
-REQUEST_FILES = (DATASET_DIR / "sample_deletion_requests.csv", DATASET_DIR / "deletion_requests.csv")
 
 # required action -> (finding, remediation, verification)
 ACTIONS = {
@@ -89,14 +87,20 @@ def proof_rank(obs):
     return 0 if obs["unit_id"].endswith("#omission") else 1  # JSON extract vs SQL capture
 
 
-def cite(observations, audit_at, test):
-    """source_id of the best citable observation passing test, else "":
-    the strongest kind of proof, then the latest."""
+def best_proof(observations, audit_at, test):
+    """The best citable observation passing test, or None: the strongest kind
+    of proof, then the latest."""
     usable = [o for o in observations
               if o["observed_at"] <= audit_at and o["captured_at"] <= audit_at and test(o)]
     if not usable:
-        return ""
-    return max(usable, key=lambda o: (proof_rank(o), o["observed_at"], o["unit_id"]))["source_id"]
+        return None
+    return max(usable, key=lambda o: (proof_rank(o), o["observed_at"], o["unit_id"]))
+
+
+def cite(observations, audit_at, test):
+    """source_id of the best citable observation passing test, else ""."""
+    best = best_proof(observations, audit_at, test)
+    return best["source_id"] if best else ""
 
 
 def case_steps(states, audit_at):
@@ -136,20 +140,18 @@ class Auditor:
         self.identity = {r["case_id"]: r for r in load_and_resolve(requests_path)}
         self.disc = build_discoverer(screenshot_backend=backend)
         self.reader = StateReader(self.disc, build_categorizer(self.disc))
-        self.accounts = AccountLinker(self.disc, self._deletion_cases())
+        self.accounts = AccountLinker(self.disc)
         self.catalog = CatalogLinker(self.disc.index)
 
-    def _deletion_cases(self):
-        """Every request in both request files whose email resolves to a user
-        (inputs only), for the account rule's cross-case elimination. No intent
-        filter: the non-deletion requests never win a candidate (checked: the
-        same 121 links either way), and this keeps model calls out of the
-        shared preparation."""
-        cases = []
-        for path in REQUEST_FILES:
-            identity = {r["case_id"]: r for r in load_and_resolve(path)}
-            cases += [(r, identity[r["case_id"]]) for r in read_csv(path) if identity[r["case_id"]]["user_id"]]
-        return cases
+    def classify(self, request):
+        """Intent for one request (model call, or its cached answer) with the call record."""
+        rows, _ = classify_requests([request], roles=("test",), cache=self.cache,
+                                    backend=self.backend, workers=1)
+        model = MODELS["test"]
+        entry = self.cache.get(namespace(model, ACTIVE_PROMPT), rows[0]["text_key"]) or {}
+        return {"model": model, "prompt": ACTIVE_PROMPT, "prompt_id": prompt_id(ACTIVE_PROMPT),
+                "answer": rows[0]["test"], "flags": rows[0]["flags"],
+                "backend": entry.get("backend", ""), "usage": entry.get("usage", {})}
 
     def _add_catalog(self, request, found, audit_at):
         """Catalog rule: add records a confirmed catalog row links to this case.
@@ -168,27 +170,18 @@ class Auditor:
                 found["weak"].remove(rid)
         return extra, summary
 
-    def _add_account(self, case_id, found, audit_at):
-        """Account rule: list the worker-row account when evidence gave none."""
-        if any(ACCOUNT.match(rid) for rid in found["resources"]):
-            return
-        rid = self.accounts.link(case_id)
-        if not rid:
-            return
-        rows = [u["unit_id"] for u in self.accounts.rows if u["fields"]["resource_id"] == rid]
-        found["resources"][rid] = rows
-        found["evidence"][rid] = [{"unit_id": u, **self.disc.time_flags(u, audit_at)}
-                                  for u in self.disc.index.lookup("ids", rid)]
-
-    def classify(self, request):
-        """Intent for one request (model call, or its cached answer) with the call record."""
-        rows, _ = classify_requests([request], roles=("test",), cache=self.cache,
-                                    backend=self.backend, workers=1)
-        model = MODELS["test"]
-        entry = self.cache.get(namespace(model, ACTIVE_PROMPT), rows[0]["text_key"]) or {}
-        return {"model": model, "prompt": ACTIVE_PROMPT, "prompt_id": prompt_id(ACTIVE_PROMPT),
-                "answer": rows[0]["test"], "flags": rows[0]["flags"],
-                "backend": entry.get("backend", ""), "usage": entry.get("usage", {})}
+    def _add_account(self, request, row, found, audit_at):
+        """Account rule: list the worker-row account when evidence gave none.
+        Uses only this request and the evidence (atomic)."""
+        evidence_accounts = {rid for rid in found["resources"] if ACCOUNT.match(rid)}
+        decision = self.accounts.decide(request, row, evidence_accounts)
+        rid = decision["linked"]
+        if rid:
+            rows = [u["unit_id"] for u in self.accounts.rows if u["fields"]["resource_id"] == rid]
+            found["resources"][rid] = rows
+            found["evidence"][rid] = [{"unit_id": u, **self.disc.time_flags(u, audit_at)}
+                                      for u in self.disc.index.lookup("ids", rid)]
+        return decision
 
     def run(self, request, on_stage=None):
         """Run one request through every stage; on_stage(stage, summary), if
@@ -212,11 +205,18 @@ class Auditor:
             done("steps", "NOT_APPLICABLE")
             return trace
         trace["discovery"] = found = self.disc.discover(row, audit_at)
-        self._add_account(case_id, found, audit_at)
-        trace["account_rule"] = self.accounts.explain(case_id)
+        trace["account_rule"] = decision = self._add_account(request, row, found, audit_at)
+        person = person_tokens(row)
+        if not decision["linked"] and not decision["evidence_accounts"]:
+            # state of each unlinked candidate: if every one is gone at audit_at,
+            # the person's account is gone too (used by the confidence score only)
+            decision["candidate_states"] = {
+                rid: self.reader.resource_state(
+                    rid, [{"unit_id": u, **self.disc.time_flags(u, audit_at)} for u in self.disc.index.lookup("ids", rid)],
+                    person, audit_at)["compliant"]
+                for rid in decision["window_candidates"]}
         extra, trace["catalog_rule"] = self._add_catalog(request, found, audit_at)
         done("discovery", f"{len(found['resources'])} records")
-        person = person_tokens(row)
         trace["states"] = states = [
             self.reader.resource_state(rid, found["evidence"][rid], person, audit_at, units, extra.get(rid, ()))
             for rid, units in sorted(found["resources"].items())]
