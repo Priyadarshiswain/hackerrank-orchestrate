@@ -55,11 +55,25 @@ From the repository root (the folder that contains `dataset/`):
 .venv/bin/python -m unittest discover -s code/tests                # 71 unit tests
 ```
 
-### Trace viewer (visual check of every step)
+### Live viewer (run from the browser)
 
 ```bash
-.venv/bin/python code/trace.py --sample      # -> trace/sample_trace.html (with gold comparison)
-.venv/bin/python code/trace.py               # -> trace/evaluation_trace.html (518 cases)
+.venv/bin/python code/server.py              # then open http://127.0.0.1:8765
+```
+
+The page has these controls:
+- **Run sample (32)** and **Run full (518)** start a run.
+- **Model backend** chooses `cli` (headless `claude -p`) or `api`.
+- **Fresh model calls** uses an empty cache under `cache_live/`, so every call is really made.
+- **Workers** sets how many cases run at the same time.
+
+Each case's stages appear as they finish, and finished cases can be opened with their full trace. A run writes the same files as `main.py`. A sample run ends with its score, and a full run ends with the validator result. The server listens on 127.0.0.1 only.
+
+### Trace viewer (static file, visual check of every step)
+
+```bash
+.venv/bin/python code/trace_export.py --sample      # -> trace/sample_trace.html (with gold comparison)
+.venv/bin/python code/trace_export.py               # -> trace/evaluation_trace.html (518 cases)
 ```
 
 Open the HTML file in a browser. For each case it shows each pipeline stage:
@@ -76,7 +90,7 @@ Click any evidence id to read the unit; screenshots show their AI transcription.
 Options for `code/main.py`:
 - `--requests PATH` and `--out PATH` run another request file;
 - `--backend api` uses the SDK for any uncached model call (default: `MODEL_BACKEND`, else `cli`);
-- `--verbose` prints each case as it finishes. Each case runs through the whole pipeline on its own, and `output.csv` is rewritten after every case.
+- `--verbose` prints each case as it finishes; `--workers N` runs N cases at the same time (default 4). Each case still runs through the whole pipeline on its own, and `output.csv` is rewritten, sorted, after every case, so the result does not depend on the worker count.
 
 A full run takes about 1 second with the cache. Requests are processed one at a time through the same pipeline, and the output is deterministic: rows are sorted by `case_id`, steps follow the contract order, and JSON is serialized with sorted keys.
 
@@ -139,7 +153,8 @@ deletion_requests.csv
 | `evaluation/` | copies of the two reports at the top level (AGENTS.md 6.8 path), made by `code/package.py` |
 | `code/package.py` | builds `code.zip` |
 | `code/config.py`, `code/check_api.py` | `.env` loading, backend and cache settings; API smoke test |
-| `code/trace.py`, `code/ui/viewer.html` | per-case trace export and the standalone viewer page |
+| `code/trace_export.py`, `code/ui/viewer.html` | per-case trace export and the viewer page |
+| `code/server.py` | live viewer server: run the pipeline from the browser |
 | `code/tests/` | unit tests |
 
 ## Results (V1, 32 labelled samples)

@@ -58,8 +58,9 @@ def location(unit, obs):
 class Omissions:
     """Snapshots that declare which systems they cover, for absence by omission."""
 
-    def __init__(self, index):
+    def __init__(self, index, prefix_system=None):
         self.index = index
+        self.prefix_system = prefix_system or {}
         self.covers = defaultdict(list)  # system -> [(source_id, captured_at, unit_id, ids in it)]
         by_source = defaultdict(set)
         for uid, unit in index.units.items():
@@ -67,9 +68,28 @@ class Omissions:
         for uid, unit in index.units.items():
             if unit["kind"] == "sql_scope":
                 ids = set().union(*(index.tokens[u]["ids"] for u in by_source[unit["source_id"]]))
-                for system, at in unit["context"].get("snapshot_scope", {}).items():
+                scope = unit["context"].get("snapshot_scope", {})
+                for system, at in scope.items():
                     self.covers[system].append((unit["source_id"], at, uid, ids))
+                if not scope:
+                    self._single_type_tables(unit, by_source, ids)
         self._json_snapshots(by_source)
+
+    def _single_type_tables(self, scope_unit, by_source, ids):
+        """A SQL capture without snapshot_scope covers a system through tables
+        that hold one record type only (e.g. customer_profiles_primary: all
+        account_ rows), at the file's capture time."""
+        prefixes = defaultdict(set)  # table -> resource prefixes of its rows
+        for uid in by_source[scope_unit["source_id"]]:
+            unit = self.index.units[uid]
+            if unit["kind"] == "sql" and unit["fields"].get("resource_id"):
+                prefixes[unit["fields"]["table"]].add(unit["fields"]["resource_id"].rsplit("_", 1)[0])
+        for table, found in prefixes.items():
+            if len(found) == 1 and not REPLICA.search(table):
+                system = self.prefix_system.get(next(iter(found)))
+                if system:
+                    self.covers[system].append((scope_unit["source_id"], scope_unit["captured_at"],
+                                                f"{scope_unit['source_id']}#table={table}", ids))
 
     def _json_snapshots(self, by_source):
         """JSON snapshots: records grouped under an object naming data_store."""
@@ -166,7 +186,7 @@ def compliant(action, state):
 class StateReader:
     def __init__(self, disc, categorizer):
         self.disc, self.cat = disc, categorizer
-        self.omissions = Omissions(disc.index)
+        self.omissions = Omissions(disc.index, categorizer.systems)
 
     def resource_state(self, rid, evidence, person, audit_at, link_units=()):
         info = self.cat.describe(rid, link_units)
@@ -190,9 +210,16 @@ class StateReader:
                            for e in evidence)
         if not direct and not later_delete and info["required_action"] in ("DELETE", "REDACT", "ANONYMIZE"):
             template = {"captured_at": "", "fields": {}, "context": {}}
+            # a snapshot taken before the record's last recorded deletion
+            # step cannot show that the deletion worked
+            claims = [self.disc.index.units[e["unit_id"]]["observed_at"] for e in evidence
+                      if self.disc.index.units[e["unit_id"]]["kind"] == "activity"
+                      and self.disc.index.units[e["unit_id"]]["observed_at"] <= audit_at]
+            since = max(claims, default="")
             for obs in self.omissions.absent_obs(rid, info["system_id"], template):
-                obs["location"] = "primary"
-                observations.append(obs)
+                if obs["observed_at"] >= since:
+                    obs["location"] = "primary"
+                    observations.append(obs)
         state = combine(observations, audit_at)
         return {**info, **state, "compliant": compliant(info["required_action"], state),
                 "observations": observations}

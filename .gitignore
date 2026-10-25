@@ -19,3 +19,9 @@ code/cache/*.tmp
 
 # Trace viewer output (copies dataset content)
 trace/
+
+# Fresh model-answer cache for API runs
+cache_api/
+
+# Fresh caches from live viewer runs
+cache_live/
