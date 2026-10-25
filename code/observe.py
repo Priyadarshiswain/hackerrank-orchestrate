@@ -132,10 +132,13 @@ def observe_record(unit, rid, person):
 
 
 def observe_log(unit, rid, person):
-    if rid not in LOG_RESOURCE.findall(unit["text"]):
+    # Some exports nest the fields in a quoted message with escaped quotes
+    # (message="... resource_id=\"account_7107\" rows=\"1\""); unescape first.
+    raw = unit["text"].replace('\\"', '"')
+    if rid not in LOG_RESOURCE.findall(raw):
         return None
     obs = new_obs(unit, rid)
-    text = QUERY_KEYS.sub("", unit["text"])
+    text = QUERY_KEYS.sub("", raw)
     kv = dict(LOG_KV.findall(text))
     if kv.get("rows") == "0" or kv.get("http_status") == "404" or kv.get("total_hits") == "0":
         obs["present"] = False

@@ -24,6 +24,13 @@ class ObserveTests(unittest.TestCase):
                                 "resource_id=account_7 lookup_key=a@x.com rows=0 http_status=404"), "account_7", PERSON)
         self.assertEqual((o["present"], o["direct"]), (False, []))
 
+    def test_log_with_escaped_quotes_in_a_message_field(self):
+        line = ('2026-06-08T09:51:49Z requestId=tr-1 level=DEBUG function=account_service message="instance=\\"a-5\\" '
+                'resource_id=\\"account_7\\" event=\\"profile_lookup_completed\\" rows=\\"1\\" http_status=\\"200\\""')
+        self.assertTrue(observe(unit("log", line), "account_7", PERSON)["present"])
+        flow = line.replace("account_7", "data_flow_7").replace('rows=\\"1\\"', 'enabled=\\"true\\"')
+        self.assertTrue(observe(unit("log", flow), "data_flow_7", PERSON)["flow_active"])
+
     def test_log_mentioning_another_resource_is_not_about_it(self):
         self.assertIsNone(observe(unit("log", "x resource_id=search_1 source_resource_id=account_7"),
                                   "account_7", PERSON))
