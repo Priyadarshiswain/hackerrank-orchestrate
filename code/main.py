@@ -17,7 +17,7 @@ import sys
 
 import config
 from contract import DATASET_DIR, OUTPUT_PATH, REPO_ROOT, read_csv, write_output
-from plan import Auditor
+from plan import Auditor, run_cases
 
 
 def main(argv=None):
@@ -29,6 +29,8 @@ def main(argv=None):
     ap.add_argument("--backend", default=config.backend(), choices=config.BACKENDS,
                     help="model backend for uncached model calls (default: MODEL_BACKEND or cli)")
     ap.add_argument("--verbose", action="store_true", help="print each case as it finishes")
+    ap.add_argument("--workers", type=int, default=4,
+                    help="cases run at the same time (default 4); each case still runs every stage on its own")
     args = ap.parse_args(argv)
 
     if args.sample:
@@ -43,11 +45,14 @@ def main(argv=None):
     requests = read_csv(requests_path)
     auditor = Auditor(requests_path, backend=args.backend)
     rows = []
-    for i, request in enumerate(requests, 1):  # one case at a time, written as it finishes
-        rows.append((request["case_id"], *auditor.audit(request)))
+
+    def done(count, request, trace):  # output.csv is rewritten, sorted, as each case finishes
+        rows.append((request["case_id"], trace["status"], trace["steps"]))
         write_output(rows, out_path)
         if args.verbose:
-            print(f"[{i}/{len(requests)}] {request['case_id']} {rows[-1][1]} ({len(rows[-1][2])} steps)")
+            print(f"[{count}/{len(requests)}] {request['case_id']} {trace['status']} ({len(trace['steps'])} steps)")
+
+    run_cases(auditor, requests, workers=args.workers, on_done=done)
     print(f"wrote {len(rows)} rows to {out_path}")
     return 0
 

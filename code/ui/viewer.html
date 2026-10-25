@@ -80,6 +80,16 @@ dialog { border: 1px solid var(--line); border-radius: 10px; background: var(--p
   width: min(900px, 94vw); max-height: 85vh; padding: 0; }
 dialog .head { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--line); }
 dialog .content { padding: 12px 14px; overflow: auto; max-height: calc(85vh - 50px); }
+#live { display: none; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%; }
+#live.on { display: flex; }
+#live button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+#live button:disabled { opacity: .5; cursor: not-allowed; }
+#live select { width: auto; margin: 0; padding: 6px 8px; }
+.bar { flex: 1 1 200px; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; min-width: 120px; }
+.bar > div { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+#runmsg { font-size: 13px; color: var(--muted); }
+.case.running { border: 1px dashed var(--accent); }
+.stages { font-size: 12px; color: var(--muted); padding: 2px 8px 6px; }
 @media (max-width: 760px) {
   .layout { grid-template-columns: 1fr; }
   aside { position: static; max-height: 260px; border-right: 0; border-bottom: 1px solid var(--line); }
@@ -91,6 +101,16 @@ dialog .content { padding: 12px 14px; overflow: auto; max-height: calc(85vh - 50
   <h1>Deletion Audit Trace</h1>
   <span class="stat" id="summary"></span>
   <button id="theme" type="button">Theme</button>
+  <div id="live">
+    <button type="button" class="primary" id="run-sample">Run sample (32)</button>
+    <button type="button" id="run-full">Run full (518)</button>
+    <label class="stat">Model backend
+      <select id="backend"><option value="cli">headless claude (cli)</option><option value="api">Anthropic API</option></select></label>
+    <label class="stat"><input type="checkbox" id="fresh" style="width:auto;margin:0 4px 0 0">Fresh model calls</label>
+    <label class="stat">Workers <input type="number" id="workers" min="1" max="16" value="4" style="width:56px;margin:0;padding:5px"></label>
+    <div class="bar"><div id="progress"></div></div>
+    <span id="runmsg">Ready. Answers already in the cache are reused.</span>
+  </div>
 </header>
 <div class="layout">
   <aside>
@@ -112,7 +132,8 @@ dialog .content { padding: 12px 14px; overflow: auto; max-height: calc(85vh - 50
 <script id="trace-data" type="application/json">__TRACE_DATA__</script>
 <script>
 const DATA = JSON.parse(document.getElementById("trace-data").textContent);
-const CASES = DATA.cases, UNITS = DATA.units;
+let CASES = DATA.cases, UNITS = DATA.units;
+let RUNNING = {};  // case_id -> stages, for cases in progress (live mode)
 const $ = (s) => document.querySelector(s);
 const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
 const tag = (text, cls) => `<span class="tag ${esc(cls || text)}">${esc(text)}</span>`;
@@ -151,7 +172,9 @@ function matches(c, q, f) {
 
 function renderList() {
   const q = $("#search").value.trim().toLowerCase(), f = $("#filter").value;
-  $("#list").innerHTML = CASES.filter((c) => matches(c, q, f)).map((c) => {
+  const running = Object.entries(RUNNING).map(([id, stages]) => `<div class="case running"><span class="mono">${esc(id)}</span>${tag("running…", "warn")}</div>
+    <div class="stages">${stages.map((s) => `${esc(s.stage)}: ${esc(s.summary)}`).join("<br>")}</div>`).join("");
+  $("#list").innerHTML = running + CASES.filter((c) => matches(c, q, f)).map((c) => {
     const g = c.gold ? (c.gold.exact ? tag("exact", "ok") : c.gold.status_ok ? tag("steps", "warn") : tag("status", "bad")) : "";
     return `<div class="case ${current === c.case_id ? "active" : ""}" data-case="${esc(c.case_id)}">
       <span class="mono">${esc(c.case_id)}</span><span>${tag(c.status === "NOT_APPLICABLE" ? "N/A" : c.status, c.status)} ${g}</span></div>`;
@@ -169,6 +192,15 @@ function stepTable(steps, marks) {
     steps.map((s) => `<tr class="${marks ? marks(key(s)) : ""}"><td>${s.step_no}</td><td>${esc(s.phase)}</td><td>${esc(s.system_id)}</td>
       <td class="mono">${esc(s.resource_id)}</td><td>${esc(s.operation)}</td><td>${esc(s.state)}</td>
       <td>${s.evidence_id ? unitLinkSource(s.evidence_id) : `<span class="muted">""</span>`}</td></tr>`).join("") + `</table>`;
+}
+
+function accountRule(a) {
+  if (!a) return "";
+  if (a.evidence_accounts.length) return `<p class="muted">Account rule: not needed, evidence names the account (${a.evidence_accounts.map(esc).join(", ")}).</p>`;
+  const cands = a.window_candidates.length ? a.window_candidates.map(esc).join(", ") : "none";
+  return `<p>${tag("account rule", "na")} worker DELETE_RECORD rows on account_service between the request and the report (+10 min),
+    with a result matching the reported status, minus accounts claimed elsewhere — candidates: <span class="mono">${cands}</span> →
+    ${a.linked ? `linked <b class="mono">${esc(a.linked)}</b> (only one left after elimination)` : `${tag("not linked", "warn")} (more than one or none left)`}</p>`;
 }
 
 function unitLinkSource(sourceId) {
@@ -216,6 +248,7 @@ function renderCase(c) {
     }).join("");
     parts.push(card(4, "Discovery", `<p class="muted">Hop 1 finds units holding the person's identifiers (${(d.hop1 || []).length} units); hop 2 gathers every unit that names each record found.</p>
       <table><tr><th>Record</th><th>Linked to the person by</th><th>Evidence about it</th></tr>${rows || `<tr><td colspan="3" class="muted">No records found.</td></tr>`}</table>
+      ${accountRule(c.account_rule)}
       ${(d.weak || []).length ? `<p>${tag("not listed", "warn")} linked only by activity claims: <span class="mono">${d.weak.map(esc).join(", ")}</span></p>` : ""}
       ${(d.ambiguous || []).length ? `<p>${tag("ambiguous", "warn")} units naming another known person: ${d.ambiguous.map(unitLink).join(", ")}</p>` : ""}
       <details><summary class="muted">Hop-1 units</summary><p>${(d.hop1 || []).map(unitLink).join(" · ")}</p></details>`));
@@ -288,9 +321,62 @@ function fromHash() {
   if (c) { renderCase(c); window.scrollTo(0, 0); }
 }
 window.addEventListener("hashchange", fromHash);
+
+// ---- live mode: served by code/server.py ----
+function startLive() {
+  $("#live").classList.add("on");
+  let total = 0;
+  const msg = (t) => { $("#runmsg").textContent = t; };
+  const busy = (on) => { for (const id of ["#run-sample", "#run-full", "#backend", "#fresh", "#workers"]) $(id).disabled = on; };
+  fetch("/api/state").then((r) => r.json()).then((st) => {
+    $("#backend").value = st.backend;
+    if (!st.api_key) $("#backend").querySelector('[value="api"]').textContent = "Anthropic API (no key in .env)";
+    busy(st.running);
+  });
+  const run = (dataset) => fetch("/api/run", {method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({dataset, backend: $("#backend").value, fresh: $("#fresh").checked, workers: Number($("#workers").value)})})
+    .then((r) => r.json().then((b) => { if (!r.ok) msg("Not started: " + b.error); }));
+  $("#run-sample").onclick = () => run("sample");
+  $("#run-full").onclick = () => run("full");
+
+  const es = new EventSource("/api/events");
+  es.onmessage = (m) => {
+    const e = JSON.parse(m.data);
+    if (e.type === "run_started") {
+      CASES = []; UNITS = {}; current = null; RUNNING = {}; total = e.total;
+      DATA.source = e.source; DATA.has_gold = e.has_gold;
+      $("#progress").style.width = "0"; $("#main").innerHTML = ""; busy(true);
+      msg(`Starting ${e.dataset} run on ${e.backend}${e.fresh ? " with fresh model calls" : ""}, ${e.workers} workers…`); summary(); renderList();
+    } else if (e.type === "preparing") {
+      msg(e.message);
+    } else if (e.type === "prepared") {
+      msg(`Shared preparation done in ${e.seconds}s. Running cases one by one…`);
+    } else if (e.type === "case_started") {
+      RUNNING[e.case_id] = []; renderList();
+    } else if (e.type === "stage") {
+      if (RUNNING[e.case_id]) { RUNNING[e.case_id].push(e); renderList(); }
+    } else if (e.type === "case_done") {
+      Object.assign(UNITS, e.units);
+      CASES.push(e.trace); delete RUNNING[e.case_id];
+      CASES.sort((a, b) => Number(a.case_id.split("_")[1]) - Number(b.case_id.split("_")[1]));
+      $("#progress").style.width = `${(100 * e.index / total).toFixed(1)}%`;
+      msg(`${e.index}/${total} cases done · last ${e.case_id}: ${e.trace.status}`);
+      summary();
+      if (!current) renderCase(e.trace); else renderList();
+    } else if (e.type === "run_done") {
+      busy(false);
+      const s = e.score;
+      msg(`Done: ${e.rows} rows in ${e.seconds}s → ${e.out}` + (s ? ` · status ${s.status_accuracy} · step P/R/F1 ${s.step_precision}/${s.step_recall}/${s.step_f1} · exact ${s.sequence_accuracy}`
+        : ` · validator errors: ${e.validator_errors}`));
+    } else if (e.type === "run_failed") {
+      busy(false); RUNNING = {}; renderList(); msg("Run failed: " + e.error);
+    }
+  };
+  es.onerror = () => msg("Connection to the server lost; retrying…");
+}
 summary();
 renderList();
-fromHash();
+if (DATA.live) startLive(); else fromHash();
 </script>
 </body>
 </html>

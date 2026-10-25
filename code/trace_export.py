@@ -1,9 +1,9 @@
 """Export a per-case trace of every pipeline stage and open it in the viewer.
 
 Usage:
-    python3 code/trace.py --sample          # 32 samples, with the gold answer and differences
-    python3 code/trace.py                   # 518 evaluation requests
-    python3 code/trace.py --cases case_10 case_22 --sample
+    python3 code/trace_export.py --sample          # 32 samples, with the gold answer and differences
+    python3 code/trace_export.py                   # 518 evaluation requests
+    python3 code/trace_export.py --cases case_10 case_22 --sample
 
 Writes trace/<name>.html: one self-contained page (code/ui/viewer.html with
 the trace data inside) to open in any browser. trace/ is git-ignored and is not
