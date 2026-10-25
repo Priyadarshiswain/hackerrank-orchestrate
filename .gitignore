@@ -16,3 +16,6 @@ agent-trace/
 agent-trace.zip
 sample_predictions.csv
 code/cache/*.tmp
+
+# Trace viewer output (copies dataset content)
+trace/
