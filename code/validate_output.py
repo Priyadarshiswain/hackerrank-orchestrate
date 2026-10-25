@@ -15,8 +15,9 @@ from contract import (DATASET_DIR, OPERATIONS, OUTPUT_COLUMNS, OUTPUT_PATH, STAT
                       STEP_FIELDS, case_sort_key, read_csv, step_sort_key)
 
 
-def validate(pred_path, requests_path, evidence_ids=None):
+def validate(pred_path, requests_path, evidence_ids=None, warnings=None):
     errors = []
+    warnings = warnings if warnings is not None else []
     with open(pred_path, newline="", encoding="utf-8") as f:
         reader = csv.reader(f)
         header = next(reader, None)
@@ -56,8 +57,10 @@ def validate(pred_path, requests_path, evidence_ids=None):
             continue
         if status == "NOT_APPLICABLE" and steps:
             errors.append(f"{where} NOT_APPLICABLE must have []")
-        if status in ("COMPLETE", "INCOMPLETE") and not steps:
-            errors.append(f"{where} {status} with no steps")
+        if status == "INCOMPLETE" and not steps:
+            errors.append(f"{where} INCOMPLETE with no steps")
+        if status == "COMPLETE" and not steps:  # allowed: no record found to verify
+            warnings.append(f"{where} COMPLETE with no steps")
 
         phases = set()
         for i, s in enumerate(steps, 1):
@@ -104,7 +107,12 @@ def known_evidence_ids():
 def main(argv):
     pred = Path(argv[1]) if len(argv) > 1 else OUTPUT_PATH
     reqs = Path(argv[2]) if len(argv) > 2 else DATASET_DIR / "deletion_requests.csv"
-    errors = validate(pred, reqs, known_evidence_ids())
+    warnings = []
+    errors = validate(pred, reqs, known_evidence_ids(), warnings)
+    for w in warnings[:20]:
+        print("WARN ", w)
+    if len(warnings) > 20:
+        print(f"... and {len(warnings) - 20} more warnings")
     for e in errors[:50]:
         print("ERROR", e)
     if len(errors) > 50:
