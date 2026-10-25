@@ -148,9 +148,9 @@ class Discoverer:
                 "evidence": evidence, "weak": weak, "ambiguous": ambiguous}
 
 
-def build_discoverer():
+def build_discoverer(screenshot_backend="cli"):
     activity = read_csv(DATASET_DIR / "system_activity.csv")
-    index = EvidenceIndex(build_units(activity=activity))
+    index = EvidenceIndex(build_units(activity=activity, screenshot_backend=screenshot_backend))
     owners = owner_index(read_csv(DATASET_DIR / "user_identities.csv"),
                          read_csv(DATASET_DIR / "user_audit_log.csv"))
     return Discoverer(index, resource_prefixes(activity), owners)

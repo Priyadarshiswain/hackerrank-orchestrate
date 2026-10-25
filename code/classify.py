@@ -28,13 +28,13 @@ import tempfile
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-from contract import DATASET_DIR, REPO_ROOT, case_sort_key, read_csv
+from config import cache_path, cli_env
+from contract import DATASET_DIR, case_sort_key, read_csv
 
 MODELS = {"test": "claude-haiku-5-5", "control": "claude-sonnet-5-5"}
 # USD per million tokens (input, output), Anthropic first-party list prices.
 PRICES = {"claude-haiku-5-5": (0.10, 0.50), "claude-sonnet-5-5": (2.00, 10.00)}
 EFFORT = "low"
-CACHE_PATH = REPO_ROOT / "code" / "cache" / "intent_cache.json"
 INTENTS = ["DELETE", "ACCESS", "EXPORT", "CORRECTION", "OPT_OUT", "OTHER"]
 
 PROMPT_V1 = """\
@@ -214,7 +214,7 @@ def call_cli(model, text, system_prompt):
            "--output-format", "json", "--tools", "", "--strict-mcp-config",
            "--setting-sources", "", "--no-session-persistence"]
     with tempfile.TemporaryDirectory() as cwd:
-        proc = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=180)
+        proc = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=180, env=cli_env())
     if proc.returncode != 0:
         raise RuntimeError(f"claude exited {proc.returncode}: {proc.stderr.strip()[:200]}")
     out = json.loads(proc.stdout)
@@ -240,7 +240,7 @@ def call_api(model, text, system_prompt):
         _client = anthropic.Anthropic()
     response = _client.messages.create(
         model=model,
-        max_tokens=1024,
+        max_tokens=4096,  # adaptive thinking is on by default for these models
         system=system_prompt,
         messages=[{"role": "user", "content": user_message(text)}],
         output_config={"effort": EFFORT, "format": {"type": "json_schema", "schema": SCHEMA}},
@@ -263,10 +263,10 @@ BACKENDS = {"cli": call_cli, "api": call_api}
 class IntentCache:
     """JSON file of {"model|prompt_id": {text_sha256: entry}}, written after every new result."""
 
-    def __init__(self, path=CACHE_PATH):
-        self.path = path
+    def __init__(self, path=None):
+        self.path = path or cache_path("intent_cache.json")
         self.lock = threading.Lock()
-        self.data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+        self.data = json.loads(self.path.read_text(encoding="utf-8")) if self.path.exists() else {}
 
     def get(self, namespace, key):
         return self.data.get(namespace, {}).get(key)

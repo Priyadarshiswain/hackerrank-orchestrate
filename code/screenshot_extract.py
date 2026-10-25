@@ -26,10 +26,10 @@ import tempfile
 from concurrent.futures import ThreadPoolExecutor
 
 from classify import MODELS, PRICES, IntentCache
-from contract import DATASET_DIR, REPO_ROOT, read_csv
+from config import cache_path, cli_env
+from contract import DATASET_DIR, read_csv
 from identifiers import extract_identifiers
 
-CACHE_PATH = REPO_ROOT / "code" / "cache" / "screenshot_cache.json"
 EFFORT = "medium"
 MAX_TOKENS = 8000
 
@@ -130,7 +130,7 @@ def call_cli(model, image_bytes, system_prompt):
            "--setting-sources", "", "--no-session-persistence"]
     with tempfile.TemporaryDirectory() as cwd:
         proc = subprocess.run(cmd, cwd=cwd, input=json.dumps(message) + "\n",
-                              capture_output=True, text=True, timeout=300)
+                              capture_output=True, text=True, timeout=300, env=cli_env())
     if proc.returncode != 0:
         raise RuntimeError(f"claude exited {proc.returncode}: {proc.stderr.strip()[:200]}")
     result = None
@@ -244,7 +244,7 @@ def extract_one(item, roles, backend, cache, version):
 def extract_all(roles=("test", "control"), backend="cli", workers=4, cache=None,
                 version=ACTIVE_PROMPT, manifest=None):
     """Transcribe every PNG in the evidence manifest; returns {file_id: result}."""
-    cache = cache or IntentCache(CACHE_PATH)
+    cache = cache or IntentCache(cache_path("screenshot_cache.json"))
     manifest = manifest if manifest is not None else read_csv(DATASET_DIR / "evidence_files.csv")
     items = [(r["file_id"], DATASET_DIR / r["file_path"]) for r in manifest
              if r["file_path"].lower().endswith(".png")]

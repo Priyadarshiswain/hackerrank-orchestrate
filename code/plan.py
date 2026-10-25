@@ -23,7 +23,7 @@ Agreed design (user sign-off 2026-10-25):
     BLOCK_RESTORE before record changes (AGENTS.md 6.5).
 """
 from categories import build_categorizer
-from classify import IntentCache, classify_requests
+from classify import ACTIVE_PROMPT, MODELS, IntentCache, classify_requests, namespace, prompt_id
 from contract import finalize_steps, make_step
 from discover import build_discoverer, person_tokens
 from identity import load_and_resolve
@@ -110,24 +110,47 @@ def case_steps(states, audit_at):
 
 
 class Auditor:
-    """Builds the shared index once, then audits each request."""
+    """Builds the shared evidence index once, then runs each request through
+    the whole pipeline on its own: intent -> identity -> discovery -> state
+    -> status and steps. run() also returns the trace of every stage."""
 
-    def __init__(self, requests, requests_path, backend="cli"):
-        self.requests = requests
+    def __init__(self, requests_path, backend="cli"):
+        self.backend = backend
+        self.cache = IntentCache()
         self.identity = {r["case_id"]: r for r in load_and_resolve(requests_path)}
-        answers, _ = classify_requests(requests, roles=("test",), cache=IntentCache(), backend=backend)
-        self.intent = {r["case_id"]: r for r in answers}
-        self.disc = build_discoverer()
+        self.disc = build_discoverer(screenshot_backend=backend)
         self.reader = StateReader(self.disc, build_categorizer(self.disc))
 
-    def audit(self, request):
+    def classify(self, request):
+        """Intent for one request (model call, or its cached answer) with the call record."""
+        rows, _ = classify_requests([request], roles=("test",), cache=self.cache,
+                                    backend=self.backend, workers=1)
+        model = MODELS["test"]
+        entry = self.cache.get(namespace(model, ACTIVE_PROMPT), rows[0]["text_key"]) or {}
+        return {"model": model, "prompt": ACTIVE_PROMPT, "prompt_id": prompt_id(ACTIVE_PROMPT),
+                "answer": rows[0]["test"], "flags": rows[0]["flags"],
+                "backend": entry.get("backend", ""), "usage": entry.get("usage", {})}
+
+    def run(self, request):
         case_id, audit_at = request["case_id"], request["audit_at"]
-        row = self.identity[case_id]
-        answer = self.intent[case_id]["test"]
+        trace = {"case_id": case_id, "request": request}
+        trace["intent"] = intent = self.classify(request)
+        trace["identity"] = row = self.identity[case_id]
+        answer = intent["answer"]
         if not row["user_id"] or not answer or not answer["authorizes_deletion"]:
-            return "NOT_APPLICABLE", []
-        found = self.disc.discover(row, audit_at)
+            trace["reason"] = ("email matches no user" if not row["user_id"] else
+                               "intent model failed" if not answer else "request does not authorize deletion")
+            trace.update(status="NOT_APPLICABLE", steps=[])
+            return trace
+        trace["discovery"] = found = self.disc.discover(row, audit_at)
         person = person_tokens(row)
-        states = [self.reader.resource_state(rid, found["evidence"][rid], person, audit_at, units)
-                  for rid, units in sorted(found["resources"].items())]
-        return case_steps(states, audit_at)
+        trace["states"] = states = [
+            self.reader.resource_state(rid, found["evidence"][rid], person, audit_at, units)
+            for rid, units in sorted(found["resources"].items())]
+        status, steps = case_steps(states, audit_at)
+        trace.update(status=status, steps=steps)
+        return trace
+
+    def audit(self, request):
+        trace = self.run(request)
+        return trace["status"], trace["steps"]

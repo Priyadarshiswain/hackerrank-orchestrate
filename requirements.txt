@@ -1,3 +1,2 @@
 pypdf==6.19.0
-# Optional, only for --backend api (uncached model calls through the SDK):
-# anthropic
+anthropic==2.3.0  # only used by --backend api / MODEL_BACKEND=api

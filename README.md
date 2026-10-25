@@ -32,6 +32,15 @@ python3 -m venv .venv
 | `cli` (default) | Headless Claude Code, `claude -p` in an isolated temporary directory, no tools, settings or MCP | A logged-in `claude` CLI |
 | `api` | Anthropic SDK | `.venv/bin/pip install anthropic` and `ANTHROPIC_API_KEY` set in the environment (see `.env.example`; never commit `.env`) |
 
+### Anthropic API setup (optional)
+
+1. Install the requirements: `.venv/bin/pip install -r requirements.txt` (this includes `anthropic==2.3.0`).
+2. Copy `.env.example` to `.env`, which git ignores, and set `ANTHROPIC_API_KEY`. Set `MODEL_BACKEND=api` to use the SDK for uncached calls.
+3. Check the setup: `.venv/bin/python code/check_api.py` (add `--all` to also check the control model). It sends one synthetic request, prints the answer, tokens and estimated cost, and never prints the key.
+4. For a fresh, fully measured API run, point `GHOST_CACHE_DIR` at an empty folder (e.g. `code/cache_api`) so every call is made and its usage recorded.
+
+The `cli` backend never passes `ANTHROPIC_API_KEY` to `claude -p`, so it keeps using the Claude Code login.
+
 ## Run
 
 From the repository root (the folder that contains `dataset/`):
@@ -46,9 +55,28 @@ From the repository root (the folder that contains `dataset/`):
 .venv/bin/python -m unittest discover -s code/tests                # 71 unit tests
 ```
 
+### Trace viewer (visual check of every step)
+
+```bash
+.venv/bin/python code/trace.py --sample      # -> trace/sample_trace.html (with gold comparison)
+.venv/bin/python code/trace.py               # -> trace/evaluation_trace.html (518 cases)
+```
+
+Open the HTML file in a browser. For each case it shows each pipeline stage:
+1. the request;
+2. the intent model call (model, prompt version, tokens, answer, reason);
+3. identity resolution;
+4. discovery links;
+5. each record's category, rule, evidence observations and state at `audit_at`;
+6. the final status and steps;
+7. for samples, the gold answer, with missing and extra steps highlighted.
+
+Click any evidence id to read the unit; screenshots show their AI transcription. Add `#case_19` to the URL to open one case. `trace/` is git-ignored and not packaged, because it copies dataset content.
+
 Options for `code/main.py`:
 - `--requests PATH` and `--out PATH` run another request file;
-- `--backend api` uses the SDK for any uncached model call.
+- `--backend api` uses the SDK for any uncached model call (default: `MODEL_BACKEND`, else `cli`);
+- `--verbose` prints each case as it finishes. Each case runs through the whole pipeline on its own, and `output.csv` is rewritten after every case.
 
 A full run takes about 1 second with the cache. Requests are processed one at a time through the same pipeline, and the output is deterministic: rows are sorted by `case_id`, steps follow the contract order, and JSON is serialized with sorted keys.
 
@@ -110,6 +138,8 @@ deletion_requests.csv
 | `code/evaluation/usage_report.md` | models, calls, tokens and cost of the final run |
 | `evaluation/` | copies of the two reports at the top level (AGENTS.md 6.8 path), made by `code/package.py` |
 | `code/package.py` | builds `code.zip` |
+| `code/config.py`, `code/check_api.py` | `.env` loading, backend and cache settings; API smoke test |
+| `code/trace.py`, `code/ui/viewer.html` | per-case trace export and the standalone viewer page |
 | `code/tests/` | unit tests |
 
 ## Results (V1, 32 labelled samples)
