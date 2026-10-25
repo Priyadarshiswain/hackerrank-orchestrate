@@ -188,11 +188,13 @@ class StateReader:
         self.disc, self.cat = disc, categorizer
         self.omissions = Omissions(disc.index, categorizer.systems)
 
-    def resource_state(self, rid, evidence, person, audit_at, link_units=()):
+    def resource_state(self, rid, evidence, person, audit_at, link_units=(), extra_units=()):
+        """extra_units: unit copies to observe as well (the catalog rule's
+        confirming files, with the record's label read as its id)."""
         info = self.cat.describe(rid, link_units)
         observations = []
-        for e in evidence:
-            unit = self.disc.index.units[e["unit_id"]]
+        units = [self.disc.index.units[e["unit_id"]] for e in evidence] + list(extra_units)
+        for unit in units:
             obs = observe(unit, rid, person)
             if obs:
                 obs["location"] = location(unit, obs)

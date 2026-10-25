@@ -26,6 +26,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 
 from account_rule import ACCOUNT, AccountLinker
+from catalog_rule import CatalogLinker
 from categories import build_categorizer
 from classify import ACTIVE_PROMPT, MODELS, IntentCache, classify_requests, namespace, prompt_id
 from contract import DATASET_DIR, finalize_steps, make_step, read_csv
@@ -136,6 +137,7 @@ class Auditor:
         self.disc = build_discoverer(screenshot_backend=backend)
         self.reader = StateReader(self.disc, build_categorizer(self.disc))
         self.accounts = AccountLinker(self.disc, self._deletion_cases())
+        self.catalog = CatalogLinker(self.disc.index)
 
     def _deletion_cases(self):
         """Every request in both request files whose email resolves to a user
@@ -148,6 +150,23 @@ class Auditor:
             identity = {r["case_id"]: r for r in load_and_resolve(path)}
             cases += [(r, identity[r["case_id"]]) for r in read_csv(path) if identity[r["case_id"]]["user_id"]]
         return cases
+
+    def _add_catalog(self, request, found, audit_at):
+        """Catalog rule: add records a confirmed catalog row links to this case.
+        Returns {rid: unit copies to observe} and the trace summary."""
+        extra, summary = {}, {}
+        for rid, link in self.catalog.links(request, set(found["hop1"])).items():
+            summary[rid] = {"row": link["row"], "confirmed_by": link["units"], "label": link["names"]}
+            if rid in found["resources"]:
+                continue
+            found["resources"][rid] = [link["row"]] + link["units"]
+            found["evidence"][rid] = [{"unit_id": u, **self.disc.time_flags(u, audit_at)}
+                                      for u in self.disc.index.lookup("ids", rid)]
+            extra[rid] = [self.catalog.as_record(self.disc.index.units[u], rid, link["names"])
+                          for u in link["units"] if u not in self.disc.index.lookup("ids", rid)]
+            if rid in found.get("weak", []):
+                found["weak"].remove(rid)
+        return extra, summary
 
     def _add_account(self, case_id, found, audit_at):
         """Account rule: list the worker-row account when evidence gave none."""
@@ -195,10 +214,11 @@ class Auditor:
         trace["discovery"] = found = self.disc.discover(row, audit_at)
         self._add_account(case_id, found, audit_at)
         trace["account_rule"] = self.accounts.explain(case_id)
+        extra, trace["catalog_rule"] = self._add_catalog(request, found, audit_at)
         done("discovery", f"{len(found['resources'])} records")
         person = person_tokens(row)
         trace["states"] = states = [
-            self.reader.resource_state(rid, found["evidence"][rid], person, audit_at, units)
+            self.reader.resource_state(rid, found["evidence"][rid], person, audit_at, units, extra.get(rid, ()))
             for rid, units in sorted(found["resources"].items())]
         done("state", f"{sum(s['compliant'] is False for s in states)} violations")
         status, steps = case_steps(states, audit_at)

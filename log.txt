@@ -2405,3 +2405,45 @@ repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
 
+
+## [2026-10-25T09:59:18Z] Explain group B cases (61, 63, 33, 46) in simple English
+
+User Prompt (verbatim, secrets redacted):
+ok exaplin B now in B1 english each case we will come back to D later, I think the most important for us is to show complete only when we are 100% sure with in what is given to use
+
+Agent Response Summary:
+Checked the facts for the four cases: each has a data_catalog LINK_RESOURCE_IDENTITY row (activity_4007/4008/4009/4011) written about 7 minutes after an evidence file that shows the record (evidence_46, 60, 18, 42), all before the case's audit_at. Explained each case simply: case_61 should be INCOMPLETE (attachment object_19 still in storage; its current support_001 step is from June, after the audit), case_63 COMPLETE with zero steps is not "100% sure" and the marketing profile is shown live (finding on marketing_001), case_33 keeps INCOMPLETE but misses export_1842, case_46 keeps COMPLETE but misses VERIFY_RECORD_REDACTED tombstone_17. Proposed one general rule (catalog link confirmed by an evidence file showing the record) and noted the sample case_07 caveat; no code changed.
+
+Actions:
+* Ran grep on deletion_requests.csv, output.csv, system_activity.csv and evidence_files.csv
+
+Context:
+tool=Claude Code
+model=claude-opus-5-5[1m]
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
+
+## [2026-10-25T10:05:16Z] Build the catalog rule (group B); case_63 INCOMPLETE
+
+User Prompt (verbatim, secrets redacted):
+yes build the rule, and case_63 incomplete
+
+Agent Response Summary:
+Built code/catalog_rule.py: a data_catalog LINK_RESOURCE_IDENTITY row links its record to a case only if the row falls between that case's requested_at and audit_at and a file captured within the hour before the row shows the record by id or bracketed label; the record's state is read from that file. Checked all 12 catalog rows first: the window keeps sample case_07 and case_17 matching their answers. Exactly four eval cases change: case_61 and case_63 become INCOMPLETE (object_19 still stored, evidence_46; marketing_001 still live, evidence_60), case_33 gains export_1842 (evidence_18) and case_46 gains VERIFY_RECORD_REDACTED tombstone_17 (evidence_42); the sample is unchanged, output.csv validates, 85 tests pass, and the viewer shows the rule. Not committed yet.
+
+Actions:
+* Created code/catalog_rule.py, code/tests/test_catalog_rule.py
+* Edited code/plan.py, code/state.py, code/ui/viewer.html
+* Ran main.py on sample and 518, evaluation/main.py, validate_output.py, stage_report.py, unit tests, trace_export.py, node --check; diffed output.csv
+
+Context:
+tool=Claude Code
+model=claude-opus-5-5[1m]
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
