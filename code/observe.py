@@ -50,6 +50,9 @@ TRUE = {"true", "True", "1", 1, True}
 FALSE = {"false", "False", "0", 0, False}
 QUERY_KEYS = re.compile(r'\b(?:lookup_key|subject_key|lookup_value|query)\s*[=:]\s*"?[^"\s,}]+"?')
 LOG_RESOURCE = re.compile(r'\bresource_id"?\s*[=:]\s*"?([a-z]+(?:_[a-z]+)*_\d+)')
+PAGE_FLOW_ON = re.compile(r"\b(Healthy|Continuous|Active|Running|Enabled)\b")
+PAGE_FLOW_OFF = re.compile(r"\b(Paused|Disabled|Stopped|Inactive)\b")
+PAGE_RESTORE_BLOCKED = re.compile(r"\b(block(ed)?|den(y|ied)|legal hold|restore disabled)\b", re.I)
 LOG_KV = re.compile(r'"?\b([a-z_]+)"?\s*[=:]\s*"?([^"\s,}|]*)"?')
 
 
@@ -175,14 +178,41 @@ def observe_inventory(unit, rid):
     return obs
 
 
+def _detail_panel(lines, rid):
+    """Lines of the screen's detail panel for rid: from a header naming the
+    record ("rid", "rid · ...", "... · rid") to the next "Activity" line."""
+    for i, line in enumerate(lines):
+        head = line.strip()
+        if head == rid or head.startswith(f"{rid} ·") or head.endswith(f"· {rid}"):
+            end = next((j for j in range(i + 1, len(lines)) if lines[j].strip() == "Activity"), len(lines))
+            return lines[i:end]
+    return []
+
+
 def observe_page(unit, rid, person):
-    lines = [l for l in unit["text"].splitlines() if re.search(rf"\b{re.escape(rid)}\b", l)]
+    """A PDF page or screenshot. Rows naming rid plus the record's detail panel
+    are its content: identifiers shown there are exposed, and status words
+    there give the flow or restore state."""
+    all_lines = unit["text"].splitlines()
+    lines = [l for l in all_lines if re.search(rf"\b{re.escape(rid)}\b", l)]
     if not lines:
         return None
+    content = lines + _detail_panel(all_lines, rid)
     obs = new_obs(unit, rid)
     obs["present"] = True
-    if person and any(_mentions(l, person) for l in lines):
+    if person and any(_mentions(l, person) for l in content):
         obs["direct"].add("page")
+    text = "\n".join(content)
+    if rid.startswith("data_flow_"):
+        if PAGE_FLOW_OFF.search(text):
+            obs["flow_active"] = False
+        elif PAGE_FLOW_ON.search(text):
+            obs["flow_active"] = True
+    if rid.startswith("backup_"):
+        if PAGE_RESTORE_BLOCKED.search(text):
+            obs["restore_open"] = False
+        elif re.search(r"\brestor", unit["text"], re.I):  # a recovery screen offering restores
+            obs["restore_open"] = True
     return obs
 
 
