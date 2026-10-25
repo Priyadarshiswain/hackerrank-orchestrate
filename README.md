@@ -1,6 +1,6 @@
 # Ghost Data Still Exists — Deletion-Audit Agent
 
-**Version: V1** (phase-1 build, 2026-10-25) · HackerRank Orchestrate, October 2026
+**Version: V1.1** (phase-1 build, 2026-10-25) · HackerRank Orchestrate, October 2026
 
 For each request in `dataset/deletion_requests.csv`, the agent:
 1. decides whether the person actually asked for deletion;
@@ -16,14 +16,14 @@ The challenge contract is in [`problem_statement.md`](./problem_statement.md) an
 
 ## Setup
 
-Requires Python 3.11 or later.
+Requires Python 3.9 or later (developed on 3.13).
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt        # pypdf, Pillow
+.venv/bin/pip install -r requirements.txt        # pypdf
 ```
 
-**Model calls.** The intent and screenshot model answers are cached in `code/cache/` (keyed by model, prompt version and a hash of the input; no request text is stored). A run on the supplied dataset needs **no model access**.
+**Model calls.** The intent and screenshot model answers are cached in `code/cache/`, keyed by model, prompt version and a hash of the input. For requests, each entry stores only that hash, the model's structured answer (including its one-line reason) and the token usage, not the request text itself. A run on the supplied dataset needs **no model access**.
 
 **When a cache entry is missing**, the code calls the model:
 
@@ -41,6 +41,8 @@ From the repository root (the folder that contains `dataset/`):
 .venv/bin/python code/validate_output.py          # contract check of output.csv
 .venv/bin/python code/main.py --sample            # 32 samples -> ./sample_predictions.csv
 .venv/bin/python code/evaluation/main.py sample_predictions.csv   # score against sample_output.csv
+.venv/bin/python code/evaluation/stage_report.py                   # per-stage accuracy on the samples
+.venv/bin/python code/evaluation/intent_eval.py --prompt v4        # 70 intent cases (38 synthetic)
 .venv/bin/python -m unittest discover -s code/tests                # 71 unit tests
 ```
 
@@ -103,8 +105,11 @@ deletion_requests.csv
 | `code/cache/` | cached model answers (intent, screenshots) |
 | `code/evaluation/main.py` | scorer (status, step P/R/F1, field and sequence accuracy) |
 | `code/evaluation/intent_eval.py`, `intent_eval_cases.csv` | 70-case intent evaluation (38 synthetic) |
+| `code/evaluation/stage_report.py` | per-stage accuracy on the samples |
 | `code/evaluation/evaluation_report.md` | evaluation results, custom cases, failures and improvements |
 | `code/evaluation/usage_report.md` | models, calls, tokens and cost of the final run |
+| `evaluation/` | copies of the two reports at the top level (AGENTS.md 6.8 path), made by `code/package.py` |
+| `code/package.py` | builds `code.zip` |
 | `code/tests/` | unit tests |
 
 ## Results (V1, 32 labelled samples)
@@ -122,8 +127,10 @@ Details and known limitations are in `code/evaluation/evaluation_report.md`.
 ## Packaging
 
 ```bash
-zip -r code.zip README.md requirements.txt .env.example code -x "*/__pycache__/*" "*/.venv/*" "*/venv/*" "*/node_modules/*" "*/.git/*" "*/.DS_Store" "code/cache/*.tmp"
+.venv/bin/python code/package.py
 ```
+
+This copies the reports to `evaluation/` and zips `README.md`, `requirements.txt`, `.env.example`, `code/` and `evaluation/`. It leaves out the dataset, virtual environments, `__pycache__`, `.DS_Store`, temporary files and any archive.
 
 Submit `code.zip`, the root `output.csv`, and the root `log.txt` (chat transcript).
 
