@@ -17,6 +17,7 @@ import sys
 
 import config
 from contract import DATASET_DIR, OUTPUT_PATH, REPO_ROOT, read_csv, write_output
+from confidence import case_confidence, write_confidence
 from plan import Auditor, run_cases
 
 
@@ -44,16 +45,19 @@ def main(argv=None):
 
     requests = read_csv(requests_path)
     auditor = Auditor(requests_path, backend=args.backend)
-    rows = []
+    rows, confidence = [], []
+    conf_path = out_path.with_name(("sample" if args.sample else out_path.stem) + "_confidence.csv")
 
     def done(count, request, trace):  # output.csv is rewritten, sorted, as each case finishes
         rows.append((request["case_id"], trace["status"], trace["steps"]))
         write_output(rows, out_path)
+        confidence.append((request["case_id"], trace["status"], *case_confidence(trace)))
         if args.verbose:
             print(f"[{count}/{len(requests)}] {request['case_id']} {trace['status']} ({len(trace['steps'])} steps)")
 
     run_cases(auditor, requests, workers=args.workers, on_done=done)
-    print(f"wrote {len(rows)} rows to {out_path}")
+    write_confidence(confidence, conf_path)  # a separate file; output.csv has the contract columns only
+    print(f"wrote {len(rows)} rows to {out_path} (confidence: {conf_path.name})")
     return 0
 
 
