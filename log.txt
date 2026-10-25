@@ -2835,3 +2835,26 @@ repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
 
+
+## [2026-10-25T10:59:05Z] V3 final API run, docs refreshed, package built and tagged
+
+User Prompt (verbatim, secrets redacted):
+yes commit it , package it , upade the all relevant mds, and then get a fable review. this will be our final step. if there are no serious issue identiied, we will proceed with submission
+
+Agent Response Summary:
+Committed the model ladder (408786c) and ran all 518 requests on the Anthropic API with an empty cache and the ladder: 399 calls, 747,944 tokens, about USD 0.35, 1 min 59 s, 0 errors. The run flipped case_53 because a transcription listed the screen's tabs under the record header and cut the detail panel short; the panel now runs to the last "Activity" heading, after which the V3 output equals the previous output exactly. Merged the run's answers into code/cache, rewrote usage_report.md for V3, and updated evaluation_report.md, README.md and decisions.md (entries 33, 34, 35, 47 updated; 48-50 added). A clean unzip reproduces output.csv and output_confidence.csv with model calls forbidden, the validator and 95 tests pass, and the sample is 32/32 with step F1 0.940; committed, tagged v3, and the final Fable review starts next.
+
+Actions:
+* git commit 408786c; ran main.py --backend api --workers 8 with GHOST_CACHE_DIR=cache_v3
+* Edited code/observe.py, code/tests/test_state.py, code/cache/*.json (merge), code/evaluation/usage_report.md, code/evaluation/evaluation_report.md, README.md, decisions.md, .gitignore
+* Ran usage_summary.py, stage_report.py, evaluation/main.py, validate_output.py, unit tests, package.py; clean unzip check with GHOST_OFFLINE=1
+* git commit and git tag v3
+
+Context:
+tool=Claude Code
+model=claude-opus-5-5[1m]
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+

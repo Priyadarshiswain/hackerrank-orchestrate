@@ -222,17 +222,19 @@ A data-catalog row ("record X belongs to this person") counts only if it was wri
 ## 33. Read what the files really say
 - Screenshots: the detail panel of the selected record gives its state (flow on or off, restore blocked, data shown). This fixed cases 39, 53 and 55.
 - Logs: quotes nested inside a message field are unescaped before reading. This fixed the wave of deletions on 8 June 2026 (`evidence_25`): 7 cases are now INCOMPLETE.
-**Why:** both were reading errors, found by Fable on the 518.
-**Breaks when:** a new format appears. Fable's odd-case reviews are how we find these.
+- Screenshots again (V3): a transcription may list the screen's tabs ("Conversation", "Internal notes", "Activity") under the record header. The detail panel now runs to the last "Activity" heading, not the first, so the tabs no longer cut it short (case_53).
+**Why:** these were reading errors, found by Fable on the 518 and by comparing the V3 run with the previous output.
+**Breaks when:** a new format appears. Fable's odd-case reviews and run-to-run diffs are how we find these.
 
 ## 34. Final run on the API with an empty cache
 The model answers in `output.csv` come from a full API run made for V2 (397 calls, about USD 0.23, 0 errors); its output was identical to the headless-CLI run. The answers ship in `code/cache/`, so the package gives the same output with no model access. Later fixes (decisions 30, 32, 33) re-ran the pipeline from that cache, so the current `output.csv` differs from the V2 file in 32 rows (9 statuses).
 **Why:** the usage report must describe a real final run.
 **Rejected:** reporting the cached CLI run as the final run.
 **Breaks when:** the usage report is read as describing the current file. A final API re-run before packaging closes this gap.
+**Update (V3):** closed. The final V3 run was made on the API with an empty cache and the model ladder (399 calls, about USD 0.35, 0 errors). The shipped cache reproduces the submitted `output.csv` exactly, with model calls switched off.
 
 ## 35. Package for both readings of the rules
-Both `code/evaluation/` and `evaluation/` reports ship. Each release is tagged (v1, v1.1, v2). A clean unzip must give the same `output.csv`.
+Both `code/evaluation/` and `evaluation/` reports ship. Each release is tagged (v1, v1.1, v2, v3). A clean unzip must give the same `output.csv`.
 **Why:** AGENTS.md and the organizers' README name different paths.
 **Breaks when:** the graders accept only one path and judge the extra copy as clutter.
 
@@ -305,9 +307,26 @@ I stopped two Fable runs that took too long. Later reviews are scoped to about 1
 **Why:** the reviewer's job is to find the next fix, not to redo the pipeline.
 **Breaks when:** a short review misses a bug that is slow to find.
 
-## 47. The real run: API only, one model per task
+## 47. The real run: API only, no control model
 The real run uses the Anthropic API only. Intent and screenshots each use one model (`claude-haiku-5-5`). The control model (`claude-sonnet-5-5`) does not run in the pipeline; it stays as an optional evaluation tool.
 **Why:** the real run should be simple, cheap and traceable. Every API answer now stores Anthropic's message id and request id, so a cached answer can be traced to a real call (this reduces security finding MEDIUM 2). Without a control model, there is no "ignored disagreement" (MEDIUM 1).
 **Rejected:** a control model in the real run — it doubles screenshot cost (about USD 0.15 of USD 0.23), and its only job was to flag; it never changed an answer.
 **Breaks when:** the one model misreads a screenshot. Nothing cross-checks it in the real run.
+**Update:** "one model per task" was replaced by the model ladder (decision 48). There is still no control model.
+
+## 48. A model ladder for every AI call
+Every AI call (intent and screenshots) starts with `claude-haiku-5-5`. If the answer fails our checks, or the model says it is less than 90% sure, the next model is asked: `claude-sonnet-5-5`, then `claude-opus-5-5`, then `claude-fable-5-1`. The ladder stops at the first valid answer with confidence of 0.90 or more. If no model reaches 0.90, we keep the most confident answer, flag it, and the case's confidence score drops.
+**Why:** cheap models for easy calls, stronger models only where needed. On the API, 68 of 70 intent test cases stopped at Haiku, and no answer changed by climbing. In the final run all intents stopped at Haiku; screenshots mostly needed Sonnet, and one needed Fable.
+**Rejected:** a fixed control model (decision 47); Fable for everything (100 times Haiku's price per token).
+**Breaks when:** a model is confidently wrong. A model's own confidence is not well calibrated, so it is one signal next to our checks, never the only one.
+
+## 49. Tests never call a model
+Tests run with `GHOST_OFFLINE=1`; any model call that is not already cached is refused.
+**Why:** once, the tests made real model calls (about USD 0.18) because a new prompt version was not cached yet.
+**Breaks when:** a test needs an answer that is not in the cache. It then fails clearly instead of calling a model.
+
+## 50. Final package: V3
+The V3 package is the submission: the final API run with the model ladder, the shipped cache, refreshed reports, and a final review by Fable. We submit only if that review finds no serious issue.
+**Why:** one complete, reviewed and reproducible package.
+**Breaks when:** the review finds a serious issue. Then we fix it before submitting.
 

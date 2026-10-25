@@ -30,3 +30,6 @@ cache_live/
 
 # Fresh cache of the final API run (merged into code/cache afterwards)
 cache_final/
+
+# Fresh cache of the V3 final API run (merged into code/cache afterwards)
+cache_v3/
