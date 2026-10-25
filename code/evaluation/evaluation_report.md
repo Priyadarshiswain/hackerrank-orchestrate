@@ -1,6 +1,6 @@
 # Evaluation Report — Ghost Data Still Exists
 
-**Version: V1.1** (phase-1 build, 2026-10-25)
+**Version: V2** (2026-10-25; V1 numbers kept for comparison)
 
 ## 1. How we measure
 
@@ -14,7 +14,7 @@
   python3 code/evaluation/stage_report.py               # per-stage table (section 2)
   python3 code/main.py && python3 code/validate_output.py
   python3 code/evaluation/intent_eval.py --prompt v4    # intent cases (section 3)
-  python3 -m unittest discover -s code/tests            # 71 unit tests
+  python3 -m unittest discover -s code/tests            # 80 unit tests
   ```
 
 ### Metric definitions (`code/evaluation/main.py`)
@@ -26,43 +26,46 @@
 | Field accuracy | For each field, the share of gold steps whose step at the same position in the prediction has the same value |
 | Sequence accuracy | Share of cases whose whole ordered `steps_json` equals the gold answer exactly |
 
-## 2. Results on the 32 samples (V1)
+## 2. Results on the 32 samples
 
-| Metric | V1 |
-|---|---|
-| Case status accuracy | **1.000** (32/32) |
-| Step precision | **0.994** |
-| Step recall | **0.865** |
-| Step F1 | **0.925** |
-| Sequence accuracy | **0.344** (11/32) |
+| Metric | V1 | V2 |
+|---|---|---|
+| Case status accuracy | 1.000 (32/32) | **1.000** (32/32) |
+| Step precision | 0.994 | **0.994** |
+| Step recall | 0.865 | **0.896** |
+| Step F1 | 0.925 | **0.943** |
+| Sequence accuracy | 0.344 (11/32) | **0.438** (14/32) |
 
-| Field | Accuracy |
-|---|---|
-| step_no | 0.865 |
-| phase | 0.865 |
-| system_id | 0.653 |
-| resource_id | 0.653 |
-| operation | 0.705 |
-| state | 0.705 |
-| evidence_id | 0.865 |
+| Field | V1 | V2 |
+|---|---|---|
+| step_no | 0.865 | 0.896 |
+| phase | 0.865 | 0.896 |
+| system_id | 0.653 | 0.736 |
+| resource_id | 0.653 | 0.736 |
+| operation | 0.705 | 0.777 |
+| state | 0.705 | 0.777 |
+| evidence_id | 0.865 | 0.896 |
 
 How to read these numbers:
-- **Field accuracy is position-based.** One missing step shifts every later step, so `resource_id` (0.653) is lower than step recall (0.865) even though the steps we do emit are almost all correct.
+- **Field accuracy is position-based.** One missing step shifts every later step, so `resource_id` (0.736) is lower than step recall (0.896) even though the steps we do emit are almost all correct.
 - **Wrong steps.** We emit 1 wrong step: a `VERIFY_RECORD_ABSENT` for `account_6523` in case_17. That record has no evidence it ever existed.
-- **Missing steps.** All other differences are steps for 26 records the pipeline never links to the person:
-  - 13 main accounts and 10 anonymised analytics records that appear only in unattributed deletion-worker activity rows;
-  - 3 resources that appear in no participant-visible file at all.
+- **Missing steps.** All other differences are steps for 20 records the pipeline doesn't link to the person:
+  - 11 main accounts: the account rule found more than one candidate, or none (account_004 appears in no file at all);
+  - 7 anonymised analytics records that appear only in unattributed deletion-worker activity rows;
+  - 2 audit records that appear in no participant-visible file.
 - **Citations.** Every citation we emit matches the gold citation.
 
 ### Results by pipeline stage (samples, `code/evaluation/stage_report.py`)
 
-| Stage | Measure | V1 |
-|---|---|---|
-| Intent classification | NOT_APPLICABLE decided correctly | 32/32 |
-| Identity resolution | case → user_id resolved | 32/32 |
-| Discovery | gold resources found (recall) / found resources that are gold (precision) | 85/111 = 0.77 / 85/86 = 0.99 |
-| Categories (C1) | owning system / required action correct | 85/85 / 85/85 |
-| State (C2–C4) | compliant-vs-violating agrees with gold | 85/85 |
+| Stage | Measure | V1 | V2 |
+|---|---|---|---|
+| Intent classification | NOT_APPLICABLE decided correctly | 32/32 | 32/32 |
+| Identity resolution | case → user_id resolved | 32/32 | 32/32 |
+| Discovery | gold resources found (recall) | 85/111 = 0.77 | 91/111 = 0.82 |
+| Discovery | found resources that are gold (precision) | 85/86 = 0.99 | 91/92 = 0.99 |
+| Account rule | links where no file names the account | — | 6 correct, 0 wrong |
+| Categories (C1) | owning system / required action correct | 85/85 / 85/85 | 91/91 / 91/91 |
+| State (C2–C4) | compliant-vs-violating agrees with gold | 85/85 | 91/91 |
 
 ## 3. Additional evaluation cases created by the team
 
@@ -149,7 +152,7 @@ Three end-to-end cases for the status and step logic, written by us. Each runs a
 - *Why.* That file can't be cited (AGENTS.md 6.6), and a finding needs citable evidence.
 - *Result.* Pass.
 
-`code/tests/` holds 71 tests in all. These synthetic cases each check one deletion-audit rule:
+`code/tests/` holds 80 tests in all. These synthetic cases each check one deletion-audit rule:
 
 | Case | Rule checked |
 |---|---|
@@ -161,6 +164,8 @@ Three end-to-end cases for the status and step logic, written by us. Each runs a
 | `test_state.ObserveTests.test_log_404_is_absent_and_query_key_is_not_exposure` | A lookup key is not exposed PII; a 404 means absent |
 | `test_state.ObserveTests.test_activity_rows_are_claims` | Activity rows never prove state |
 | `test_categories.PageRuleTests.test_unknown_people_on_a_page_block_whole_page_attribution` | A screen showing a stranger's email gives only same-line records |
+| `test_state.ObserveTests.test_screen_*` | A screenshot's detail panel gives exposure, flow state and restore state |
+| `test_account_rule.*` | The worker result must match the reported status; cross-case elimination; two candidates stay unlinked; the 10-minute grace period |
 | `test_identity.*` | Historical emails, an email shared by two users, chains that don't end at the snapshot |
 | `test_identifiers.*`, `test_evidence_index.*` | Lookalike decoy emails (`.jr`) are kept apart; phone formats are normalised |
 
@@ -180,23 +185,27 @@ Three end-to-end cases for the status and step logic, written by us. Each runs a
 | 10 | `source_resource_id=` was read as `resource_id=` | unit test | Word-boundary match |
 | 11 | COMPLETE verifications with no citable evidence; a finding seen only in a later file | validator on the 518 | Dropped, following AGENTS.md 6.3/6.6 |
 | 12 | A time-window link for activity-only accounts added 55 wrong records for 23 right ones | sample experiment | Rejected: a wrong record costs more than a missing one |
+| 13 | Screenshots gave presence only, so active flows, open restores and exposed tickets were missed (cases 39, 53, 55 wrongly COMPLETE) | adversarial review of the 518 | The record's detail panel on the screen is read for exposure, flow and restore state; the 3 cases are now INCOMPLETE with cited findings |
+| 14 | Omission from service exports, which list only the lookups that were run, "proved" absence (case_55 cited evidence_71 for an account deleted after audit_at) | adversarial review | No omission from service exports; a deletion after audit_at means the record existed at audit_at |
+| 15 | The main account was missing in 262 of 508 cases | adversarial review | Account rule (V2): worker result must match `reported_status`, inside the request–report window, with cross-case elimination, linked only when one candidate is left. Sample: 6 correct, 0 wrong; agrees with the evidence 117 times in 118; adds the account to 113 more evaluation cases |
+| 16 | Absence proof cited a snapshot taken before the deletion, and missed account-table SQL captures (case_02, case_31) | sample citations | A missing row proves absence only in a snapshot taken after the record's last deletion step; single-record-type SQL tables count as sources; SQL captures are preferred over JSON extracts (sample F1 0.937 → 0.943) |
 
 ## 5. Evaluation-set checks (518 requests, no labels)
 
 - **Contract.** The validator passes: 518 rows, sorted, valid JSON, phases and states consistent, no remediation evidence, no citation captured after audit_at. The only warning is case_63: COMPLETE with no steps, because no file ties a record to the person.
-- **Status split.** 165 COMPLETE, 343 INCOMPLETE, 10 NOT_APPLICABLE.
+- **Final run.** Done on the Anthropic API with a fresh cache (see `usage_report.md`). Its output is byte-for-byte identical to the headless-CLI run.
+- **Status split (V2).** 162 COMPLETE, 346 INCOMPLETE, 10 NOT_APPLICABLE; 2,935 steps. V1 had 165 / 343 / 10.
   - All 10 NOT_APPLICABLE texts are genuine non-deletion requests.
-  - 157 cases whose workflow reported COMPLETE are INCOMPLETE on the evidence.
+  - 159 cases whose workflow reported COMPLETE are INCOMPLETE on the evidence.
+  - 350 of the 508 deletion cases list their main account (V1: 237).
 - **Independent review (Fable).** A stratified hand check of about 20 evaluation cases plus dataset-wide probes. It confirms that ordering, citation timing, tombstones, legal holds, replicas and analytics rules are handled. Known weak spots are listed in section 6.
 
-## 6. Known limitations (targets for V2)
+## 6. Known limitations
 
-1. **Main account missing in 262 of 508 cases.** The account id appears only in an unattributed deletion-worker row. A stricter evidence-pattern rule is being considered: worker result matching `reported_status`, inside the request–report window, with cross-case elimination. On the samples it gives 15 correct, 0 wrong.
-2. **Screenshots give presence and PII only.** Flow, restore and redaction status are not read from them. This makes 3 cases wrongly COMPLETE (39, 53, 55).
-3. **Absence by omission is still used from partial JSON exports and bundles.** That gives about 40 citations that may not prove absence.
-4. **Records linked through reused emails can belong to a later period** than the case's audit_at. This affects 8 cases.
-5. **Unknown states (14 cases) default to COMPLETE**, because a finding needs evidence.
-6. **28 cases whose workflow reported NOT_STARTED are answered COMPLETE.**
-   - In 11 of them, the only step is a retained audit record, so nothing proves the account is gone.
-   - case_63 has no steps at all: no file ties any record to the person.
-   - In V2, these become a review group instead of defaulting to COMPLETE.
+Fixed in V2: the screenshot state (V1 item 2) and the service-export omission (part of V1 item 3), and the account rule now covers part of V1 item 1. Still open:
+
+1. **The main account is still missing in 158 of 508 evaluation cases.** The account rule leaves them unlinked because two or three candidates remain after elimination. A constraint solver over each wave could resolve more; a language model adds no signal there.
+2. **Absence by omission is still used from JSON bundles.** The sample answers do cite a bundle (case_31) when no SQL capture qualifies.
+3. **Records linked through reused emails can belong to a later period** than the case's audit_at. This affects about 8 cases.
+4. **Unknown states default to COMPLETE**, because a finding needs evidence.
+5. **27 cases whose workflow reported NOT_STARTED are answered COMPLETE.** case_63 has no steps at all: no file ties any record to the person. These are the natural group for an LLM-assisted review in a later version.

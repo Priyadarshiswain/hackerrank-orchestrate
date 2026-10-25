@@ -25,3 +25,6 @@ cache_api/
 
 # Fresh caches from live viewer runs
 cache_live/
+
+# Fresh cache of the final API run (merged into code/cache afterwards)
+cache_final/

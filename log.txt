@@ -2177,3 +2177,26 @@ repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
 worktree=main
 parent_agent=none
 
+
+## [2026-10-25T09:00:19Z] Final API run on the 518 and V2 package
+
+User Prompt (verbatim, secrets redacted):
+ok create the package and run on actual using apis, make sure package is complete as per instuctions
+
+Agent Response Summary:
+Ran all 518 requests on the Anthropic API with a fresh cache and 8 workers: 397 model calls, 680,658 tokens, about USD 0.23, 1 min 34 s, 0 errors; output.csv is byte-identical to the headless-CLI run and validates. Merged the run's answers into code/cache so the package reproduces it, added code/evaluation/usage_summary.py, updated stage_report.py to the full per-case pipeline, and updated README.md, evaluation_report.md and usage_report.md to V2 (sample status 1.000, step P/R/F1 0.994/0.896/0.943, sequence 0.438). Built code.zip with code/package.py and verified every required file is present, nothing forbidden or secret is included, and a clean unzip reproduces output.csv with 0 model calls while the validator, 80 tests and reports pass; committed and tagged v2.
+
+Actions:
+* Ran main.py --backend api --workers 8 with GHOST_CACHE_DIR=cache_final; validate_output.py; cmp against the CLI run
+* Merged cache_final into code/cache; created code/evaluation/usage_summary.py; edited code/evaluation/stage_report.py, README.md, code/evaluation/evaluation_report.md, code/evaluation/usage_report.md, .gitignore
+* Ran package.py; clean unzip in the scratchpad: main.py, cmp, validate_output.py, unit tests, evaluation/main.py, stage_report.py, usage_summary.py
+* git commit and git tag v2
+
+Context:
+tool=Claude Code
+model=claude-opus-5-5[1m]
+branch=main
+repo_root=/Users/priyadarshiswain/Projects/hackerrank-orchestrate-october26
+worktree=main
+parent_agent=none
+
