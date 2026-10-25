@@ -1,12 +1,15 @@
-"""Screenshot evidence: vision transcription with a test and a control model.
+"""Screenshot evidence: vision transcription.
 
-Agreed design (build plan V1.0, option B):
-  - Each PNG in evidence_files.csv is read once by claude-haiku-5-5 (test) and
-    once by claude-sonnet-5-5 (control). Each returns a faithful transcription
-    plus the identifiers it saw.
-  - Identifiers are extracted in code (identifiers.py) from each model's
-    transcribed lines and compared; any difference is flagged, because one
-    misread character can hide or invent a customer link.
+Agreed design (build plan V1.0 option B; model ladder since V3):
+  - The pipeline reads each PNG in evidence_files.csv with the model ladder
+    (escalate.py, ladder_one below): claude-haiku-5-5 first, a stronger model
+    only when the transcription fails a check or reports less than 0.90
+    confidence. Each returns a faithful transcription.
+  - Identifiers are extracted in code (identifiers.py) from the transcribed
+    lines, never taken from the model's own lists.
+  - --roles test,control keeps the older fixed comparison of two models as an
+    optional evaluation tool; any difference is flagged, because one misread
+    character can hide or invent a customer link.
   - Results are cached per (model, prompt version, sha256 of image bytes) in
     code/cache/screenshot_cache.json, so re-runs need no model calls.
   - Only extraction happens here; matching identifiers to people is done later

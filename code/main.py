@@ -14,6 +14,7 @@ cached under code/cache/.
 """
 import argparse
 import sys
+from pathlib import Path
 
 import config
 from contract import DATASET_DIR, OUTPUT_PATH, REPO_ROOT, read_csv, write_output
@@ -40,8 +41,8 @@ def main(argv=None):
     else:
         requests_path = DATASET_DIR / "deletion_requests.csv"
         out_path = OUTPUT_PATH
-    requests_path = args.requests or requests_path
-    out_path = args.out or out_path
+    requests_path = Path(args.requests) if args.requests else requests_path
+    out_path = Path(args.out) if args.out else out_path
 
     requests = read_csv(requests_path)
     auditor = Auditor(requests_path, backend=args.backend)
