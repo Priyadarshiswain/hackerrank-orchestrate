@@ -11,17 +11,15 @@
     "lines": [
      "Northstar Shop / Customer Download Center / Data exports",
      "Data exports",
-     "Create and manage customer download packages",
      "4 jobs",
-     "All exports",
-     "Ready",
-     "Processing",
-     "Expired",
+     "Create and manage customer download packages",
+     "All exports | Ready | Processing | Expired",
      "Ready: 2",
      "Processing: 2",
      "Created today: 1",
      "Downloads today: 0",
-     "All exports | Updated moments ago \u00b7 4 records",
+     "All exports",
+     "Updated moments ago \u00b7 4 records",
      "Export ID | Filename | Owner | Status | Created",
      "1 export_1261 | customer_export_1261.zip | marcus.lee@northstar.shop | Collecting | 20 Jun 14:18 UTC",
      "2 export_1260 | customer_export_1260.zip | ingrid.dahl@outlook.com | Ready | 18 Jun 06:42 UTC",
@@ -39,11 +37,7 @@
      "06:46 Ready for download",
      "06:45 Package created",
      "06:43 Collecting customer records",
-     "06:42 Export requested",
-     "Production",
-     "Help",
-     "Production workspace",
-     "build 2026.10.4"
+     "06:42 Export requested"
     ],
     "person_names": [],
     "phones": [],
@@ -54,13 +48,20 @@
      "export_1258"
     ],
     "screen_title": "Data exports",
-    "shown_timestamp": "18 Jun 2026 06:42 UTC"
+    "shown_timestamp": ""
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.0006704000000000001,
+     "input_tokens": 3539,
+     "output_tokens": 633
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.00120833,
-    "input_tokens": 4347,
-    "output_tokens": 853
+    "cost_usd": 0.0006704000000000001,
+    "input_tokens": 3539,
+    "output_tokens": 633
    }
   },
   "2c246aa5843bec609b9ddfdf1154cd81e0fd61996f83954735e9856e48c18bf3": {
@@ -79,17 +80,21 @@
      "Archives",
      "Recent restores",
      "Infrastructure health",
-     "Service health: Healthy",
-     "Storage growth: +12.4%",
-     "Restore success: 99.6%",
-     "Stored: 1.35 PB",
+     "Service health",
+     "Healthy",
+     "Storage growth",
+     "+12.4%",
+     "Restore success",
+     "99.6%",
+     "Stored",
+     "1.35 PB",
      "Archives",
      "Updated moments ago \u00b7 4 records",
      "Archive ID | Account | Region | Created | Size | Encryption | Tier",
-     "backup_9291 | bluepeakco@outlook.com | ap-southeast-1 | 26 Apr 02:00 | 102.3 GB | AES-256 | Archive",
-     "backup_9288 | miller.logistics@company.com | us-west-2 | 26 Apr 02:00 | 67.1 GB | AES-256 | Archive",
-     "backup_9287 | areed1433@gmail.com | eu-west-1 | 26 Apr 02:00 | 84.7 GB | AES-256 | Archive",
-     "backup_9286 | summit-retail@company.com | us-east-1 | 26 Apr 02:00 | 91.4 GB | AES-256 | Archive",
+     "1 backup_9291 | bluepeakco@outlook.com | ap-southeast-1 | 26 Apr 02:00 | 102.3 GB | AES-256 | Archive",
+     "2 backup_9288 | miller.logistics@company.com | us-west-2 | 26 Apr 02:00 | 67.1 GB | AES-256 | Archive",
+     "3 backup_9287 | areed1433@gmail.com | eu-west-1 | 26 Apr 02:00 | 84.7 GB | AES-256 | Archive",
+     "4 backup_9286 | summit-retail@company.com | us-east-1 | 26 Apr 02:00 | 91.4 GB | AES-256 | Archive",
      "backup_9287",
      "Account: areed1433@gmail.com",
      "Path: s3://northstar-backups/customer-platform/weekly/segment-42-20260426.tar.zst",
@@ -106,9 +111,7 @@
      "backup_9281 restored \u00b7 Completed",
      "22 Apr",
      "checksum verification \u00b7 Completed",
-     "Vault Recovery Manager",
-     "Production workspace",
-     "build 2026.10.4"
+     "Vault Recovery Manager Production workspace build 2026.10.4"
     ],
     "person_names": [],
     "phones": [],
@@ -122,11 +125,18 @@
     "screen_title": "Customer-platform archives",
     "shown_timestamp": "26 Apr 2026 02:00 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.0007504000000000001,
+     "input_tokens": 3669,
+     "output_tokens": 767
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.0019660299999999997,
-    "input_tokens": 4478,
-    "output_tokens": 2316
+    "cost_usd": 0.0007504000000000001,
+    "input_tokens": 3669,
+    "output_tokens": 767
    }
   },
   "4e4cb259bc2010b622b0c53fe5872258f994fefc23452a83bb27473758693484": {
@@ -135,17 +145,27 @@
      "darwish.omar@icloud.com"
     ],
     "lines": [
+     "Pulse Analytics",
      "Northstar Shop / Pulse Analytics / Users",
      "Omar Darwish",
      "Last 90 days",
      "user_20 \u00b7 analytics_7438 \u00b7 darwish.omar@icloud.com",
-     "Event timeline | Sessions (12) | Orders (2) | Products viewed (19)",
-     "Sessions: 12",
-     "Products viewed: 19",
-     "Completed orders: 2",
-     "Revenue: USD 167.42",
-     "Mobile / Desktop: 67% / 33%",
-     "Acquisition: Organic search",
+     "Event timeline",
+     "Sessions (12)",
+     "Orders (2)",
+     "Products viewed (19)",
+     "Sessions",
+     "12",
+     "Products viewed",
+     "19",
+     "Completed orders",
+     "2",
+     "Revenue",
+     "USD 167.42",
+     "Mobile / Desktop",
+     "67% / 33%",
+     "Acquisition",
+     "Organic search",
      "Event timeline",
      "Updated moments ago \u00b7 5 records",
      "Time | Event | Product / detail | Value | Device",
@@ -168,7 +188,13 @@
      "30 Jun",
      "Product search \u00b7 coffee set",
      "22 Jun",
-     "Campaign opened"
+     "Campaign opened",
+     "Pulse Analytics",
+     "Production workspace",
+     "build 2026.10.4",
+     "Production",
+     "Help",
+     "PA"
     ],
     "person_names": [
      "Omar Darwish"
@@ -179,13 +205,20 @@
      "analytics_7438"
     ],
     "screen_title": "Omar Darwish",
-    "shown_timestamp": "13 Jul 2026 14:22 UTC"
+    "shown_timestamp": ""
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.0006854000000000001,
+     "input_tokens": 3669,
+     "output_tokens": 637
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.0014172,
-    "input_tokens": 4477,
-    "output_tokens": 792
+    "cost_usd": 0.0006854000000000001,
+    "input_tokens": 3669,
+    "output_tokens": 637
    }
   },
   "51fa0e6a38f8fa3629ba1b0d0b90b4ed139715956b97bfd09a6f1a6232c15df5": {
@@ -198,6 +231,10 @@
      "Soo-jin Park",
      "Live",
      "marketing_001 \u00b7 sj.park@naver.com \u00b7 +82 10-5837-9451",
+     "Profile",
+     "Attributes",
+     "Memberships",
+     "Activity",
      "Market: South Korea",
      "Language: Korean",
      "Email opt-in: Yes",
@@ -206,10 +243,10 @@
      "Profile",
      "Updated moments ago \u00b7 4 records",
      "Time | Activity | Detail",
-     "23:40 | Product-category update | Desk accessories \u00b7 Drinkware",
-     "23:38 | Campaign eligibility check | Autumn offers \u00b7 Eligible",
-     "23:35 | Profile refresh | Live profile fields updated",
-     "23:32 | Audience evaluation | Returning customers \u2014 East Asia",
+     "1 23:40 | Product-category update | Desk accessories \u00b7 Drinkware",
+     "2 23:38 | Campaign eligibility check | Autumn offers \u00b7 Eligible",
+     "3 23:35 | Profile refresh | Live profile fields updated",
+     "4 23:32 | Audience evaluation | Returning customers \u2014 East Asia",
      "Audience membership",
      "Audience: Returning customers \u2014 East Asia",
      "Segments: Repeat customer \u00b7 Home & lifestyle \u00b7 Mobile shopper",
@@ -218,9 +255,12 @@
      "Open rate: 32.4%",
      "Click rate: 6.8%",
      "Activity",
-     "Autumn offers \u2014 32.4% open rate",
-     "Home & Lifestyle Picks \u2014 28.7% open rate",
-     "Profile refreshed from live data \u2014 Recorded"
+     "Autumn offers",
+     "32.4% open rate",
+     "Home & Lifestyle Picks",
+     "28.7% open rate",
+     "Profile refreshed from live data",
+     "Recorded"
     ],
     "person_names": [
      "Soo-jin Park"
@@ -234,11 +274,18 @@
     "screen_title": "Soo-jin Park",
     "shown_timestamp": "15 Sep 2026 23:40 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.0005461,
+     "input_tokens": 2721,
+     "output_tokens": 548
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.0015330300000000001,
-    "input_tokens": 3528,
-    "output_tokens": 1830
+    "cost_usd": 0.0005461,
+    "input_tokens": 2721,
+    "output_tokens": 548
    }
   },
   "542b7aec17e6b2f38827896e7eb52c70e4bfaaca22433621be1f80f54884e944": {
@@ -248,14 +295,16 @@
     ],
     "lines": [
      "Northstar Shop / Helpline Console / Inbox",
-     "CS-5034 \u00b7 Where is my delivery? | SLA 01:42",
+     "CS-5034 \u00b7 Where is my delivery?",
+     "SLA 01:42",
      "support_1034 \u00b7 Kofi Agyeman \u00b7 Normal priority",
      "Conversation | Internal notes | Activity",
      "Customer: Kofi Agyeman",
      "Email: kagyeman8947@fastmail.com",
      "Assigned: Maya Chen",
      "Tags: Delivery \u00b7 Tracking \u00b7 Order update",
-     "Conversation | Updated moments ago \u00b7 4 records",
+     "Conversation",
+     "Updated moments ago \u00b7 4 records",
      "Time | Sender | Message",
      "1 09:12 | Kofi Agyeman | Could you let me know where my order is and when it is expected to arrive?",
      "2 09:13 | Northstar Bot | We received your message and are checking the order details.",
@@ -273,7 +322,10 @@
      "23 May | Dispatched",
      "24 May 07:46 | Reached regional hub",
      "24 May 08:15 | In transit",
-     "26 May | Delivery expected"
+     "26 May | Delivery expected",
+     "Helpline Console",
+     "Production workspace",
+     "build 2026.10.4"
     ],
     "person_names": [
      "Kofi Agyeman",
@@ -287,13 +339,20 @@
      "SWF-884103"
     ],
     "screen_title": "CS-5034 \u00b7 Where is my delivery?",
-    "shown_timestamp": "09:12"
+    "shown_timestamp": ""
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.0006714000000000001,
+     "input_tokens": 3734,
+     "output_tokens": 596
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.00119603,
-    "input_tokens": 4543,
-    "output_tokens": 750
+    "cost_usd": 0.0006714000000000001,
+    "input_tokens": 3734,
+    "output_tokens": 596
    }
   },
   "68c28a72afd6ed184d5990d15c543f8a516face204f0360f732755a8a63c28be": {
@@ -302,10 +361,16 @@
     "lines": [
      "Customer Reference Registry",
      "Search references, orders, support cases or finance records...",
+     "Production",
+     "Help",
+     "CR",
      "Northstar Shop / Customer Reference Registry / Customer references",
      "user_17",
      "Retained reference",
      "Customer key \u00b7 Account Platform \u00b7 eu-west",
+     "Filter",
+     "Export",
+     "Actions",
      "Overview",
      "Linked records",
      "History",
@@ -321,21 +386,26 @@
      "3 Support | CS-3378 | Linked to customer | 03 Jun 2024 09:27 | Active",
      "4 Finance | FIN-7742 | Linked to customer | 22 Aug 2024 15:03 | Active",
      "History",
-     "10 Mar 2026 | Metadata reviewed",
-     "22 Aug 2024 | Finance link added",
-     "03 Jun 2024 | Support link added",
-     "14 Feb 2024 | Support link added",
-     "11 Jan 2024 | Reference created",
+     "10 Mar 2026 Metadata reviewed",
+     "22 Aug 2024 Finance link added",
+     "03 Jun 2024 Support link added",
+     "14 Feb 2024 Support link added",
+     "11 Jan 2024 Reference created",
      "Activity",
-     "Reference created | Recorded",
-     "Order link added | ORD-20263245",
-     "Support links added | CS-3245, CS-3378",
-     "Finance link added | FIN-7742",
-     "Metadata reviewed | Recorded",
-     "Production",
-     "Help",
-     "CR",
-     "Customer Reference Registry | Production workspace | build 2026.10.4"
+     "Reference created Recorded",
+     "Order link added ORD-20263245",
+     "Support links added CS-3245, CS-3378",
+     "Finance link added FIN-7742",
+     "Metadata reviewed Recorded",
+     "Northstar Shop",
+     "Home",
+     "Customer references",
+     "Orders",
+     "Support",
+     "Finance",
+     "Data management",
+     "Reports",
+     "Customer Reference Registry Production workspace build 2026.10.4"
     ],
     "person_names": [],
     "phones": [],
@@ -349,11 +419,18 @@
     "screen_title": "user_17",
     "shown_timestamp": "10 Mar 2026 07:18 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.0006894000000000001,
+     "input_tokens": 3539,
+     "output_tokens": 671
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.00213628,
-    "input_tokens": 9863,
-    "output_tokens": 2154
+    "cost_usd": 0.0006894000000000001,
+    "input_tokens": 3539,
+    "output_tokens": 671
    }
   },
   "75afdb0ae53a4510c83399a70d88073cb4fb2747454095756e4ddad1a8c70605": {
@@ -363,19 +440,33 @@
      "g.silva76.jr@gmail.com"
     ],
     "lines": [
+     "Search Console",
+     "email:g.silva76@gmail.com",
+     "Production",
+     "Help",
+     "SC",
      "Northstar Shop / Search Console / Customer Search",
      "Customer Search",
      "2 hits",
      "customer_directory_v3 / prod-eu",
+     "Filter",
+     "Export",
+     "Actions",
      "Results (2)",
      "Query details",
      "Shard timing",
-     "Executed: 01 Sep 2026 06:00:14 UTC",
-     "Latency: 184 ms",
-     "Index: customer_directory_v3",
-     "Environment: prod-eu",
-     "Shard total: 184 ms",
-     "Results (2) | Updated moments ago \u00b7 2 records",
+     "Executed",
+     "01 Sep 2026 06:00:14 UTC",
+     "Latency",
+     "184 ms",
+     "Index",
+     "customer_directory_v3",
+     "Environment",
+     "prod-eu",
+     "Shard total",
+     "184 ms",
+     "Results (2)",
+     "Updated moments ago \u00b7 2 records",
      "_id | Display name | Email | Customer reference | Score | Last indexed",
      "1 search_428 | Gabriel Silva | g.silva76@gmail.com | user_13 | 9.84 | 05:58:21 UTC",
      "2 search_1874 | \u2014 | g.silva76.jr@gmail.com | \u2014 | 4.12 | 05:55:03 UTC",
@@ -390,10 +481,7 @@
      "06:00:14 email:g.silva76@gmail.com \u00b7 2 hits",
      "05:42:03 customer_reference:user_9842 \u00b7 1 hit",
      "05:31:18 display_name:\"Aditi Jain\" \u00b7 1 hit",
-     "Production",
-     "Help",
-     "Search Console",
-     "email:g.silva76@gmail.com"
+     "Search Console Production workspace build 2026.10.4"
     ],
     "person_names": [
      "Gabriel Silva",
@@ -405,26 +493,46 @@
      "search_428",
      "search_1874",
      "user_13",
-     "user_9842"
+     "user_9842",
+     "prod-eu"
     ],
     "screen_title": "Customer Search",
     "shown_timestamp": "01 Sep 2026 06:00:14 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.0006764000000000001,
+     "input_tokens": 3539,
+     "output_tokens": 645
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.0013895,
-    "input_tokens": 4346,
-    "output_tokens": 789
+    "cost_usd": 0.0006764000000000001,
+    "input_tokens": 3539,
+    "output_tokens": 645
    }
   },
   "96e9a191380c29b9e0ab997007268c4cd6353cb6721ebd1ed4a32599d8d37e04": {
    "answer": {
     "emails": [],
     "lines": [
+     "Northstar Shop",
+     "Nimbus Object Storage",
+     "Search objects by name or prefix...",
+     "Production",
+     "Help",
+     "NO",
+     "Northstar Shop / Nimbus Object Storage / northstar-customer-data",
      "northstar-customer-data",
      "8 objects",
      "eu-west-1 / support-attachments / 2026 / 02",
-     "Objects | Versions | Access",
+     "Filter",
+     "Export",
+     "Actions",
+     "Objects",
+     "Versions",
+     "Access",
      "Account: Northstar Production",
      "Region: eu-west-1",
      "Captured: 13 Feb 2026 08:00 UTC",
@@ -449,26 +557,38 @@
      "Uploader: support-service",
      "Modified: 12 Feb 2026 18:42 UTC",
      "Activity",
-     "v3 | 12 Feb 18:42 \u00b7 metadata update",
-     "v2 | 12 Feb 18:39 \u00b7 upload complete",
-     "v1 | 12 Feb 18:38 \u00b7 object created"
+     "v3",
+     "12 Feb 18:42 \u00b7 metadata update",
+     "v2",
+     "12 Feb 18:39 \u00b7 upload complete",
+     "v1",
+     "12 Feb 18:38 \u00b7 object created",
+     "Nimbus Object Storage",
+     "Production workspace",
+     "build 2026.10.4"
     ],
     "person_names": [],
     "phones": [],
     "resource_ids": [
      "northstar-customer-data",
-     "NS-10493",
-     "customer_export_2026-02-10.zip",
-     "customer_export_2026-02-12.zip"
+     "invoice_NS-10493.pdf",
+     "support-service"
     ],
     "screen_title": "northstar-customer-data",
     "shown_timestamp": "13 Feb 2026 08:00 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.0007804000000000001,
+     "input_tokens": 3669,
+     "output_tokens": 827
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.00126863,
-    "input_tokens": 4476,
-    "output_tokens": 922
+    "cost_usd": 0.0007804000000000001,
+    "input_tokens": 3669,
+    "output_tokens": 827
    }
   },
   "ca59f693f4e7002466b3fdeaf1bb6763618770963dd811b60003772d07b4b03b": {
@@ -476,13 +596,20 @@
     "emails": [],
     "lines": [
      "Northstar Shop / Sentinel / Account events",
-     "Account events",
      "6 signed events",
+     "Account events",
      "Subject filter: user_03 \u00b7 18-26 Aug 2026 UTC",
-     "Events: 6",
-     "Categories: 5",
-     "Integrity failures: 0",
-     "Partition: 2026-Q3",
+     "Events (6)",
+     "Timeline",
+     "Integrity",
+     "Events",
+     "6",
+     "Categories",
+     "5",
+     "Integrity failures",
+     "0",
+     "Partition",
+     "2026-Q3",
      "Events (6)",
      "Updated moments ago \u00b7 6 records",
      "Time (UTC) | Event | Category | Subject | Actor | Integrity | Reference",
@@ -501,30 +628,40 @@
      "signature: Valid",
      "journal: 2026-Q3",
      "Activity",
-     "25 Aug: Account closure recorded",
-     "25 Aug: Session revoked",
-     "24 Aug: Recovery challenge completed",
-     "22 Aug: Email change confirmed"
+     "25 Aug Account closure recorded",
+     "25 Aug Session revoked",
+     "24 Aug Recovery challenge completed",
+     "22 Aug Email change confirmed",
+     "Sentinel",
+     "Production workspace",
+     "build 2026.10.4"
     ],
     "person_names": [],
     "phones": [],
     "resource_ids": [
      "user_03",
-     "audit_record_001",
-     "audit_record_002",
      "audit_record_003",
-     "audit_record_004",
+     "audit_record_002",
+     "audit_record_001",
+     "audit_record_006",
      "audit_record_005",
-     "audit_record_006"
+     "audit_record_004"
     ],
     "screen_title": "Account events",
     "shown_timestamp": ""
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.0007039000000000001,
+     "input_tokens": 3539,
+     "output_tokens": 700
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.00186153,
-    "input_tokens": 4348,
-    "output_tokens": 2159
+    "cost_usd": 0.0007039000000000001,
+    "input_tokens": 3539,
+    "output_tokens": 700
    }
   },
   "d5c32ca5b6e1a2b4bbe9f5d41835ef1fd5d4f7061dab9067a4f9f88cea3c1861": {
@@ -533,6 +670,7 @@
      "haruka.s1838@zoho.com"
     ],
     "lines": [
+     "Customer Operations",
      "Northstar Shop / Customer Operations / Customers",
      "Haruka Sato",
      "Silver",
@@ -544,7 +682,8 @@
      "Market: JP",
      "Preferred language: Japanese",
      "Last contact: 24 Sep 2026 09:14 JST",
-     "Overview \u00b7 Updated moments ago \u00b7 2 records",
+     "Overview",
+     "Updated moments ago \u00b7 2 records",
      "Order ID | Date | Item | Qty | Total | Status",
      "1 ORD-20265762 | 12 Sep 2026 | Ceramic coffee set | 1 | JPY 8,900 | Delivered \u00b7 18 Sep",
      "2 ORD-20265518 | 28 Aug 2026 | Travel backpack | 1 | JPY 12,400 | Returned \u00b7 03 Sep",
@@ -554,11 +693,11 @@
      "Support: CS-8538 \u00b7 support_9538",
      "Member since: 12 Jan 2024",
      "Activity",
-     "24 Sep - Customer replied to CS-8538",
-     "22 Sep - Support agent responded",
-     "18 Sep - Order ORD-20265762 delivered",
-     "03 Sep - Order ORD-20265518 returned",
-     "28 Aug - support_9538 created"
+     "24 Sep | Customer replied to CS-8538",
+     "22 Sep | Support agent responded",
+     "18 Sep | Order ORD-20265762 delivered",
+     "03 Sep | Order ORD-20265518 returned",
+     "28 Aug | support_9538 created"
     ],
     "person_names": [
      "Haruka Sato"
@@ -577,11 +716,18 @@
     "screen_title": "Haruka Sato",
     "shown_timestamp": "24 Sep 2026 09:14 JST"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.0006779,
+     "input_tokens": 3734,
+     "output_tokens": 609
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.0014215,
-    "input_tokens": 4541,
-    "output_tokens": 775
+    "cost_usd": 0.0006779,
+    "input_tokens": 3734,
+    "output_tokens": 609
    }
   },
   "e81fabc93ea1b5f4c918d934cdb2bea05d61737adfcc29f281494f5d8ec46355": {
@@ -598,18 +744,23 @@
      "Topology",
      "Throughput",
      "Recent deliveries",
-     "Healthy: 12",
-     "Events / hour: 4,113",
-     "Delivery p95: 1.8 s",
-     "Backlog: 18",
-     "Destination health: Healthy",
+     "Healthy",
+     "12",
+     "Events / hour",
+     "4,113",
+     "Delivery p95",
+     "1.8 s",
+     "Backlog",
+     "18",
+     "Destination health",
+     "Healthy",
      "Topology",
      "Updated moments ago \u00b7 4 records",
      "Connector | Destination | Selector | Mode | Events/hour | Last contact",
-     "data_flow_1121 | customer_analytics_warehouse | jain.aditi@gmail.com | Continuous | 1,284 | 07:59:42",
-     "data_flow_9846 | customer_analytics_warehouse | lucia-torres@gmail.com | Continuous | 842 | 07:59:36",
-     "Order notifications | notification_service | order events | Continuous | 650 | 07:59:28",
-     "Delivery tracking | logistics_warehouse | shipment events | Continuous | 420 | 07:59:13",
+     "1 data_flow_1121 | customer_analytics_warehouse | jain.aditi@gmail.com | Continuous | 1,284 | 07:59:42",
+     "2 data_flow_9846 | customer_analytics_warehouse | lucia-torres@gmail.com | Continuous | 842 | 07:59:36",
+     "3 Order notifications | notification_service | order events | Continuous | 650 | 07:59:28",
+     "4 Delivery tracking | logistics_warehouse | shipment events | Continuous | 420 | 07:59:13",
      "data_flow_1121",
      "Status: Healthy",
      "Owner: Data Platform",
@@ -621,22 +772,37 @@
      "07:59:42 124 events delivered",
      "07:58:10 checkpoint committed",
      "07:56:44 18 events retried",
-     "07:55:02 destination acknowledged batch"
+     "07:55:02 destination acknowledged batch",
+     "BridgeOps",
+     "Production workspace",
+     "build 2026.10.4",
+     "Production",
+     "Help"
     ],
     "person_names": [],
     "phones": [],
     "resource_ids": [
      "data_flow_1121",
-     "data_flow_9846"
+     "data_flow_9846",
+     "customer_analytics_warehouse",
+     "notification_service",
+     "logistics_warehouse"
     ],
     "screen_title": "Connections",
     "shown_timestamp": "07 Aug 2026 08:00 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.0006989000000000001,
+     "input_tokens": 3669,
+     "output_tokens": 664
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.0019987,
-    "input_tokens": 4477,
-    "output_tokens": 1955
+    "cost_usd": 0.0006989000000000001,
+    "input_tokens": 3669,
+    "output_tokens": 664
    }
   }
  },
@@ -644,8 +810,8 @@
   "18b95c1bd8b8956e40216df935498a9f3c181ea2a69b5cd6d3c0841a816d5557": {
    "answer": {
     "emails": [
-     "marcus.lee@northstar.shop",
      "ingrid.dahl@outlook.com",
+     "marcus.lee@northstar.shop",
      "sara.kim@northstar.shop",
      "daniel.park@northstar.shop"
     ],
@@ -655,7 +821,10 @@
      "Data exports",
      "4 jobs",
      "Create and manage customer download packages",
-     "All exports | Ready | Processing | Expired",
+     "All exports",
+     "Ready",
+     "Processing",
+     "Expired",
      "Ready: 2",
      "Processing: 2",
      "Created today: 1",
@@ -676,10 +845,14 @@
      "Download count: 0",
      "Included: Profile \u00b7 Orders \u00b7 Saved addresses",
      "Activity",
-     "06:46 | Ready for download",
-     "06:45 | Package created",
-     "06:43 | Collecting customer records",
-     "06:42 | Export requested",
+     "06:46",
+     "Ready for download",
+     "06:45",
+     "Package created",
+     "06:43",
+     "Collecting customer records",
+     "06:42",
+     "Export requested",
      "Customer Download Center",
      "Production workspace",
      "build 2026.10.4"
@@ -693,13 +866,20 @@
      "export_1258"
     ],
     "screen_title": "Data exports",
-    "shown_timestamp": "18 Jun 2026 06:42 UTC"
+    "shown_timestamp": ""
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.013718,
+     "input_tokens": 3539,
+     "output_tokens": 664
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.0217843,
-    "input_tokens": 4348,
-    "output_tokens": 865
+    "cost_usd": 0.013718,
+    "input_tokens": 3539,
+    "output_tokens": 664
    }
   },
   "2c246aa5843bec609b9ddfdf1154cd81e0fd61996f83954735e9856e48c18bf3": {
@@ -711,7 +891,6 @@
      "summit-retail@company.com"
     ],
     "lines": [
-     "Vault Recovery Manager",
      "Northstar Shop / Vault Recovery Manager / Recovery Manager",
      "Customer-platform archives",
      "Healthy",
@@ -756,11 +935,18 @@
     "screen_title": "Customer-platform archives",
     "shown_timestamp": "26 Apr 2026 02:00 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.014528,
+     "input_tokens": 3669,
+     "output_tokens": 719
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.0227643,
-    "input_tokens": 4478,
-    "output_tokens": 911
+    "cost_usd": 0.014528,
+    "input_tokens": 3669,
+    "output_tokens": 719
    }
   },
   "4e4cb259bc2010b622b0c53fe5872258f994fefc23452a83bb27473758693484": {
@@ -770,9 +956,6 @@
     ],
     "lines": [
      "Pulse Analytics",
-     "Production",
-     "Help",
-     "PA",
      "Northstar Shop / Pulse Analytics / Users",
      "Omar Darwish",
      "Last 90 days",
@@ -809,10 +992,7 @@
      "30 Jun",
      "Product search \u00b7 coffee set",
      "22 Jun",
-     "Campaign opened",
-     "Pulse Analytics",
-     "Production workspace",
-     "build 2026.10.4"
+     "Campaign opened"
     ],
     "person_names": [
      "Omar Darwish"
@@ -825,11 +1005,18 @@
     "screen_title": "Omar Darwish",
     "shown_timestamp": "13 Jul 2026 14:22 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.013578,
+     "input_tokens": 3669,
+     "output_tokens": 624
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.026034,
-    "input_tokens": 4478,
-    "output_tokens": 800
+    "cost_usd": 0.013578,
+    "input_tokens": 3669,
+    "output_tokens": 624
    }
   },
   "51fa0e6a38f8fa3629ba1b0d0b90b4ed139715956b97bfd09a6f1a6232c15df5": {
@@ -882,11 +1069,18 @@
     "screen_title": "Soo-jin Park",
     "shown_timestamp": "15 Sep 2026 23:40 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.010812,
+     "input_tokens": 2721,
+     "output_tokens": 537
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.016966300000000004,
-    "input_tokens": 3531,
-    "output_tokens": 710
+    "cost_usd": 0.010812,
+    "input_tokens": 2721,
+    "output_tokens": 537
    }
   },
   "542b7aec17e6b2f38827896e7eb52c70e4bfaaca22433621be1f80f54884e944": {
@@ -895,23 +1089,21 @@
      "kagyeman8947@fastmail.com"
     ],
     "lines": [
-     "Helpline Console",
      "Northstar Shop / Helpline Console / Inbox",
      "CS-5034 \u00b7 Where is my delivery?",
      "SLA 01:42",
-     "support_1034 \u00b7 Kofi Agyeman \u00b7 Normal priority",
-     "Conversation | Internal notes | Activity",
-     "Customer: Kofi Agyeman",
+     "support_1034 \u00b7 Kofi Ageyman \u00b7 Normal priority",
+     "Customer: Kofi Ageyman",
      "Email: kagyeman8947@fastmail.com",
      "Assigned: Maya Chen",
      "Tags: Delivery \u00b7 Tracking \u00b7 Order update",
      "Conversation",
      "Updated moments ago \u00b7 4 records",
      "Time | Sender | Message",
-     "1 09:12 | Kofi Agyeman | Could you let me know where my order is and when it is expected to arrive?",
+     "1 09:12 | Kofi Ageyman | Could you let me know where my order is and when it is expected to arrive?",
      "2 09:13 | Northstar Bot | We received your message and are checking the order details.",
      "3 09:28 | Maya Chen | The parcel reached the regional hub and is on track for delivery on 26 May.",
-     "4 09:35 | Kofi Agyeman | Thanks for the update.",
+     "4 09:35 | Kofi Ageyman | Thanks for the update.",
      "Order ORD-20265034",
      "Product: Running shoes",
      "Status: In transit",
@@ -920,14 +1112,19 @@
      "Expected: 26 May 2026",
      "Assigned agent: Maya Chen",
      "Activity",
-     "22 May: Order confirmed",
-     "23 May: Dispatched",
-     "24 May 07:46: Reached regional hub",
-     "24 May 08:15: In transit",
-     "26 May: Delivery expected"
+     "22 May",
+     "Order confirmed",
+     "23 May",
+     "Dispatched",
+     "24 May 07:46",
+     "Reached regional hub",
+     "24 May 08:15",
+     "In transit",
+     "26 May",
+     "Delivery expected"
     ],
     "person_names": [
-     "Kofi Agyeman",
+     "Kofi Ageyman",
      "Maya Chen"
     ],
     "phones": [],
@@ -940,11 +1137,18 @@
     "screen_title": "CS-5034 \u00b7 Where is my delivery?",
     "shown_timestamp": ""
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.013038,
+     "input_tokens": 3734,
+     "output_tokens": 557
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.0211423,
-    "input_tokens": 4545,
-    "output_tokens": 722
+    "cost_usd": 0.013038,
+    "input_tokens": 3734,
+    "output_tokens": 557
    }
   },
   "68c28a72afd6ed184d5990d15c543f8a516face204f0360f732755a8a63c28be": {
@@ -956,6 +1160,9 @@
      "user_17",
      "Retained reference",
      "Customer key \u00b7 Account Platform \u00b7 eu-west",
+     "Overview",
+     "Linked records",
+     "History",
      "Reference type: Customer key",
      "Created: 11 Jan 2024 08:42 UTC",
      "Most recent update: 10 Mar 2026 07:18 UTC",
@@ -1000,11 +1207,18 @@
     "screen_title": "user_17",
     "shown_timestamp": "10 Mar 2026 07:18 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.013198,
+     "input_tokens": 3539,
+     "output_tokens": 612
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.020968300000000002,
-    "input_tokens": 4349,
-    "output_tokens": 783
+    "cost_usd": 0.013198,
+    "input_tokens": 3539,
+    "output_tokens": 612
    }
   },
   "75afdb0ae53a4510c83399a70d88073cb4fb2747454095756e4ddad1a8c70605": {
@@ -1015,7 +1229,7 @@
     ],
     "lines": [
      "Search Console",
-     "Search: email:g.silva76@gmail.com",
+     "email:g.silva76@gmail.com",
      "Production",
      "Help",
      "SC",
@@ -1060,27 +1274,33 @@
     ],
     "phones": [],
     "resource_ids": [
-     "customer_directory_v3",
      "search_428",
      "search_1874",
      "user_13",
-     "user_9842"
+     "user_9842",
+     "customer_directory_v3"
     ],
     "screen_title": "Customer Search",
     "shown_timestamp": "01 Sep 2026 06:00:14 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.013368,
+     "input_tokens": 3539,
+     "output_tokens": 629
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.025704,
-    "input_tokens": 4348,
-    "output_tokens": 819
+    "cost_usd": 0.013368,
+    "input_tokens": 3539,
+    "output_tokens": 629
    }
   },
   "96e9a191380c29b9e0ab997007268c4cd6353cb6721ebd1ed4a32599d8d37e04": {
    "answer": {
     "emails": [],
     "lines": [
-     "Nimbus Object Storage",
      "Northstar Shop / Nimbus Object Storage / northstar-customer-data",
      "northstar-customer-data",
      "8 objects",
@@ -1118,22 +1338,38 @@
     ],
     "person_names": [],
     "phones": [],
-    "resource_ids": [],
+    "resource_ids": [
+     "delivery_confirmation_19.pdf",
+     "delivery_confirmation_20.pdf",
+     "return_label_4821.pdf",
+     "return_label_4876.pdf",
+     "invoice_NS-10493.pdf",
+     "parcel_damage_7713.jpg",
+     "customer_export_2026-02-10.zip",
+     "customer_export_2026-02-12.zip",
+     "NS-10493"
+    ],
     "screen_title": "northstar-customer-data",
     "shown_timestamp": "13 Feb 2026 08:00 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.015618,
+     "input_tokens": 3669,
+     "output_tokens": 828
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.022654300000000002,
-    "input_tokens": 4478,
-    "output_tokens": 900
+    "cost_usd": 0.015618,
+    "input_tokens": 3669,
+    "output_tokens": 828
    }
   },
   "ca59f693f4e7002466b3fdeaf1bb6763618770963dd811b60003772d07b4b03b": {
    "answer": {
     "emails": [],
     "lines": [
-     "Sentinel",
      "Northstar Shop / Sentinel / Account events",
      "Account events",
      "6 signed events",
@@ -1163,13 +1399,14 @@
      "signature: Valid",
      "journal: 2026-Q3",
      "Activity",
-     "25 Aug | Account closure recorded",
-     "25 Aug | Session revoked",
-     "24 Aug | Recovery challenge completed",
-     "22 Aug | Email change confirmed",
-     "Sentinel",
-     "Production workspace",
-     "build 2026.10.4"
+     "25 Aug",
+     "Account closure recorded",
+     "25 Aug",
+     "Session revoked",
+     "24 Aug",
+     "Recovery challenge completed",
+     "22 Aug",
+     "Email change confirmed"
     ],
     "person_names": [],
     "phones": [],
@@ -1183,13 +1420,20 @@
      "audit_record_004"
     ],
     "screen_title": "Account events",
-    "shown_timestamp": "18-26 Aug 2026 UTC"
+    "shown_timestamp": "2026-08-25T04:03:00Z"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.014208,
+     "input_tokens": 3539,
+     "output_tokens": 713
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.022324300000000002,
-    "input_tokens": 4348,
-    "output_tokens": 919
+    "cost_usd": 0.014208,
+    "input_tokens": 3539,
+    "output_tokens": 713
    }
   },
   "d5c32ca5b6e1a2b4bbe9f5d41835ef1fd5d4f7061dab9067a4f9f88cea3c1861": {
@@ -1198,7 +1442,6 @@
      "haruka.s1838@zoho.com"
     ],
     "lines": [
-     "Customer Operations",
      "Northstar Shop / Customer Operations / Customers",
      "Haruka Sato",
      "Silver",
@@ -1216,8 +1459,8 @@
      "Overview",
      "Updated moments ago \u00b7 2 records",
      "Order ID | Date | Item | Qty | Total | Status",
-     "1 ORD-20265762 | 12 Sep 2026 | Ceramic coffee set | 1 | JPY 8,900 | Delivered \u00b7 18 Sep",
-     "2 ORD-20265518 | 28 Aug 2026 | Travel backpack | 1 | JPY 12,400 | Returned \u00b7 03 Sep",
+     "ORD-20265762 | 12 Sep 2026 | Ceramic coffee set | 1 | JPY 8,900 | Delivered \u00b7 18 Sep",
+     "ORD-20265518 | 28 Aug 2026 | Travel backpack | 1 | JPY 12,400 | Returned \u00b7 03 Sep",
      "Customer details",
      "Default address: 2-18-4 Kichijoji, Musashino, Tokyo 180-0004",
      "Loyalty tier: Silver",
@@ -1233,10 +1476,7 @@
      "03 Sep",
      "Order ORD-20265518 returned",
      "28 Aug",
-     "support_9538 created",
-     "Customer Operations",
-     "Production workspace",
-     "build 2026.10.4"
+     "support_9538 created"
     ],
     "person_names": [
      "Haruka Sato"
@@ -1255,11 +1495,18 @@
     "screen_title": "Haruka Sato",
     "shown_timestamp": "24 Sep 2026 09:14 JST"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.013448,
+     "input_tokens": 3734,
+     "output_tokens": 598
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.026418000000000004,
-    "input_tokens": 4544,
-    "output_tokens": 812
+    "cost_usd": 0.013448,
+    "input_tokens": 3734,
+    "output_tokens": 598
    }
   },
   "e81fabc93ea1b5f4c918d934cdb2bea05d61737adfcc29f281494f5d8ec46355": {
@@ -1270,14 +1517,13 @@
     ],
     "lines": [
      "BridgeOps",
-     "Search connectors...",
-     "Production",
-     "Help",
      "Northstar Shop / BridgeOps / Connections",
      "Connections",
      "12 connectors",
      "PRODUCTION \u00b7 eu-west \u00b7 07 Aug 2026 08:00 UTC",
-     "Topology | Throughput | Recent deliveries",
+     "Topology",
+     "Throughput",
+     "Recent deliveries",
      "Healthy: 12",
      "Events / hour: 4,113",
      "Delivery p95: 1.8 s",
@@ -1322,11 +1568,18 @@
     "screen_title": "Connections",
     "shown_timestamp": "07 Aug 2026 08:00 UTC"
    },
-   "backend": "cli",
+   "attempts": [
+    {
+     "cost_usd": 0.014028,
+     "input_tokens": 3669,
+     "output_tokens": 669
+    }
+   ],
+   "backend": "api",
    "usage": {
-    "cost_usd": 0.0223443,
-    "input_tokens": 4478,
-    "output_tokens": 869
+    "cost_usd": 0.014028,
+    "input_tokens": 3669,
+    "output_tokens": 669
    }
   }
  }

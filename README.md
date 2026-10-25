@@ -1,6 +1,6 @@
 # Ghost Data Still Exists — Deletion-Audit Agent
 
-**Version: V1.1** (phase-1 build, 2026-10-25) · HackerRank Orchestrate, October 2026
+**Version: V2** (2026-10-25) · HackerRank Orchestrate, October 2026
 
 For each request in `dataset/deletion_requests.csv`, the agent:
 1. decides whether the person actually asked for deletion;
@@ -92,7 +92,7 @@ Options for `code/main.py`:
 - `--backend api` uses the SDK for any uncached model call (default: `MODEL_BACKEND`, else `cli`);
 - `--verbose` prints each case as it finishes; `--workers N` runs N cases at the same time (default 4). Each case still runs through the whole pipeline on its own, and `output.csv` is rewritten, sorted, after every case, so the result does not depend on the worker count.
 
-A full run takes about 1 second with the cache. Requests are processed one at a time through the same pipeline, and the output is deterministic: rows are sorted by `case_id`, steps follow the contract order, and JSON is serialized with sorted keys.
+A full run takes a few seconds with the cache. The submitted `output.csv` came from a run on the Anthropic API with a fresh cache: 518 requests, 397 model calls, 1 min 34 s with 8 workers (see `code/evaluation/usage_report.md`). Its answers ship in `code/cache/`, so the commands above reproduce it exactly. Each request goes through the whole pipeline on its own, and the output is deterministic: rows are sorted by `case_id`, steps follow the contract order, and JSON is serialized with sorted keys.
 
 ---
 
@@ -117,12 +117,16 @@ deletion_requests.csv
    ├─ discover.py        hop 1: units holding the person's identifiers; hop 2: units naming
    │                     the resources found. Pages count whole only if they show no one else.
    │                     Activity-only links are claims and are not listed.
+   ├─ account_rule.py    the main account when only a deletion-worker row names it: request-to-
+   │                     report window, worker result = reported status, cross-case elimination,
+   │                     linked only when one candidate is left (built once for all requests)
    ├─ categories.py      owning system (from the evidence), data category, required action
    ├─ observe.py         one observation per unit: present/absent, exposed identifiers,
    │                     stable links, flow active, restore open
    ├─ state.py           state at audit_at: latest observation per copy (primary/replicas),
    │                     present if any copy is present; absence by omission only as proof
-   │                     of a required absence; compliance per required action
+   │                     of a required absence, from a snapshot taken after the record's last
+   │                     deletion step; compliance per required action
    └─ plan.py            status + steps: findings cite the latest citable evidence; remediation
                          and future verification cite ""; COMPLETE verifications cite proof
    │
@@ -148,6 +152,7 @@ deletion_requests.csv
 | `code/evaluation/main.py` | scorer (status, step P/R/F1, field and sequence accuracy) |
 | `code/evaluation/intent_eval.py`, `intent_eval_cases.csv` | 70-case intent evaluation (38 synthetic) |
 | `code/evaluation/stage_report.py` | per-stage accuracy on the samples |
+| `code/evaluation/usage_summary.py` | token and cost totals of a run, from its cache |
 | `code/evaluation/evaluation_report.md` | evaluation results, custom cases, failures and improvements |
 | `code/evaluation/usage_report.md` | models, calls, tokens and cost of the final run |
 | `evaluation/` | copies of the two reports at the top level (AGENTS.md 6.8 path), made by `code/package.py` |
@@ -157,15 +162,15 @@ deletion_requests.csv
 | `code/server.py` | live viewer server: run the pipeline from the browser |
 | `code/tests/` | unit tests |
 
-## Results (V1, 32 labelled samples)
+## Results (32 labelled samples)
 
-| Metric | Value |
-|---|---|
-| Status accuracy | 1.000 |
-| Step precision | 0.994 |
-| Step recall | 0.865 |
-| Step F1 | 0.925 |
-| Sequence accuracy | 0.344 |
+| Metric | V1 | V2 |
+|---|---|---|
+| Status accuracy | 1.000 | 1.000 |
+| Step precision | 0.994 | 0.994 |
+| Step recall | 0.865 | 0.896 |
+| Step F1 | 0.925 | 0.943 |
+| Sequence accuracy | 0.344 | 0.438 |
 
 Details and known limitations are in `code/evaluation/evaluation_report.md`.
 
