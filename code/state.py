@@ -198,26 +198,32 @@ class StateReader:
                 obs["location"] = location(unit, obs)
                 observations.append(obs)
         direct = [o for o in observations if o["present"] is not None and o["observed_at"] <= audit_at]
-        # Omission only when nothing observes the record itself, and only to
-        # prove an absence the policy wants: a missing row in a partial
-        # extract is never the evidence for a violation (retained audit
-        # records missing from an extract still exist later).
+        # Omission (a snapshot of the owning system without the row) only
+        # proves an absence the policy wants, never a violation: retained
+        # audit records missing from an extract still exist later.
         # A deletion submitted after audit_at means the record still existed
         # at audit_at; the claim only vetoes omission, it never makes a finding.
         later_delete = any(self.disc.index.units[e["unit_id"]]["kind"] == "activity"
                            and self.disc.index.units[e["unit_id"]]["fields"].get("event_type") in DELETION_EVENTS
                            and self.disc.index.units[e["unit_id"]]["observed_at"] > audit_at
                            for e in evidence)
-        if not direct and not later_delete and info["required_action"] in ("DELETE", "REDACT", "ANONYMIZE"):
+        if not later_delete and info["required_action"] in ("DELETE", "REDACT", "ANONYMIZE"):
             template = {"captured_at": "", "fields": {}, "context": {}}
-            # a snapshot taken before the record's last recorded deletion
-            # step cannot show that the deletion worked
+            # A snapshot taken before the record's last deletion step, or
+            # before its latest direct sighting, cannot show it is gone. When
+            # the record was seen, only a full SQL capture (not a JSON extract,
+            # which holds some records only) taken after that sighting counts:
+            # e.g. case_126, seen 08-11 in a later bundle, absent from the
+            # 08-17 09:42 inventory taken just before audit_at.
             claims = [self.disc.index.units[e["unit_id"]]["observed_at"] for e in evidence
                       if self.disc.index.units[e["unit_id"]]["kind"] == "activity"
                       and self.disc.index.units[e["unit_id"]]["observed_at"] <= audit_at]
-            since = max(claims, default="")
+            seen = max((o["observed_at"] for o in direct), default="")
+            since = max(claims + [seen], default="")
             for obs in self.omissions.absent_obs(rid, info["system_id"], template):
-                if obs["observed_at"] >= since:
+                full_capture = not obs["unit_id"].endswith("#omission")
+                if (obs["observed_at"] > seen if direct else obs["observed_at"] >= since) \
+                        and obs["observed_at"] >= since and (full_capture or not direct):
                     obs["location"] = "primary"
                     observations.append(obs)
         state = combine(observations, audit_at)
