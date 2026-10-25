@@ -16,7 +16,9 @@ identifier extraction over all of them.
 
 Unit fields: unit_id, source_id (file_id or activity_id), kind, origin,
 captured_at (file capture time; event_time for activity rows), event_time
-(the unit's own timestamp when it has one), locator, text, fields (structured
+(the unit's own timestamp when it has one), observed_at (the unit's own
+capture or log time when the evidence states one - a JSON snapshot's
+captured_at, a log line's time - else captured_at), locator, text, fields (structured
 values for SQL/JSON/activity), context (file-level facts such as
 snapshot_scope or enclosing JSON values).
 """
@@ -32,7 +34,8 @@ SQL_HEADER = re.compile(r"^--\s*([A-Za-z ]+):\s*(.+)$")
 SQL_COMMENT_KV = re.compile(r"^--\s*([a-z_]+)=(\S+)\s*$")
 
 
-def _unit(source, kind, locator, text, event_time="", fields=None, context=None):
+def _unit(source, kind, locator, text, event_time="", fields=None, context=None,
+          observed_at=""):
     return {
         "unit_id": f"{source['source_id']}#{locator}",
         "source_id": source["source_id"],
@@ -40,6 +43,9 @@ def _unit(source, kind, locator, text, event_time="", fields=None, context=None)
         "origin": source["origin"],
         "captured_at": source["captured_at"],
         "event_time": event_time,
+        # when the unit's content was observed: its own capture or log time
+        # if the evidence states one, else the file's capture time
+        "observed_at": observed_at or event_time or source["captured_at"],
         "locator": locator,
         "text": text,
         "fields": fields or {},
@@ -61,7 +67,8 @@ def log_units(source, text):
     for trace, lines in traces.items():
         if len(lines) > 1:
             units.append(_unit(source, "log_trace", f"trace={trace}",
-                               "\n".join(l for _, l in lines), lines[0][0]))
+                               "\n".join(l for _, l in lines), lines[0][0],
+                               observed_at=max(w for w, _ in lines)))
     return units
 
 
@@ -79,7 +86,8 @@ def json_units(source, data):
             if "resource_id" in node:
                 locator = "json=" + "/".join(map(str, path))
                 units.append(_unit(source, "json", locator, json.dumps(node, ensure_ascii=False),
-                                   fields=node, context=dict(context)))
+                                   fields=node, context=dict(context),
+                                   observed_at=context.get("captured_at", "")))
                 return
             inner = {**context, **_scalars(node)}
             for key, value in node.items():
