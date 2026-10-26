@@ -1,0 +1,2 @@
+pypdf==6.19.0
+anthropic==2.3.0  # only used by --backend api / MODEL_BACKEND=api

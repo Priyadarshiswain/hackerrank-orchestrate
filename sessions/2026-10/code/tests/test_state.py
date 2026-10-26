@@ -1,0 +1,105 @@
+"""Tests for Part C2 (observe) and C3/C4 (state).
+
+Run: python3 -m unittest discover -s code/tests
+"""
+import os
+import sys
+import unittest
+from pathlib import Path
+
+os.environ.setdefault("GHOST_OFFLINE", "1")  # tests never call a model
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from observe import observe  # noqa: E402
+from state import combine, compliant  # noqa: E402
+
+PERSON = {"emails": {"a@x.com"}, "phones": set(), "hexes": set(), "ids": {"user_1"}}
+
+
+def unit(kind, text="", fields=None, observed_at="2026-09-01T00:00:00Z", uid="u1", context=None):
+    return {"unit_id": uid, "source_id": "evidence_x", "kind": kind, "text": text, "fields": fields or {},
+            "context": context or {}, "observed_at": observed_at, "captured_at": observed_at, "locator": ""}
+
+
+class ObserveTests(unittest.TestCase):
+    def test_log_404_is_absent_and_query_key_is_not_exposure(self):
+        o = observe(unit("log", "2026-09-01T00:00:00Z service=account_service event=profile_lookup_completed "
+                                "resource_id=account_7 lookup_key=a@x.com rows=0 http_status=404"), "account_7", PERSON)
+        self.assertEqual((o["present"], o["direct"]), (False, []))
+
+    def test_log_with_escaped_quotes_in_a_message_field(self):
+        line = ('2026-06-08T09:51:49Z requestId=tr-1 level=DEBUG function=account_service message="instance=\\"a-5\\" '
+                'resource_id=\\"account_7\\" event=\\"profile_lookup_completed\\" rows=\\"1\\" http_status=\\"200\\""')
+        self.assertTrue(observe(unit("log", line), "account_7", PERSON)["present"])
+        flow = line.replace("account_7", "data_flow_7").replace('rows=\\"1\\"', 'enabled=\\"true\\"')
+        self.assertTrue(observe(unit("log", flow), "data_flow_7", PERSON)["flow_active"])
+
+    def test_log_mentioning_another_resource_is_not_about_it(self):
+        self.assertIsNone(observe(unit("log", "x resource_id=search_1 source_resource_id=account_7"),
+                                  "account_7", PERSON))
+
+    def test_record_fields(self):
+        o = observe(unit("json", fields={"resource_id": "tombstone_9", "subject_reference": "user_1",
+                                         "name": None, "email": "a@x.com", "phone": "[REDACTED]"}),
+                    "tombstone_9", PERSON)
+        self.assertEqual((o["present"], o["direct"], o["linked"]), (True, ["email"], ["subject_reference"]))
+
+    def test_flow_and_restore_flags(self):
+        flow = observe(unit("sql", fields={"resource_id": "data_flow_1", "enabled": 0}), "data_flow_1", PERSON)
+        backup = observe(unit("log", "t service=backup_service resource_id=backup_2 restore_allowed=true"),
+                         "backup_2", PERSON)
+        self.assertEqual((flow["flow_active"], backup["restore_open"]), (False, True))
+
+    def test_inventory_status(self):
+        o = observe(unit("txt", "- 2026-10-01T12:00:00Z | search_service | search_052 | SEARCH_INDEX_ENTRY | NOT_FOUND | a@x.com"),
+                    "search_052", PERSON)
+        self.assertFalse(o["present"])
+
+    def test_screen_detail_panel_gives_flow_state_and_exposure(self):
+        screen = ("Connections\nConnector | Destination | Selector | Mode\n"
+                  "data_flow_1 | warehouse | a@x.com | Continuous\ndata_flow_1\nStatus: Healthy\n"
+                  "Selector: a@x.com\nActivity\n07:59 124 events delivered")
+        o = observe(unit("png", screen), "data_flow_1", PERSON)
+        self.assertEqual((o["flow_active"], o["direct"]), (True, ["page"]))
+
+    def test_screen_backup_restore_open_unless_blocked(self):
+        base = "Recovery Manager\nRecent restores\nbackup_7 | a@x.com\nbackup_7\nAccount: a@x.com\n{}Activity\n"
+        self.assertTrue(observe(unit("png", base.format("")), "backup_7", PERSON)["restore_open"])
+        self.assertFalse(observe(unit("png", base.format("Restore: Blocked\n")), "backup_7", PERSON)["restore_open"])
+
+    def test_header_line_opens_the_detail_panel(self):
+        screen = "support_9 · Ana Lima · Normal priority\nCustomer: Ana Lima\nEmail: a@x.com\nActivity\n"
+        self.assertEqual(observe(unit("png", screen), "support_9", PERSON)["direct"], ["page"])
+
+    def test_tab_labels_do_not_cut_the_detail_panel(self):
+        screen = ("support_9 · Ana Lima · Normal priority\nConversation\nInternal notes\nActivity\n"
+                  "Customer: Ana Lima\nEmail: a@x.com\nActivity\n22 May | Order confirmed")
+        self.assertEqual(observe(unit("png", screen), "support_9", PERSON)["direct"], ["page"])
+
+    def test_activity_rows_are_claims(self):
+        self.assertIsNone(observe(unit("activity", "resource_id=account_7 reported_result=SUCCESS"), "account_7"))
+
+
+class CombineTests(unittest.TestCase):
+    def obs(self, at, present, location="primary", direct=(), uid=None):
+        return {"unit_id": uid or at, "observed_at": at, "present": present, "location": location,
+                "direct": list(direct), "linked": [], "flow_active": None, "restore_open": None}
+
+    def test_later_evidence_is_ignored(self):
+        st = combine([self.obs("2026-09-01", False), self.obs("2026-09-20", True)], "2026-09-15")
+        self.assertFalse(st["present"])
+
+    def test_latest_per_copy_and_any_copy_present(self):
+        st = combine([self.obs("2026-09-01", True), self.obs("2026-09-05", False),
+                      self.obs("2026-09-02", True, "customer_data_read_replica", ["email"])], "2026-09-15")
+        self.assertTrue(st["present"])
+        self.assertEqual(st["direct"], ["email"])
+        self.assertFalse(compliant("DELETE", st))
+        self.assertFalse(compliant("REDACT", st))
+
+    def test_nothing_known(self):
+        st = combine([], "2026-09-15")
+        self.assertIsNone(compliant("DELETE", st))
+
+
+if __name__ == "__main__":
+    unittest.main()
