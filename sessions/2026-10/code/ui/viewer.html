@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deletion Audit Trace</title>
+<style>
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --text: #1d2330; --muted: #667085; --line: #e3e6eb;
+  --accent: #3559e0; --ai: #7a3fd1; --ok: #18794e; --ok-bg: #e6f6ee; --bad: #b42318; --bad-bg: #fdecea;
+  --warn: #9a6700; --warn-bg: #fff6db; --na: #475467; --na-bg: #eef0f3; --late: #98a2b3; --code: #f2f4f7;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1218; --panel: #171b23; --text: #e6e9ef; --muted: #98a2b3; --line: #2a303b;
+    --accent: #7b96ff; --ai: #b58cff; --ok: #4ccb8a; --ok-bg: #12301f; --bad: #ff8a80; --bad-bg: #3a1716;
+    --warn: #f5c451; --warn-bg: #3a2e0c; --na: #c1c7d2; --na-bg: #232833; --late: #5d6574; --code: #1f2430;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1218; --panel: #171b23; --text: #e6e9ef; --muted: #98a2b3; --line: #2a303b;
+  --accent: #7b96ff; --ai: #b58cff; --ok: #4ccb8a; --ok-bg: #12301f; --bad: #ff8a80; --bad-bg: #3a1716;
+  --warn: #f5c451; --warn-bg: #3a2e0c; --na: #c1c7d2; --na-bg: #232833; --late: #5d6574; --code: #1f2430;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+header { position: sticky; top: 0; z-index: 5; background: var(--panel); border-bottom: 1px solid var(--line);
+  padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+header h1 { font-size: 16px; margin: 0 8px 0 0; }
+.stat { color: var(--muted); font-size: 13px; }
+.stat b { color: var(--text); }
+#theme { margin-left: auto; }
+.layout { display: grid; grid-template-columns: 290px 1fr; min-height: calc(100vh - 50px); }
+aside { border-right: 1px solid var(--line); background: var(--panel); padding: 10px; overflow: auto;
+  max-height: calc(100vh - 50px); position: sticky; top: 50px; }
+aside input, aside select, button { width: 100%; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--bg); color: var(--text); font: inherit; margin-bottom: 8px; }
+button { width: auto; cursor: pointer; margin: 0; }
+.case { display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: 6px 8px;
+  border-radius: 6px; cursor: pointer; }
+.case:hover { background: var(--bg); }
+.case.active { background: var(--bg); outline: 2px solid var(--accent); }
+main { padding: 16px; min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 14px; }
+.card > h2 { margin: 0; font-size: 14px; padding: 10px 14px; border-bottom: 1px solid var(--line);
+  display: flex; gap: 8px; align-items: center; }
+.card > .body { padding: 12px 14px; overflow-x: auto; }
+.num { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-size: 12px; }
+.num.ai { background: var(--ai); }
+.tag { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.COMPLETE, .ok { color: var(--ok); background: var(--ok-bg); }
+.INCOMPLETE, .bad { color: var(--bad); background: var(--bad-bg); }
+.NOT_APPLICABLE, .na { color: var(--na); background: var(--na-bg); }
+.warn { color: var(--warn); background: var(--warn-bg); }
+.aitag { color: #fff; background: var(--ai); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+tr.late td { color: var(--late); }
+tr.basis td { background: var(--warn-bg); }
+tr.missing td { background: var(--bad-bg); }
+tr.extra td { background: var(--warn-bg); }
+code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+pre { background: var(--code); padding: 10px; border-radius: 6px; white-space: pre-wrap; word-break: break-word;
+  margin: 6px 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+.kv { display: grid; grid-template-columns: max-content 1fr; gap: 3px 14px; }
+.kv div:nth-child(odd) { color: var(--muted); }
+a.unit { color: var(--accent); cursor: pointer; text-decoration: none; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; }
+a.unit:hover { text-decoration: underline; }
+details.res { border: 1px solid var(--line); border-radius: 8px; margin: 8px 0; }
+details.res > summary { cursor: pointer; padding: 8px 10px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+details.res > div { padding: 0 10px 10px; }
+.muted { color: var(--muted); }
+.flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 14px; }
+.flow span { padding: 3px 9px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); font-size: 12px; }
+.flow span.ai { border-color: var(--ai); color: var(--ai); }
+dialog { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--text);
+  width: min(900px, 94vw); max-height: 85vh; padding: 0; }
+dialog .head { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+dialog .content { padding: 12px 14px; overflow: auto; max-height: calc(85vh - 50px); }
+#live { display: none; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%; }
+#live.on { display: flex; }
+#live button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+#live button:disabled { opacity: .5; cursor: not-allowed; }
+#live select { width: auto; margin: 0; padding: 6px 8px; }
+.bar { flex: 1 1 200px; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; min-width: 120px; }
+.bar > div { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+#runmsg { font-size: 13px; color: var(--muted); }
+.case.running { border: 1px dashed var(--accent); }
+.stages { font-size: 12px; color: var(--muted); padding: 2px 8px 6px; }
+@media (max-width: 760px) {
+  .layout { grid-template-columns: 1fr; }
+  aside { position: static; max-height: 260px; border-right: 0; border-bottom: 1px solid var(--line); }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Deletion Audit Trace</h1>
+  <span class="stat" id="summary"></span>
+  <button id="theme" type="button">Theme</button>
+  <div id="live">
+    <button type="button" class="primary" id="run-sample">Run sample (32)</button>
+    <button type="button" id="run-full">Run full (518)</button>
+    <label class="stat">Model backend
+      <select id="backend"><option value="cli">headless claude (cli)</option><option value="api">Anthropic API</option></select></label>
+    <label class="stat"><input type="checkbox" id="fresh" style="width:auto;margin:0 4px 0 0">Fresh model calls</label>
+    <label class="stat">Workers <input type="number" id="workers" min="1" max="16" value="4" style="width:56px;margin:0;padding:5px"></label>
+    <div class="bar"><div id="progress"></div></div>
+    <span id="runmsg">Ready. Answers already in the cache are reused.</span>
+  </div>
+</header>
+<div class="layout">
+  <aside>
+    <input id="search" placeholder="Search case, email, resource…" aria-label="Search">
+    <select id="filter" aria-label="Filter">
+      <option value="all">All cases</option>
+      <option value="COMPLETE">COMPLETE</option>
+      <option value="INCOMPLETE">INCOMPLETE</option>
+      <option value="NOT_APPLICABLE">NOT_APPLICABLE</option>
+      <option value="mismatch">Differs from gold</option>
+      <option value="status_wrong">Status differs from gold</option>
+    </select>
+    <div id="list"></div>
+  </aside>
+  <main id="main"></main>
+</div>
+<dialog id="unit"><div class="head"><b id="unit-title"></b><button type="button" onclick="this.closest('dialog').close()">Close</button></div>
+  <div class="content" id="unit-body"></div></dialog>
+<script id="trace-data" type="application/json">__TRACE_DATA__</script>
+<script>
+const DATA = JSON.parse(document.getElementById("trace-data").textContent);
+let CASES = DATA.cases, UNITS = DATA.units;
+let RUNNING = {};  // case_id -> stages, for cases in progress (live mode)
+const $ = (s) => document.querySelector(s);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const tag = (text, cls) => `<span class="tag ${esc(cls || text)}">${esc(text)}</span>`;
+const yn = (v) => v === true ? tag("yes", "ok") : v === false ? tag("no", "bad") : `<span class="muted">—</span>`;
+const unitLink = (id) => `<a class="unit" data-unit="${esc(id)}">${esc(id)}</a>`;
+let current = null;
+
+try { const t = localStorage.getItem("trace-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+$("#theme").onclick = () => {
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  const now = document.documentElement.dataset.theme || (dark ? "dark" : "light");
+  const next = now === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("trace-theme", next); } catch (e) {}
+};
+
+function summary() {
+  const n = (s) => CASES.filter((c) => c.status === s).length;
+  let html = `<b>${CASES.length}</b> cases · ${esc(DATA.source)} · COMPLETE <b>${n("COMPLETE")}</b> · INCOMPLETE <b>${n("INCOMPLETE")}</b> · NOT_APPLICABLE <b>${n("NOT_APPLICABLE")}</b>`;
+  if (DATA.has_gold) {
+    const g = CASES.filter((c) => c.gold);
+    html += ` · status vs gold <b>${g.filter((c) => c.gold.status_ok).length}/${g.length}</b> · exact answer <b>${g.filter((c) => c.gold.exact).length}/${g.length}</b>`;
+  }
+  $("#summary").innerHTML = html;
+}
+
+function matches(c, q, f) {
+  if (f === "mismatch" && !(c.gold && !c.gold.exact)) return false;
+  if (f === "status_wrong" && !(c.gold && !c.gold.status_ok)) return false;
+  if (["COMPLETE", "INCOMPLETE", "NOT_APPLICABLE"].includes(f) && c.status !== f) return false;
+  if (!q) return true;
+  const hay = [c.case_id, c.request.email, c.identity.user_id, ...(c.identity.emails || []).map((e) => e.email),
+    ...Object.keys((c.discovery || {}).resources || {})].join(" ").toLowerCase();
+  return hay.includes(q);
+}
+
+function renderList() {
+  const q = $("#search").value.trim().toLowerCase(), f = $("#filter").value;
+  const running = Object.entries(RUNNING).map(([id, stages]) => `<div class="case running"><span class="mono">${esc(id)}</span>${tag("running…", "warn")}</div>
+    <div class="stages">${stages.map((s) => `${esc(s.stage)}: ${esc(s.summary)}`).join("<br>")}</div>`).join("");
+  $("#list").innerHTML = running + CASES.filter((c) => matches(c, q, f)).map((c) => {
+    const g = c.gold ? (c.gold.exact ? tag("exact", "ok") : c.gold.status_ok ? tag("steps", "warn") : tag("status", "bad")) : "";
+    return `<div class="case ${current === c.case_id ? "active" : ""}" data-case="${esc(c.case_id)}">
+      <span class="mono">${esc(c.case_id)}</span><span>${tag(c.status === "NOT_APPLICABLE" ? "N/A" : c.status, c.status)} ${g}</span></div>`;
+  }).join("") || `<p class="muted">No cases match.</p>`;
+}
+
+function card(n, title, body, ai) {
+  return `<section class="card"><h2><span class="num ${ai ? "ai" : ""}">${n}</span>${title}${ai ? " " + tag("AI model", "aitag") : ""}</h2><div class="body">${body}</div></section>`;
+}
+
+function stepTable(steps, marks) {
+  if (!steps.length) return `<p class="muted">No steps.</p>`;
+  const key = (s) => [s.phase, s.system_id, s.resource_id, s.operation, s.state, s.evidence_id].join("|");
+  return `<table><tr><th>#</th><th>Phase</th><th>System</th><th>Resource</th><th>Operation</th><th>State</th><th>Evidence</th></tr>` +
+    steps.map((s) => `<tr class="${marks ? marks(key(s)) : ""}"><td>${s.step_no}</td><td>${esc(s.phase)}</td><td>${esc(s.system_id)}</td>
+      <td class="mono">${esc(s.resource_id)}</td><td>${esc(s.operation)}</td><td>${esc(s.state)}</td>
+      <td>${s.evidence_id ? unitLinkSource(s.evidence_id) : `<span class="muted">""</span>`}</td></tr>`).join("") + `</table>`;
+}
+
+function accountRule(a) {
+  if (!a) return "";
+  if (a.evidence_accounts.length) return `<p class="muted">Account rule: not needed, evidence names the account (${a.evidence_accounts.map(esc).join(", ")}).</p>`;
+  const cands = a.window_candidates.length ? a.window_candidates.map(esc).join(", ") : "none";
+  return `<p>${tag("account rule", "na")} worker DELETE_RECORD rows on account_service between the request and the report (+10 min),
+    with a result matching the reported status, minus accounts claimed elsewhere — candidates: <span class="mono">${cands}</span> →
+    ${a.linked ? `linked <b class="mono">${esc(a.linked)}</b> (only one left after elimination)` : `${tag("not linked", "warn")} (more than one or none left)`}</p>`;
+}
+
+function ladder(attempts) {
+  if (!attempts || !attempts.length) return "";
+  return `<p class="muted">Model ladder (move up when confidence &lt; 0.90 or a check fails):</p>
+    <table><tr><th>Model</th><th>Confidence</th><th>Result</th><th>Tokens in / out</th><th>Request id</th></tr>` +
+    attempts.map((a) => `<tr><td class="mono">${esc(a.model)}</td><td>${a.confidence == null ? "—" : esc(Number(a.confidence).toFixed(2))}</td>
+      <td>${a.passed ? tag("accepted", "ok") : a.error ? tag("failed", "bad") : tag("moved up", "warn")} ${esc((a.problems || []).join(", "))}</td>
+      <td>${esc((a.usage || {}).input_tokens ?? "—")} / ${esc((a.usage || {}).output_tokens ?? "—")}</td>
+      <td class="mono">${esc((a.usage || {}).request_id || "")}</td></tr>`).join("") + `</table>`;
+}
+
+function unitLinkSource(sourceId) {
+  return `<a class="unit" data-source="${esc(sourceId)}">${esc(sourceId)}</a>`;
+}
+
+function renderCase(c) {
+  current = c.case_id;
+  const r = c.request, audit = r.audit_at, parts = [];
+  const flow = ["Request", "Intent (AI)", "Identity", "Discovery", "Records & state", "Status & steps"].concat(c.gold ? ["Gold"] : []);
+  parts.push(`<div class="flow">${flow.map((s) => `<span class="${s.includes("AI") ? "ai" : ""}">${esc(s)}</span>`).join("→")}</div>`);
+  parts.push(`<h2 style="margin:0 0 12px">${esc(c.case_id)} ${tag(c.status)} ${c.gold ? (c.gold.exact ? tag("matches gold exactly", "ok") : c.gold.status_ok ? tag("status matches gold, steps differ", "warn") : tag("status differs from gold", "bad")) : ""}</h2>`);
+
+  parts.push(card(1, "Request", `<div class="kv">
+    <div>Email</div><div class="mono">${esc(r.email)}</div><div>Requested at</div><div>${esc(r.requested_at)}</div>
+    <div>Reported status</div><div>${esc(r.reported_status)} at ${esc(r.reported_at)} <span class="muted">(a claim, not proof)</span></div>
+    <div>Audit at (cutoff)</div><div><b>${esc(audit)}</b></div></div><pre>${esc(r.request_text)}</pre>`));
+
+  const it = c.intent || {}, a = it.answer || {}, u = it.usage || {};
+  parts.push(card(2, "Intent classification", `<div class="kv">
+    <div>Model</div><div class="mono">${esc(it.model)}</div><div>Prompt</div><div class="mono">${esc(it.prompt)} (${esc(it.prompt_id)})</div>
+    <div>Backend</div><div>${esc(it.backend || "—")} <span class="muted">(answer served from the cache when present)</span></div>
+    <div>Tokens</div><div>in ${esc(u.input_tokens ?? "—")} · out ${esc(u.output_tokens ?? "—")} · est. $${u.cost_usd != null ? Number(u.cost_usd).toFixed(5) : "—"}</div>
+    <div>Authorizes deletion</div><div>${yn(a.authorizes_deletion)} ${a.intent ? tag(a.intent, "na") : ""} ${a.language ? `<span class="muted">language ${esc(a.language)}</span>` : ""}</div>
+    <div>Model's reason</div><div>${esc(a.reason)}</div>
+    <div>Flags</div><div>${(it.flags || []).map((f) => tag(f, "bad")).join(" ") || `<span class="muted">none</span>`}</div></div>
+    ${ladder(it.attempts)}`, true));
+
+  const id = c.identity || {};
+  parts.push(card(3, "Identity resolution", `<div class="kv"><div>User</div><div class="mono">${esc(id.user_id || "not found")} ${esc(id.name || "")}</div>
+    <div>Flag</div><div>${id.flag ? tag(id.flag, "bad") : `<span class="muted">none</span>`}</div></div>
+    <table><tr><th>Identifier</th><th>Value</th><th>Source</th></tr>
+    ${(id.emails || []).map((e) => `<tr><td>email</td><td class="mono">${esc(e.email)}</td><td class="mono">${esc(e.source)}</td></tr>`).join("")}
+    ${(id.phones || []).map((p) => `<tr><td>phone</td><td class="mono">${esc(p.phone)} <span class="muted">(${esc(p.digits)})</span></td><td class="mono">${esc(p.source)}</td></tr>`).join("")}
+    ${(id.hashes || []).map((h) => `<tr><td>email hash</td><td class="mono">${esc(h.email_hash.slice(0, 16))}…</td><td class="mono">${esc(h.source)}</td></tr>`).join("")}
+    </table>`));
+
+  if (c.status === "NOT_APPLICABLE") {
+    parts.push(card(4, "Decision", `<p>${tag("NOT_APPLICABLE")} — ${esc(c.reason || "")}. No evidence search is run and <code>steps_json</code> is <code>[]</code>.</p>`));
+  } else {
+    const d = c.discovery || {}, res = d.resources || {};
+    const rows = Object.keys(res).sort().map((rid) => {
+      const ev = (d.evidence || {})[rid] || [];
+      return `<tr><td class="mono">${esc(rid)}</td><td>${res[rid].map(unitLink).join("<br>")}</td>
+        <td>${ev.length} units · ${ev.filter((e) => e.for_state).length} before audit · ${ev.filter((e) => e.citable).length} citable</td></tr>`;
+    }).join("");
+    parts.push(card(4, "Discovery", `<p class="muted">Hop 1 finds units holding the person's identifiers (${(d.hop1 || []).length} units); hop 2 gathers every unit that names each record found.</p>
+      <table><tr><th>Record</th><th>Linked to the person by</th><th>Evidence about it</th></tr>${rows || `<tr><td colspan="3" class="muted">No records found.</td></tr>`}</table>
+      ${accountRule(c.account_rule)}
+      ${Object.entries(c.catalog_rule || {}).map(([rid, l]) => `<p>${tag("catalog rule", "na")} ${unitLink(l.row)} links <b class="mono">${esc(rid)}</b> to this person inside the case window; confirmed by ${l.confirmed_by.map(unitLink).join(", ")} (shows ${esc(l.label.join(" / "))}).</p>`).join("")}
+      ${(d.weak || []).length ? `<p>${tag("not listed", "warn")} linked only by activity claims: <span class="mono">${d.weak.map(esc).join(", ")}</span></p>` : ""}
+      ${(d.ambiguous || []).length ? `<p>${tag("ambiguous", "warn")} units naming another known person: ${d.ambiguous.map(unitLink).join(", ")}</p>` : ""}
+      <details><summary class="muted">Hop-1 units</summary><p>${(d.hop1 || []).map(unitLink).join(" · ")}</p></details>`));
+
+    parts.push(card(5, "Records &amp; state at audit_at", (c.states || []).map((s) => {
+      const verdict = s.compliant === true ? tag("compliant", "ok") : s.compliant === false ? tag("violation", "bad") : tag("unknown", "warn");
+      const basis = new Set(s.basis || []);
+      const obs = (s.observations || []).slice().sort((x, y) => (x.observed_at > y.observed_at ? 1 : -1)).map((o) => {
+        const late = o.observed_at > audit, cite = o.captured_at <= audit;
+        return `<tr class="${late ? "late" : basis.has(o.unit_id) ? "basis" : ""}"><td>${o.kind === "omission" ? `<span class="mono">${esc(o.unit_id)}</span>` : unitLink(o.unit_id)}</td>
+          <td>${esc(o.kind)}</td><td>${esc(o.observed_at)}${late ? " " + tag("after audit", "na") : ""}</td><td>${esc(o.location)}</td>
+          <td>${yn(o.present)}</td><td class="mono">${esc((o.direct || []).join(", "))}</td><td class="mono">${esc((o.linked || []).join(", "))}</td>
+          <td>${yn(o.flow_active)}</td><td>${yn(o.restore_open)}</td><td>${cite ? tag("yes", "ok") : tag("no", "na")}</td></tr>`;
+      }).join("");
+      return `<details class="res" ${s.compliant === false ? "open" : ""}><summary><span class="mono"><b>${esc(s.resource_id)}</b></span>
+        <span class="muted">${esc(s.system_id)}</span> ${tag(s.category || "?", "na")} <span class="muted">via ${esc(s.how)}</span>
+        → rule ${esc(s.rule_id || "—")} ${tag(s.required_action || "?", "na")} ${verdict}</summary><div>
+        <div class="kv"><div>State</div><div>present ${yn(s.present)} · flow active ${yn(s.flow_active)} · restore open ${yn(s.restore_open)}</div>
+        <div>Exposed identifiers</div><div class="mono">${esc((s.direct || []).join(", ") || "none")}</div>
+        <div>Stable links</div><div class="mono">${esc((s.linked || []).join(", ") || "none")}</div>
+        <div>Copies</div><div class="mono">${esc(Object.entries(s.copies || {}).map(([k, v]) => `${k}: ${v ? "present" : "absent"}`).join(" · ") || "—")}</div></div>
+        <p class="muted">Highlighted rows decided the state; grey rows are after audit_at and were ignored; "citable" = file captured at or before audit_at.</p>
+        <table><tr><th>Evidence unit</th><th>Kind</th><th>Observed at</th><th>Copy</th><th>Present</th><th>Exposed</th><th>Linked</th><th>Flow on</th><th>Restore open</th><th>Citable</th></tr>${obs || `<tr><td colspan="10" class="muted">No observations.</td></tr>`}</table>
+        </div></details>`;
+    }).join("") || `<p class="muted">No records.</p>`));
+
+    const gm = c.gold ? new Set(c.gold.extra.map((s) => [s.phase, s.system_id, s.resource_id, s.operation, s.state, s.evidence_id].join("|"))) : null;
+    parts.push(card(6, `Status &amp; steps ${tag(c.status)}`, stepTable(c.steps, gm ? (k) => (gm.has(k) ? "extra" : "") : null)));
+  }
+
+  if (c.gold) {
+    const g = c.gold, gx = new Set(g.missing.map((s) => [s.phase, s.system_id, s.resource_id, s.operation, s.state, s.evidence_id].join("|")));
+    parts.push(card(7, `Gold answer ${tag(g.status)}`, `<p>${g.status_ok ? tag("status matches", "ok") : tag("status differs", "bad")}
+      · missing steps <b>${g.missing.length}</b> (red below) · extra steps <b>${g.extra.length}</b> (yellow in card 6)</p>
+      ${stepTable(g.steps, (k) => (gx.has(k) ? "missing" : ""))}`));
+  }
+  $("#main").innerHTML = parts.join("");
+  renderList();
+}
+
+function showUnit(id, sourceId) {
+  let u = id ? UNITS[id] : null;
+  const list = sourceId ? Object.values(UNITS).filter((x) => x.source_id === sourceId) : [];
+  if (!u && list.length === 1) u = list[0];
+  $("#unit-title").textContent = id || sourceId;
+  if (!u && !list.length) {
+    $("#unit-body").innerHTML = `<p class="muted">${esc(id || sourceId)} is not one of this trace's evidence units (for example a whole-snapshot omission).</p>`;
+  } else if (!u) {
+    $("#unit-body").innerHTML = `<p>${esc(sourceId)} — ${list.length} units used:</p>` + list.map((x) => `<p>${unitLink(x.unit_id)} <span class="muted">${esc(x.kind)} ${esc(x.locator)}</span></p>`).join("");
+  } else {
+    $("#unit-body").innerHTML = `<div class="kv"><div>File</div><div class="mono">${esc(u.source_id)} · ${esc(u.file_path || "system_activity.csv")}</div>
+      <div>Kind</div><div>${esc(u.kind)} · ${esc(u.locator)} · origin ${esc(u.origin)}</div>
+      <div>Captured at</div><div>${esc(u.captured_at)}</div><div>Observed at</div><div>${esc(u.observed_at)}</div>
+      ${u.screen ? `<div>Transcription</div><div>${tag("AI model", "aitag")} ${esc(u.screen.model)} (confidence ${esc(u.screen.confidence ?? "—")}) · "${esc(u.screen.title)}" · flags: ${esc((u.screen.flags || []).join(", ") || "none")}</div>` : ""}
+      </div>${u.screen ? ladder(u.screen.attempts) : ""}<pre>${esc(u.text)}${u.truncated ? "\n…" : ""}</pre>`;
+  }
+  $("#unit").showModal();
+}
+
+document.addEventListener("click", (e) => {
+  const item = e.target.closest(".case");
+  if (item) { location.hash = item.dataset.case; return; }
+  const link = e.target.closest("a.unit");
+  if (link) showUnit(link.dataset.unit, link.dataset.source);
+});
+$("#search").oninput = renderList;
+$("#filter").onchange = renderList;
+function fromHash() {
+  const c = CASES.find((x) => x.case_id === decodeURIComponent(location.hash.slice(1))) || CASES[0];
+  if (c) { renderCase(c); window.scrollTo(0, 0); }
+}
+window.addEventListener("hashchange", fromHash);
+
+// ---- live mode: served by code/server.py ----
+function startLive() {
+  $("#live").classList.add("on");
+  let total = 0;
+  const msg = (t) => { $("#runmsg").textContent = t; };
+  const busy = (on) => { for (const id of ["#run-sample", "#run-full", "#backend", "#fresh", "#workers"]) $(id).disabled = on; };
+  fetch("/api/state").then((r) => r.json()).then((st) => {
+    $("#backend").value = st.backend;
+    if (!st.api_key) $("#backend").querySelector('[value="api"]').textContent = "Anthropic API (no key in .env)";
+    busy(st.running);
+  });
+  const run = (dataset) => fetch("/api/run", {method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({dataset, backend: $("#backend").value, fresh: $("#fresh").checked, workers: Number($("#workers").value)})})
+    .then((r) => r.json().then((b) => { if (!r.ok) msg("Not started: " + b.error); }));
+  $("#run-sample").onclick = () => run("sample");
+  $("#run-full").onclick = () => run("full");
+
+  const es = new EventSource("/api/events");
+  es.onmessage = (m) => {
+    const e = JSON.parse(m.data);
+    if (e.type === "run_started") {
+      CASES = []; UNITS = {}; current = null; RUNNING = {}; total = e.total;
+      DATA.source = e.source; DATA.has_gold = e.has_gold;
+      $("#progress").style.width = "0"; $("#main").innerHTML = ""; busy(true);
+      msg(`Starting ${e.dataset} run on ${e.backend}${e.fresh ? " with fresh model calls" : ""}, ${e.workers} workers…`); summary(); renderList();
+    } else if (e.type === "preparing") {
+      msg(e.message);
+    } else if (e.type === "prepared") {
+      msg(`Shared preparation done in ${e.seconds}s. Running cases one by one…`);
+    } else if (e.type === "case_started") {
+      RUNNING[e.case_id] = []; renderList();
+    } else if (e.type === "stage") {
+      if (RUNNING[e.case_id]) { RUNNING[e.case_id].push(e); renderList(); }
+    } else if (e.type === "case_done") {
+      Object.assign(UNITS, e.units);
+      CASES.push(e.trace); delete RUNNING[e.case_id];
+      CASES.sort((a, b) => Number(a.case_id.split("_")[1]) - Number(b.case_id.split("_")[1]));
+      $("#progress").style.width = `${(100 * e.index / total).toFixed(1)}%`;
+      msg(`${e.index}/${total} cases done · last ${e.case_id}: ${e.trace.status}`);
+      summary();
+      if (!current) renderCase(e.trace); else renderList();
+    } else if (e.type === "run_done") {
+      busy(false);
+      const s = e.score;
+      msg(`Done: ${e.rows} rows in ${e.seconds}s → ${e.out}` + (s ? ` · status ${s.status_accuracy} · step P/R/F1 ${s.step_precision}/${s.step_recall}/${s.step_f1} · exact ${s.sequence_accuracy}`
+        : ` · validator errors: ${e.validator_errors}`));
+    } else if (e.type === "run_failed") {
+      busy(false); RUNNING = {}; renderList(); msg("Run failed: " + e.error);
+    }
+  };
+  es.onerror = () => msg("Connection to the server lost; retrying…");
+}
+summary();
+renderList();
+if (DATA.live) startLive(); else fromHash();
+</script>
+</body>
+</html>

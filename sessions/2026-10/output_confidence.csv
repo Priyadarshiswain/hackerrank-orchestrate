@@ -1,0 +1,519 @@
+case_id,deletion_status,confidence,band,reasons
+case_33,INCOMPLETE,0.95,high,2 cited finding(s) in 2 file(s)
+case_34,INCOMPLETE,0.85,high,2 cited finding(s) in 1 file(s); every finding rests on a screenshot transcription
+case_35,INCOMPLETE,0.85,high,1 cited finding(s) in 1 file(s); every finding rests on a screenshot transcription
+case_36,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_37,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_38,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_39,INCOMPLETE,0.85,high,1 cited finding(s) in 1 file(s); every finding rests on a screenshot transcription
+case_40,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_41,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_42,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_43,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_44,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_45,COMPLETE,0.50,low,"main account linked by the account rule (worker row), not by evidence; account_7219: proven by a missing row in a full SQL capture; audit_record_001: proof read from a png (model or text extraction); audit_record_002: proof read from a png (model or text extraction); audit_record_003: proof read from a png (model or text extraction); audit_record_003: found through the catalog rule; audit_record_004: proof read from a png (model or text extraction); audit_record_005: proof read from a png (model or text extraction); audit_record_006: proof read from a png (model or text extraction)"
+case_46,COMPLETE,0.35,low,"state unknown at audit_at: account_4092, audit_record_1797, backup_3245; tombstone_17: proof read from a png (model or text extraction); tombstone_17: found through the catalog rule"
+case_47,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_48,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_49,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_50,INCOMPLETE,0.85,high,1 cited finding(s) in 1 file(s); every finding rests on a screenshot transcription
+case_51,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_52,INCOMPLETE,0.85,high,1 cited finding(s) in 1 file(s); every finding rests on a screenshot transcription
+case_53,INCOMPLETE,0.85,high,1 cited finding(s) in 1 file(s); every finding rests on a screenshot transcription
+case_54,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_55,INCOMPLETE,0.85,high,1 cited finding(s) in 1 file(s); every finding rests on a screenshot transcription
+case_56,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_57,COMPLETE,0.90,high,main account not identified; all 3 candidate account(s) gone at audit_at
+case_58,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_59,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_60,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_61,INCOMPLETE,0.85,high,1 cited finding(s) in 1 file(s); every finding rests on a screenshot transcription
+case_62,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_63,INCOMPLETE,0.85,high,1 cited finding(s) in 1 file(s); every finding rests on a screenshot transcription
+case_64,COMPLETE,0.85,high,main account proven absent only in a file saved after audit_at
+case_65,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_66,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_67,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_68,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_69,COMPLETE,0.85,high,main account proven absent only in a file saved after audit_at
+case_70,COMPLETE,0.85,high,main account proven absent only in a file saved after audit_at
+case_71,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_72,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_73,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_74,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_75,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_76,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_77,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_78,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_79,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_80,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_81,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_82,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_83,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_84,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_85,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_86,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_87,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_88,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_89,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_90,INCOMPLETE,0.90,high,3 cited finding(s) in 1 file(s)
+case_91,INCOMPLETE,0.90,high,3 cited finding(s) in 1 file(s)
+case_92,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_93,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_94,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_95,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_96,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_97,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_98,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_99,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_100,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_101,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_102,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_103,COMPLETE,0.65,medium,main account not identified
+case_104,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_105,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_106,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_107,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_108,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_109,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_110,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_111,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_112,COMPLETE,0.90,high,main account not identified; all 3 candidate account(s) gone at audit_at
+case_113,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_114,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_115,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_116,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_117,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_118,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_119,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_120,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_121,COMPLETE,0.95,high,search_3573: proven by a missing row in a full SQL capture
+case_122,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_123,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_124,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_125,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_126,COMPLETE,0.95,high,account_8819: proven by a missing row in a full SQL capture
+case_127,COMPLETE,0.95,high,account_6805: proven by a missing row in a full SQL capture
+case_128,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_129,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_130,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_131,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_132,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_133,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_134,INCOMPLETE,0.90,high,3 cited finding(s) in 1 file(s)
+case_135,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_136,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_137,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_138,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_139,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_140,INCOMPLETE,0.90,high,3 cited finding(s) in 1 file(s)
+case_141,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_142,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_143,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_144,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_145,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_146,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_147,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_148,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_149,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_150,COMPLETE,0.95,high,"main account linked by the account rule (worker row), not by evidence"
+case_151,COMPLETE,0.95,high,"main account linked by the account rule (worker row), not by evidence"
+case_152,COMPLETE,0.95,high,"main account linked by the account rule (worker row), not by evidence"
+case_153,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_154,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_155,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_156,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_157,COMPLETE,0.90,high,main account not identified; all 3 candidate account(s) gone at audit_at
+case_158,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_159,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_160,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_161,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_162,COMPLETE,0.80,medium,"main account linked by the account rule (worker row), not by evidence; account_5983: proven only by a missing row in a JSON extract"
+case_163,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_164,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_165,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_166,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_167,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_168,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_169,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_170,COMPLETE,0.95,high,search_3619: proven by a missing row in a full SQL capture
+case_171,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_172,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_173,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_174,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_175,COMPLETE,0.95,high,account_246: proven by a missing row in a full SQL capture
+case_176,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_177,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_178,COMPLETE,0.90,high,"main account linked by the account rule (worker row), not by evidence; account_1090: proven by a missing row in a full SQL capture"
+case_179,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_180,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_181,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_182,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_183,COMPLETE,0.65,medium,main account not identified
+case_184,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_185,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_186,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_187,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_188,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_189,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_190,COMPLETE,0.95,high,"main account linked by the account rule (worker row), not by evidence"
+case_191,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_192,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_193,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_194,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_195,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_196,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_197,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_198,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_199,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_200,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_201,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_202,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_203,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_204,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_205,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_206,COMPLETE,0.90,high,"main account linked by the account rule (worker row), not by evidence; account_4522: proven by a missing row in a full SQL capture"
+case_207,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_208,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_209,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_210,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_211,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_212,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_213,COMPLETE,0.85,high,main account proven absent only in a file saved after audit_at
+case_214,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_215,COMPLETE,0.85,high,main account proven absent only in a file saved after audit_at
+case_216,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_217,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_218,COMPLETE,0.85,high,main account proven absent only in a file saved after audit_at
+case_219,COMPLETE,0.85,high,main account proven absent only in a file saved after audit_at
+case_220,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_221,COMPLETE,0.85,high,main account proven absent only in a file saved after audit_at
+case_222,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_223,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_224,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_225,COMPLETE,0.90,high,main account not identified; all 3 candidate account(s) gone at audit_at
+case_226,COMPLETE,0.90,high,main account not identified; all 3 candidate account(s) gone at audit_at
+case_227,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_228,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_229,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_230,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_231,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_232,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_233,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_234,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_235,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_236,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_237,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_238,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_239,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_240,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_241,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_242,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_243,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_244,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_245,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_246,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_247,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_248,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_249,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_250,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_251,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_252,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_253,COMPLETE,0.80,medium,"main account linked by the account rule (worker row), not by evidence; account_6073: proven only by a missing row in a JSON extract"
+case_254,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_255,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_256,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_257,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_258,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_259,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_260,COMPLETE,0.85,high,"main account linked by the account rule (worker row), not by evidence; account_7811: proven by a missing row in a full SQL capture over 14 days old"
+case_261,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_262,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_263,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_264,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_265,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_266,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_267,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_268,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_269,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_270,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_271,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_272,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_273,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_274,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_275,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_276,COMPLETE,0.95,high,"main account linked by the account rule (worker row), not by evidence"
+case_277,COMPLETE,0.90,high,main account not identified; all 3 candidate account(s) gone at audit_at
+case_278,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_279,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_280,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_281,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_282,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_283,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_284,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_285,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_286,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_287,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_288,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_289,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_290,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_291,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_292,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_293,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_294,COMPLETE,0.90,high,main account not identified; all 4 candidate account(s) gone at audit_at
+case_295,COMPLETE,0.90,high,main account not identified; all 4 candidate account(s) gone at audit_at
+case_296,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_297,COMPLETE,0.90,high,main account not identified; all 4 candidate account(s) gone at audit_at
+case_298,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_299,COMPLETE,0.90,high,main account not identified; all 3 candidate account(s) gone at audit_at
+case_300,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_301,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_302,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_303,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_304,COMPLETE,0.90,high,main account not identified; all 4 candidate account(s) gone at audit_at
+case_305,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_306,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_307,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_308,COMPLETE,0.90,high,main account not identified; all 4 candidate account(s) gone at audit_at
+case_309,COMPLETE,0.90,high,"main account linked by the account rule (worker row), not by evidence; account_4319: proven by a missing row in a full SQL capture"
+case_310,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_311,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_312,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_313,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_314,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_315,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_316,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_317,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_318,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_319,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_320,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_321,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_322,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_323,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_324,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_325,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_326,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_327,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_328,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_329,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_330,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_331,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_332,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_333,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_334,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_335,COMPLETE,0.95,high,account_8892: proven by a missing row in a full SQL capture
+case_336,COMPLETE,0.95,high,account_2282: proven by a missing row in a full SQL capture
+case_337,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_338,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_339,COMPLETE,0.95,high,account_1340: proven by a missing row in a full SQL capture
+case_340,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_341,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_342,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_343,COMPLETE,0.95,high,"main account linked by the account rule (worker row), not by evidence"
+case_344,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_345,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_346,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_347,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_348,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_349,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_350,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_351,COMPLETE,0.95,high,"main account linked by the account rule (worker row), not by evidence"
+case_352,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_353,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_354,COMPLETE,0.85,high,"main account linked by the account rule (worker row), not by evidence; account_3918: proven by a missing row in a full SQL capture over 14 days old"
+case_355,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_356,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_357,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_358,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_359,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_360,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_361,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_362,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_363,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_364,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_365,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_366,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_367,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_368,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_369,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_370,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_371,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_372,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_373,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_374,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_375,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_376,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_377,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_378,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_379,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_380,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_381,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_382,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_383,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_384,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_385,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_386,INCOMPLETE,0.90,high,3 cited finding(s) in 1 file(s)
+case_387,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_388,INCOMPLETE,0.90,high,3 cited finding(s) in 1 file(s)
+case_389,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_390,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_391,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_392,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_393,COMPLETE,0.90,high,"main account linked by the account rule (worker row), not by evidence; account_1093: proven by a missing row in a full SQL capture"
+case_394,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_395,COMPLETE,0.90,high,main account not identified; all 6 candidate account(s) gone at audit_at
+case_396,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_397,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_398,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_399,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_400,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_401,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_402,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_403,COMPLETE,0.40,low,"main account not identified; main account linked by the account rule (worker row), not by evidence; state unknown at audit_at: account_1246"
+case_404,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_405,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_406,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_407,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_408,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_409,COMPLETE,0.90,high,main account not identified; all 4 candidate account(s) gone at audit_at
+case_410,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_411,COMPLETE,0.90,high,main account not identified; all 5 candidate account(s) gone at audit_at
+case_412,COMPLETE,0.90,high,main account not identified; all 6 candidate account(s) gone at audit_at
+case_413,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_414,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_415,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_416,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_417,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_418,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_419,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_420,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_421,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_422,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_423,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_424,COMPLETE,0.90,high,main account not identified; all 3 candidate account(s) gone at audit_at
+case_425,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_426,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_427,COMPLETE,0.95,high,"main account linked by the account rule (worker row), not by evidence"
+case_428,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_429,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_430,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_431,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_432,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_433,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_434,INCOMPLETE,0.90,high,3 cited finding(s) in 1 file(s)
+case_435,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_436,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_437,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_438,INCOMPLETE,0.90,high,3 cited finding(s) in 1 file(s)
+case_439,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_440,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_441,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_442,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_443,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_444,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_445,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_446,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_447,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_448,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_449,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_450,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_451,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_452,COMPLETE,0.90,high,"main account linked by the account rule (worker row), not by evidence; account_6294: proven by a missing row in a full SQL capture"
+case_453,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_454,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_455,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_456,COMPLETE,0.85,high,"main account linked by the account rule (worker row), not by evidence; account_3584: proven by a missing row in a full SQL capture over 14 days old"
+case_457,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_458,COMPLETE,0.85,high,"main account linked by the account rule (worker row), not by evidence; account_077: proven by a missing row in a full SQL capture over 14 days old"
+case_459,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_460,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_461,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_462,COMPLETE,0.40,low,"main account not identified; main account linked by the account rule (worker row), not by evidence; state unknown at audit_at: account_1881"
+case_463,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_464,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_465,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_466,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_467,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_468,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_469,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_470,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_471,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_472,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_473,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_474,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_475,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_476,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_477,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_478,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_479,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_480,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_481,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_482,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_483,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_484,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_485,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_486,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_487,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_488,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_489,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_490,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_491,COMPLETE,0.95,high,search_8910: proven by a missing row in a full SQL capture
+case_492,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_493,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_494,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_495,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_496,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_497,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_498,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_499,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_500,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_501,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_502,COMPLETE,0.90,high,main account not identified; all 3 candidate account(s) gone at audit_at
+case_503,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_504,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_505,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_506,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_507,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_508,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_509,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_510,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_511,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_512,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_513,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_514,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_515,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_516,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_517,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_518,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_519,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_520,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_521,COMPLETE,1.00,certain,"every listed record proven at audit_at, main account covered, nothing unknown"
+case_522,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_523,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_524,COMPLETE,0.95,high,"main account linked by the account rule (worker row), not by evidence"
+case_525,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_526,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_527,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_528,INCOMPLETE,0.90,high,4 cited finding(s) in 1 file(s)
+case_529,INCOMPLETE,0.90,high,2 cited finding(s) in 1 file(s)
+case_530,COMPLETE,0.95,high,"main account linked by the account rule (worker row), not by evidence"
+case_531,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_532,COMPLETE,0.95,high,"main account linked by the account rule (worker row), not by evidence"
+case_533,NOT_APPLICABLE,0.95,high,intent model claude-haiku-5-5: not a deletion request (CORRECTION)
+case_534,NOT_APPLICABLE,0.95,high,intent model claude-haiku-5-5: not a deletion request (OPT_OUT)
+case_535,NOT_APPLICABLE,0.95,high,intent model claude-haiku-5-5: not a deletion request (EXPORT)
+case_536,NOT_APPLICABLE,0.95,high,intent model claude-haiku-5-5: not a deletion request (OTHER)
+case_537,NOT_APPLICABLE,0.95,high,intent model claude-haiku-5-5: not a deletion request (CORRECTION)
+case_538,NOT_APPLICABLE,0.95,high,intent model claude-haiku-5-5: not a deletion request (OPT_OUT)
+case_539,NOT_APPLICABLE,0.95,high,intent model claude-haiku-5-5: not a deletion request (ACCESS)
+case_540,NOT_APPLICABLE,0.95,high,intent model claude-haiku-5-5: not a deletion request (EXPORT)
+case_541,NOT_APPLICABLE,0.95,high,intent model claude-haiku-5-5: not a deletion request (CORRECTION)
+case_542,NOT_APPLICABLE,0.95,high,intent model claude-haiku-5-5: not a deletion request (EXPORT)
+case_543,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_544,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_545,COMPLETE,0.90,high,main account not identified; all 2 candidate account(s) gone at audit_at
+case_546,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_547,COMPLETE,0.90,high,main account not identified; all 3 candidate account(s) gone at audit_at
+case_548,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
+case_549,COMPLETE,0.90,high,main account not identified; all 4 candidate account(s) gone at audit_at
+case_550,INCOMPLETE,0.90,high,1 cited finding(s) in 1 file(s)
