@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audit Core Fleet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #020a12; --panel: rgba(6, 26, 36, .78); --line: rgba(64, 224, 208, .22); --teal: #3ff0d8; --teal-dim: rgba(63, 240, 216, .35);
+  --cyan: #6fe6ff; --white: #e6fbff; --muted: #6f9aa6; --red: #ff3b4e; --red-dim: rgba(255, 59, 78, .55); --amber: #ffb547;
+  --green: #4dffb0; --violet: #b18cff; --wait: #0f2530;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: radial-gradient(ellipse at 50% 20%, #06222e 0%, var(--bg) 60%); color: var(--white); font: 15px/1.35 Rajdhani, "Segoe UI", sans-serif; overflow-x: hidden; min-height: 100vh; }
+#stars { position: fixed; inset: 0; z-index: 0; opacity: .7; }
+.scan { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(rgba(63,240,216,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(63,240,216,.05) 1px, transparent 1px); background-size: 46px 46px; }
+.app { position: relative; z-index: 1; max-width: 1600px; margin: 0 auto; padding: 14px 18px 30px; }
+header { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.logo { font: 700 17px Orbitron; letter-spacing: .16em; color: var(--teal); text-shadow: 0 0 12px var(--teal-dim); }
+.logo small { display: block; font: 500 11px Rajdhani; letter-spacing: .3em; color: var(--muted); }
+.logo a { color: var(--muted); font: 500 11px Rajdhani; letter-spacing: .2em; text-decoration: none; }
+.meter label { font-size: 10.5px; letter-spacing: .22em; color: var(--muted); }
+.meter b { display: block; font: 700 18px Orbitron; }
+.spacer { flex: 1; }
+button, select { font: 600 13px Rajdhani; letter-spacing: .1em; color: var(--white); background: rgba(63,240,216,.07); border: 1px solid var(--teal-dim); border-radius: 999px; padding: 8px 13px; cursor: pointer; }
+button.go { background: linear-gradient(90deg, rgba(63,240,216,.25), rgba(111,230,255,.18)); box-shadow: 0 0 16px rgba(63,240,216,.25); }
+button:disabled, select:disabled { opacity: .45; cursor: default; }
+.panel { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); position: relative; padding: 30px 12px 12px; box-shadow: 0 0 24px rgba(63,240,216,.06) inset; }
+.panel .tab { position: absolute; left: 10px; top: -1px; background: linear-gradient(180deg, #ff4b5c, #b51f30); color: #fff; font: 700 10px Orbitron; letter-spacing: .14em; padding: 4px 12px 4px 10px; border-radius: 0 0 6px 6px; box-shadow: 0 0 12px var(--red-dim); }
+.panel .tab.teal { background: linear-gradient(180deg, #2fd9c2, #127a6d); box-shadow: 0 0 12px var(--teal-dim); }
+.panel .corner { position: absolute; width: 12px; height: 12px; border: 2px solid var(--teal); opacity: .6; }
+.c1 { right: -1px; top: -1px; border-left: 0; border-bottom: 0; } .c2 { left: -1px; bottom: -1px; border-right: 0; border-top: 0; }
+.row1 { display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px; margin-top: 14px; }
+.row2 { display: grid; grid-template-columns: 1.15fr .55fr .75fr; gap: 14px; margin-top: 14px; }
+#router { width: 100%; height: 330px; display: block; }
+.pill rect { fill: rgba(8, 40, 48, .95); stroke: var(--teal); stroke-width: 1.2; }
+.pill text { fill: var(--white); font: 600 11px Orbitron; letter-spacing: .06em; }
+.pill.gone { opacity: .25; }
+.wire { fill: none; stroke: #cfe9ee; stroke-width: 1.4; opacity: .85; filter: drop-shadow(0 0 3px rgba(207,233,238,.6)); }
+.wire.live { stroke: var(--teal); stroke-dasharray: 6 6; animation: dash .5s linear infinite; }
+@keyframes dash { to { stroke-dashoffset: -12; } }
+.socket circle { fill: #06202a; stroke: var(--teal-dim); stroke-width: 1.4; }
+.socket.on circle { fill: var(--teal); stroke: var(--teal); filter: drop-shadow(0 0 6px var(--teal)); }
+.socket text { fill: var(--muted); font: 600 10px Orbitron; }
+.lane-bg { fill: rgba(63,240,216,.04); stroke: rgba(63,240,216,.12); }
+.tl rect { rx: 1.5; }
+#ship { width: 100%; height: 380px; display: block; }
+.hull { fill: none; stroke: var(--cyan); stroke-width: 1.4; opacity: .85; filter: drop-shadow(0 0 4px rgba(111,230,255,.55)); }
+.hatch { fill: rgba(111,230,255,.06); stroke: rgba(111,230,255,.35); stroke-width: .8; stroke-dasharray: 2 5; }
+.spine { stroke: var(--amber); stroke-width: 2; opacity: .7; }
+.spine.flow { stroke-dasharray: 10 8; animation: dash .45s linear infinite; opacity: 1; filter: drop-shadow(0 0 5px var(--amber)); }
+.dotw { fill: var(--teal); opacity: .5; }
+.dotw.busy { fill: var(--red); opacity: 1; filter: drop-shadow(0 0 8px var(--red)); animation: blink .8s infinite; }
+@keyframes blink { 50% { opacity: .35; } }
+.shiplbl { fill: var(--muted); font: 600 10px Orbitron; letter-spacing: .1em; }
+.baycount { fill: var(--teal); font: 700 14px Orbitron; }
+.dial text { fill: var(--white); font: 700 16px Orbitron; } .dial .lbl { fill: var(--muted); font: 600 9.5px Orbitron; letter-spacing: .12em; }
+.dial .trk { fill: none; stroke: #0f3038; stroke-width: 7; } .dial .val { fill: none; stroke: var(--teal); stroke-width: 7; stroke-linecap: round; transition: stroke-dasharray .4s; filter: drop-shadow(0 0 5px var(--teal)); }
+.rung { display: grid; grid-template-columns: 58px 1fr 34px; gap: 6px; align-items: center; margin: 5px 0; font: 600 10.5px Orbitron; letter-spacing: .05em; }
+.rung .bar { height: 8px; border-radius: 99px; background: #0f3038; overflow: hidden; }
+.rung .bar i { display: block; height: 100%; width: 0; transition: width .4s; background: var(--teal); }
+.rung.up .bar i { background: var(--violet); }
+.rung em { font-style: normal; color: var(--muted); text-align: right; }
+.sub { font: 600 10px Orbitron; letter-spacing: .16em; color: var(--muted); margin: 8px 0 2px; }
+#chart { width: 100%; height: 120px; display: block; }
+#grid { display: grid; grid-template-columns: repeat(37, 1fr); gap: 3px; }
+#grid i { aspect-ratio: 1; border-radius: 2px; background: var(--wait); cursor: pointer; transition: background .2s; }
+#grid i.arr { background: #23525e; } #grid i.fly { background: var(--red); box-shadow: 0 0 6px var(--red); }
+#grid i.COMPLETE { background: var(--green); } #grid i.INCOMPLETE { background: #ff8a5c; } #grid i.NOT_APPLICABLE { background: #4f7380; }
+#grid i.diff { outline: 2px solid var(--amber); }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 6px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+#log { height: 300px; overflow-y: auto; font: 500 13.5px/1.4 Rajdhani; }
+#log p { margin: 0 0 5px; } #log .t { color: var(--muted); font-size: 11px; margin-right: 5px; }
+#log p.sys { color: var(--teal); } #log p.warn { color: var(--amber); } #log p.bad { color: #ff8a5c; } #log p.ok { color: var(--green); } #log p.save { color: var(--violet); }
+.banner { display: none; margin-top: 14px; padding: 12px 16px; border: 1px solid var(--green); border-radius: 10px; background: rgba(20,90,60,.18); font: 600 15.5px Rajdhani; }
+.banner.show { display: block; }
+.small { color: var(--muted); font-size: 12.5px; } .mono { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; }
+dialog { border: 1px solid var(--teal-dim); border-radius: 12px; background: #04141c; color: var(--white); width: min(880px, 94vw); max-height: 85vh; padding: 0; }
+dialog .head { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--line); font: 600 13px Orbitron; letter-spacing: .1em; }
+dialog .content { padding: 12px 14px; overflow: auto; max-height: calc(85vh - 50px); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; } th, td { text-align: left; padding: 4px 6px; border-bottom: 1px solid rgba(63,240,216,.12); }
+th { color: var(--muted); font: 600 10px Orbitron; letter-spacing: .12em; }
+.FINDING { color: #ff8a5c; } .REMEDIATION { color: var(--amber); } .VERIFICATION { color: var(--green); }
+@media (max-width: 1200px) { .row1, .row2 { grid-template-columns: 1fr; } #grid { grid-template-columns: repeat(24, 1fr); } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas><div class="scan"></div>
+<div class="app">
+  <header>
+    <div class="logo">AUDIT CORE · FLEET RUN<small>INBOUND STREAM 5/SEC · PARALLEL WORKERS</small><a href="/">← story mode (6 cases)</a></div>
+    <div class="meter"><label>ARRIVED</label><b id="m-arr">0</b></div>
+    <div class="meter"><label>IN FLIGHT</label><b id="m-fly">0</b></div>
+    <div class="meter"><label>DONE</label><b id="m-done">0</b></div>
+    <div class="meter"><label>WAITING</label><b id="m-wait">0</b></div>
+    <div class="meter"><label>POWER SAVED</label><b id="m-saved">0 kWh</b></div>
+    <div class="spacer"></div>
+    <select id="set" aria-label="Request set"><option value="sample">SAMPLE · 32</option><option value="eval" selected>FULL · 518</option></select>
+    <select id="workers" aria-label="Workers"><option value="4">4 WORKERS</option><option value="8" selected>8 WORKERS</option><option value="12">12 WORKERS</option></select>
+    <select id="mode" aria-label="Model source"><option value="0" selected>REPLAY (FREE)</option><option value="1">LIVE API (~$0.40)</option></select>
+    <button class="go" id="start">OPEN THE INBOUND STREAM</button>
+  </header>
+
+  <div class="row1">
+    <section class="panel"><span class="tab teal">NAV · INBOUND ROUTING</span><span class="corner c1"></span><span class="corner c2"></span>
+      <svg id="router" viewBox="0 0 760 330" preserveAspectRatio="none"><g id="pills"></g><g id="wires"></g><g id="sockets"></g><g id="timeline"></g></svg>
+      <div class="small">Requests arrive on the left at 5 per second and are wired to a free worker. Each finished case becomes a bar on that worker's timeline: green COMPLETE, orange INCOMPLETE, grey N/A, width = processing time.</div>
+    </section>
+    <section class="panel"><span class="tab">DIAGNOSTICS · CORE</span><span class="corner c1"></span><span class="corner c2"></span>
+      <svg id="ship" viewBox="0 0 700 380"></svg>
+    </section>
+  </div>
+
+  <div class="row2">
+    <section class="panel"><span class="tab">POD MAP · CLICK A FINISHED CASE</span><span class="corner c1"></span>
+      <div id="grid"></div>
+      <div class="legend"><span><i style="background:var(--wait)"></i>not arrived</span><span><i style="background:#23525e"></i>waiting</span><span><i style="background:var(--red)"></i>in flight</span>
+        <span><i style="background:var(--green)"></i>COMPLETE</span><span><i style="background:#ff8a5c"></i>INCOMPLETE</span><span><i style="background:#4f7380"></i>N/A</span><span><i style="outline:2px solid var(--amber)"></i>differs from reference</span></div>
+      <div class="sub">COMPLETIONS OVER TIME</div><svg id="chart" viewBox="0 0 600 120" preserveAspectRatio="none"></svg>
+      <div class="small" id="match">The answers are compared with the reference as cases finish.</div>
+    </section>
+    <section class="panel"><span class="tab teal">REACTOR · LADDER</span>
+      <svg viewBox="0 0 240 140" style="width:100%"><g class="dial" transform="translate(60,62)"><circle class="trk" r="42"/><circle class="val" id="d-out" r="42" transform="rotate(-90)" stroke-dasharray="0 264"/><text text-anchor="middle" y="6" id="d-out-t">12%</text><text class="lbl" text-anchor="middle" y="60">REACTOR</text></g>
+        <g class="dial" transform="translate(180,62)"><circle class="trk" r="42"/><circle class="val" id="d-tps" r="42" transform="rotate(-90)" stroke-dasharray="0 264" style="stroke:var(--cyan)"/><text text-anchor="middle" y="6" id="d-tps-t">0/s</text><text class="lbl" text-anchor="middle" y="60">THROUGHPUT</text></g></svg>
+      <div class="sub">INTENT LADDER · PER REQUEST</div><div id="ladder-intent"></div>
+      <div class="sub">SCREENSHOT LADDER · AT BOOT</div><div id="ladder-screen"></div>
+      <div class="sub">STATUS</div>
+      <div class="rung"><span style="color:var(--green)">COMPLETE</span><div class="bar"><i id="t-COMPLETE" style="background:var(--green)"></i></div><em id="n-COMPLETE">0</em></div>
+      <div class="rung"><span style="color:#ff8a5c">INCOMPL.</span><div class="bar"><i id="t-INCOMPLETE" style="background:#ff8a5c"></i></div><em id="n-INCOMPLETE">0</em></div>
+      <div class="rung"><span style="color:#8fb1bc">N/A</span><div class="bar"><i id="t-NOT_APPLICABLE" style="background:#4f7380"></i></div><em id="n-NOT_APPLICABLE">0</em></div>
+    </section>
+    <section class="panel"><span class="tab">SHIP AI</span><div id="log"></div></section>
+  </div>
+  <div class="banner" id="banner"></div>
+</div>
+<dialog id="dlg"><div class="head"><span id="dlg-title"></span><button type="button" onclick="this.closest('dialog').close()">CLOSE</button></div><div class="content" id="dlg-body"></div></dialog>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const NS = "http://www.w3.org/2000/svg";
+const STAGES = ["intent", "identity", "discovery", "state", "steps"];
+const BAYNAME = {intent: "INTENT", identity: "IDENTITY", discovery: "DISCOVERY", state: "STATE", steps: "PLAN"};
+const MODELS = ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5", "claude-fable-5-1"];
+const LABEL = {"claude-haiku-5-5": "HAIKU", "claude-sonnet-5-5": "SONNET", "claude-opus-5-5": "OPUS", "claude-fable-5-1": "FABLE"};
+const COLOR = {COMPLETE: "#4dffb0", INCOMPLETE: "#ff8a5c", NOT_APPLICABLE: "#4f7380"};
+let S;
+function reset(total, workers) {
+  S = {total, workers, arrived: 0, done: 0, waiting: 0, fly: {}, stage: {}, status: {COMPLETE: 0, INCOMPLETE: 0, NOT_APPLICABLE: 0},
+       answeredBy: {}, saved: 0, t0: performance.now(), matches: 0, pills: [], tlx: Array(workers).fill(0), series: []};
+  STAGES.forEach((s) => (S.stage[s] = 0)); MODELS.forEach((m) => (S.answeredBy[m] = 0));
+}
+const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
+
+// ---------- starfield ----------
+(() => { const c = $("#stars"), x = c.getContext("2d"); let st = [];
+  const size = () => { c.width = innerWidth; c.height = innerHeight; st = Array.from({length: 180}, () => ({x: Math.random() * c.width, y: Math.random() * c.height, z: Math.random() * 1.4 + .2})); };
+  size(); addEventListener("resize", size); const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  (function d() { x.clearRect(0, 0, c.width, c.height); for (const s of st) { s.x -= s.z * .3; if (s.x < 0) s.x = c.width; x.fillStyle = `rgba(190,245,240,${.2 + s.z * .4})`; x.fillRect(s.x, s.y, s.z, s.z); } if (!still) requestAnimationFrame(d); })(); })();
+
+// ---------- router (pills -> sockets -> timeline) ----------
+const PILL_X = 10, SOCK_X = 300, TL_X = 330, TL_W = 420;
+const sockY = (w) => 20 + w * (290 / Math.max(S.workers - 1, 1));
+function buildRouter() {
+  ["#pills", "#wires", "#sockets", "#timeline"].forEach((g) => ($(g).innerHTML = ""));
+  for (let w = 0; w < S.workers; w++) {
+    const y = sockY(w);
+    el("rect", {class: "lane-bg", x: TL_X, y: y - 7, width: TL_W, height: 14, rx: 3}, $("#timeline"));
+    const g = el("g", {class: "socket", id: `sk-${w}`}, $("#sockets"));
+    el("circle", {cx: SOCK_X, cy: y, r: 6}, g);
+    const t = el("text", {x: SOCK_X - 12, y: y + 3.5, "text-anchor": "end"}, g); t.textContent = `W${w + 1}`;
+  }
+}
+function addPill(caseId) {
+  S.pills.unshift(caseId); if (S.pills.length > 9) S.pills.pop();
+  $("#pills").innerHTML = "";
+  S.pills.forEach((id, i) => {
+    const y = 18 + i * 34, g = el("g", {class: "pill", id: `pl-${id}`}, $("#pills"));
+    if (!(id in S.fly) && S.started && S.started[id]) g.classList.add("gone");
+    el("rect", {x: PILL_X, y: y - 11, width: 128, height: 22, rx: 11}, g);
+    const t = el("text", {x: PILL_X + 64, y: y + 4, "text-anchor": "middle"}, g); t.textContent = `• ${id.toUpperCase()}`;
+  });
+}
+function wire(caseId, w) {
+  const i = Math.max(0, S.pills.indexOf(caseId)), y1 = 18 + i * 34, x1 = PILL_X + 128, y2 = sockY(w);
+  const p = el("path", {class: "wire live", id: `wr-${caseId}`, d: `M${x1} ${y1} C ${x1 + 90} ${y1}, ${SOCK_X - 90} ${y2}, ${SOCK_X - 6} ${y2}`}, $("#wires"));
+  return p;
+}
+function timelineBar(w, status, ms) {
+  const width = Math.max(3, Math.min(40, ms / 6));
+  if (S.tlx[w] + width > TL_W) { S.tlx[w] = 0; [...$("#timeline").querySelectorAll(`.tl-${w}`)].forEach((n) => n.remove()); }
+  el("rect", {class: `tl tl-${w}`, x: TL_X + S.tlx[w], y: sockY(w) - 5, width: width - 1, height: 10, fill: COLOR[status]}, $("#timeline"));
+  S.tlx[w] += width;
+}
+
+// ---------- holographic ship ----------
+let SHIPDOTS = [];
+function buildShip() {
+  const s = $("#ship"); s.innerHTML = `
+    <defs><radialGradient id="rg"><stop offset="0%" stop-color="#e6fbff"/><stop offset="40%" stop-color="#6fe6ff"/><stop offset="100%" stop-color="#05202a" stop-opacity="0"/></radialGradient></defs>
+    <path class="hatch" d="M170 120 C 300 60, 470 40, 640 70 L 650 95 C 480 70, 320 95, 190 150 Z"/>
+    <path class="hull" d="M170 120 C 300 60, 470 40, 640 70 L 650 95 C 480 70, 320 95, 190 150 Z"/>
+    <path class="hatch" d="M200 250 C 330 300, 500 330, 655 300 L 640 276 C 490 300, 340 280, 220 225 Z"/>
+    <path class="hull" d="M200 250 C 330 300, 500 330, 655 300 L 640 276 C 490 300, 340 280, 220 225 Z"/>
+    <path class="hatch" d="M250 70 C 330 150, 430 240, 560 350 L 585 340 C 460 230, 360 140, 275 60 Z"/>
+    <path class="hull" d="M250 70 C 330 150, 430 240, 560 350 L 585 340 C 460 230, 360 140, 275 60 Z"/>
+    <line class="spine" id="spine" x1="80" y1="190" x2="680" y2="190"/>
+    <circle cx="88" cy="190" r="34" fill="url(#rg)"/><circle cx="88" cy="190" r="42" class="hull" stroke-dasharray="3 5"/>
+    <rect x="160" y="168" width="150" height="44" rx="10" class="hull"/><text class="shiplbl" x="235" y="160" text-anchor="middle">CORE</text>
+    <text class="shiplbl" x="88" y="250" text-anchor="middle">REACTOR</text>`;
+  const bayX = [340, 410, 480, 550, 620];
+  STAGES.forEach((st, i) => {
+    el("rect", {x: bayX[i] - 26, y: 178, width: 52, height: 24, rx: 6, class: "hull", id: `bay-${st}`}, s);
+    const n = el("text", {class: "baycount", x: bayX[i], y: 195, "text-anchor": "middle", id: `bc-${st}`}, s); n.textContent = "0";
+    const l = el("text", {class: "shiplbl", x: bayX[i], y: i % 2 ? 170 : 220, "text-anchor": "middle"}, s); l.textContent = BAYNAME[st];
+  });
+  // one dot per worker, spread along the three arms
+  const arms = [(t) => [170 + 470 * t, 120 - 55 * Math.sin(Math.PI * t) - 20 * t], (t) => [200 + 450 * t, 250 + 55 * Math.sin(Math.PI * t) + 30 * t], (t) => [255 + 310 * t, 70 + 275 * t]];
+  SHIPDOTS = [];
+  for (let w = 0; w < S.workers; w++) {
+    const arm = arms[w % 3], t = .12 + .76 * ((Math.floor(w / 3) + .5) / Math.ceil(S.workers / 3)), [x, y] = arm(t);
+    SHIPDOTS.push(el("circle", {class: "dotw", cx: x, cy: y, r: 6}, s));
+  }
+}
+
+// ---------- panels ----------
+function rungRows(target, counts, total) {
+  $(target).innerHTML = MODELS.map((m, i) => `<div class="rung ${i ? "up" : ""}"><span>${LABEL[m]}</span><div class="bar"><i style="width:${total ? (100 * (counts[m] || 0) / total) : 0}%"></i></div><em>${counts[m] || 0}</em></div>`).join("");
+}
+function buildGrid(ids) {
+  $("#grid").style.gridTemplateColumns = `repeat(${ids.length > 100 ? 37 : 16}, 1fr)`;
+  $("#grid").innerHTML = ids.map((id) => `<i id="g-${id}" title="${id}" data-id="${id}"></i>`).join("");
+}
+function say(text, cls = "") {
+  const p = document.createElement("p"); p.className = cls; p.innerHTML = `<span class="t">${new Date().toISOString().slice(11, 19)}</span>${text}`;
+  const log = $("#log"); log.appendChild(p); while (log.children.length > 200) log.removeChild(log.firstChild); log.scrollTop = log.scrollHeight;
+}
+function dial(id, frac, label) { $(`#${id}`).setAttribute("stroke-dasharray", `${Math.round(264 * Math.max(0, Math.min(1, frac)))} 264`); $(`#${id}-t`).textContent = label; }
+function chart() {
+  const pts = S.series, maxT = Math.max(...pts.map((p) => p[0]), 1), svg = $("#chart"); svg.innerHTML = "";
+  for (let i = 0; i < 26; i++) el("circle", {cx: (i * 37) % 600, cy: (i * 53) % 120, r: 1.2, fill: "#2b6e72"}, svg);
+  if (pts.length < 2) return;
+  const d = pts.map((p, i) => `${i ? "L" : "M"}${(600 * p[0] / maxT).toFixed(1)} ${(115 - 105 * p[1] / S.total).toFixed(1)}`).join(" ");
+  el("path", {d, fill: "none", stroke: "#cfe9ee", "stroke-width": 1.6}, svg);
+  pts.filter((_, i) => i % Math.ceil(pts.length / 18) === 0).forEach((p) => el("circle", {cx: 600 * p[0] / maxT, cy: 115 - 105 * p[1] / S.total, r: 2.4, fill: "#3ff0d8"}, svg));
+}
+function meters() {
+  const fly = Object.keys(S.fly).length, secs = S.lastAt || (performance.now() - S.t0) / 1000;
+  $("#m-arr").textContent = `${S.arrived}/${S.total}`; $("#m-fly").textContent = fly; $("#m-done").textContent = S.done; $("#m-wait").textContent = S.waiting;
+  $("#m-saved").textContent = `${S.saved.toFixed(1)} kWh`;
+  dial("d-out", (12 + 88 * fly / S.workers) / 100, `${Math.round(12 + 88 * fly / S.workers)}%`);
+  const tps = S.done / Math.max(secs, 1); dial("d-tps", tps / 8, `${tps.toFixed(1)}/s`);
+  for (const st of STAGES) { const n = $(`#bc-${st}`); if (n) n.textContent = S.stage[st]; const b = $(`#bay-${st}`); if (b) b.style.stroke = S.stage[st] ? "#ff3b4e" : ""; }
+  $("#spine").classList.toggle("flow", fly > 0);
+  for (const k in S.status) { $(`#n-${k}`).textContent = S.status[k]; $(`#t-${k}`).style.width = `${S.done ? 100 * S.status[k] / S.done : 0}%`; }
+  rungRows("#ladder-intent", S.answeredBy, S.done); chart();
+}
+let dirty = false; (function tick() { if (dirty && S) { meters(); dirty = false; } requestAnimationFrame(tick); })();
+
+// ---------- events ----------
+function onEvent(e) {
+  if (e.type === "boot") {
+    say(esc(e.message), "sys");
+    if (e.phase === "done" && e.screens) {
+      const c = {}; e.screens.forEach((s) => (c[s.model] = (c[s.model] || 0) + 1)); rungRows("#ladder-screen", c, e.screens.length);
+      e.screens.filter((s) => s.attempts.length > 1).forEach((s) => say(`Screenshot <b>${esc(s.file)}</b> climbed the ladder: ${s.attempts.map((a) => `${LABEL[a.model]} ${a.confidence}`).join(" → ")}.`, "save"));
+    }
+  } else if (e.type === "run_start") {
+    reset(e.total, e.workers); S.started = {}; S.reference = e.reference; buildRouter(); buildShip(); buildGrid(e.cases); $("#banner").className = "banner";
+    say(`Opening the inbound stream: ${e.total} requests at ${e.rate}/s, ${e.workers} workers, ${e.live ? "<b>LIVE API</b>" : "replayed model answers"}. No added delay in processing.`, "warn");
+  } else if (e.type === "arrive") {
+    S.arrived = e.n; S.waiting++; $(`#g-${e.case_id}`).classList.add("arr"); addPill(e.case_id);
+  } else if (e.type === "begin") {
+    S.waiting = Math.max(0, S.waiting - 1); S.fly[e.case_id] = e.worker; S.started[e.case_id] = true; S.stage.intent++;
+    wire(e.case_id, e.worker); $(`#sk-${e.worker}`).classList.add("on"); SHIPDOTS[e.worker] && SHIPDOTS[e.worker].classList.add("busy");
+    const g = $(`#g-${e.case_id}`); g.classList.remove("arr"); g.classList.add("fly");
+    const pill = $(`#pl-${e.case_id}`); if (pill) pill.classList.add("gone");
+  } else if (e.type === "stage") {
+    if (STAGES.includes(e.stage)) { S.stage[e.stage] = Math.max(0, S.stage[e.stage] - 1); const i = STAGES.indexOf(e.stage); if (i < STAGES.length - 1) S.stage[STAGES[i + 1]]++; }
+    if (e.stage === "steps" && /NOT_APPLICABLE/.test(e.summary)) {
+      S.stage.discovery = Math.max(0, S.stage.discovery - 1); S.saved += 3.4;
+      say(`<b>${esc(e.case_id)}</b> is not a deletion request: DISCOVERY and STATE stay sealed for it.`, "save");
+    }
+  } else if (e.type === "done") {
+    delete S.fly[e.case_id]; S.done++; S.status[e.status]++; if (e.matches) S.matches++; S.answeredBy[e.model] = (S.answeredBy[e.model] || 0) + 1;
+    S.lastAt = e.at; S.series.push([e.at, S.done]);  // server time: correct even when a finished run is replayed
+    const w = $(`#wr-${e.case_id}`); if (w) w.remove();
+    if (!Object.values(S.fly).includes(e.worker)) { $(`#sk-${e.worker}`).classList.remove("on"); SHIPDOTS[e.worker] && SHIPDOTS[e.worker].classList.remove("busy"); }
+    timelineBar(e.worker, e.status, e.ms);
+    const g = $(`#g-${e.case_id}`); g.classList.remove("fly"); g.classList.add(e.status); if (!e.matches) g.classList.add("diff");
+    if (e.rungs.length > 1) say(`<b>${esc(e.case_id)}</b>: the intent climbed the ladder ${e.rungs.map((m) => LABEL[m]).join(" → ")}.`, "save");
+    if (e.status === "INCOMPLETE" && S.done % 6 === 0) say(`<b>${esc(e.case_id)}</b>: ${e.findings} finding(s), ${e.steps} steps, ${e.ms} ms on worker ${e.worker + 1}.`, "bad");
+    if (!e.matches) say(`<b>${esc(e.case_id)}</b> differs from ${esc(S.reference)}.`, "warn");
+    $("#match").textContent = `${S.matches}/${S.done} match ${S.reference}`;
+  } else if (e.type === "worker_idle") {
+    if (!Object.values(S.fly).includes(e.worker)) { S.saved += .4; if (e.final) say(`Worker ${e.worker + 1} powered down: the stream is finished.`, "save"); }
+  } else if (e.type === "run_done") {
+    say(`All ${e.total} requests audited in ${e.elapsed}s. Reactor back to life support.`, "ok");
+    $("#banner").innerHTML = `✓ ${e.total} requests audited in <b>${e.elapsed}s</b> (the stream itself takes ${Math.round(S.total / 5)}s at 5/s) · COMPLETE ${S.status.COMPLETE} · INCOMPLETE ${S.status.INCOMPLETE} · N/A ${S.status.NOT_APPLICABLE} · <b>${e.matches}/${e.total}</b> match ${esc(S.reference)} · intents answered by ${MODELS.filter((m) => S.answeredBy[m]).map((m) => `${LABEL[m]} ${S.answeredBy[m]}`).join(", ")}`;
+    $("#banner").className = "banner show"; ["#start", "#workers", "#mode", "#set"].forEach((s) => ($(s).disabled = false));
+  } else if (e.type === "failed") {
+    say(`Fault: ${esc(e.error)}`, "bad"); ["#start", "#workers", "#mode", "#set"].forEach((s) => ($(s).disabled = false));
+  }
+  dirty = true;
+}
+
+$("#grid").addEventListener("click", (ev) => {
+  const id = ev.target.dataset && ev.target.dataset.id; if (!id) return;
+  fetch(`/api/case/${id}`).then((r) => r.json()).then((d) => {
+    $("#dlg-title").textContent = id;
+    if (d.error) { $("#dlg-body").innerHTML = `<p class="small">${esc(d.error)}</p>`; return $("#dlg").showModal(); }
+    const a = d.intent.answer || {};
+    $("#dlg-body").innerHTML = `<p><b style="font:700 18px Orbitron" class="${d.status === "COMPLETE" ? "VERIFICATION" : d.status === "INCOMPLETE" ? "FINDING" : ""}">${esc(d.status)}</b>
+      · confidence ${esc(d.confidence.band)} ${d.confidence.score.toFixed(2)} · claim ${esc(d.reported)} · audit ${esc(d.audit_at)}</p>
+      <p class="small">“${esc(d.text)}”</p>
+      <p class="small">Intent ${esc(a.intent)} · ladder ${(d.intent.attempts || []).map((x) => `${LABEL[x.model]} ${x.confidence}`).join(" → ")} · ${d.found} record(s)</p>
+      ${d.records.length ? `<table><tr><th>RECORD</th><th>POLICY</th><th>AT AUDIT</th><th>LINKED BY</th></tr>${d.records.map((r) => `<tr><td class="mono">${esc(r.resource_id)}</td><td>${esc(r.action)}</td><td>${r.compliant === true ? "OK" : r.compliant === false ? '<span class="FINDING">VIOLATION</span>' : "unknown"}</td><td>${esc(r.how)}</td></tr>`).join("")}</table>` : ""}
+      ${d.steps.length ? `<table><tr><th>#</th><th>PHASE</th><th>RECORD</th><th>OPERATION</th><th>EVIDENCE</th></tr>${d.steps.map((s) => `<tr><td>${s.step_no}</td><td class="${s.phase}">${esc(s.phase)}</td><td class="mono">${esc(s.resource_id)}</td><td>${esc(s.operation)}</td><td class="mono">${esc(s.evidence_id || "—")}</td></tr>`).join("")}</table>` : '<p class="small">steps_json = []</p>'}
+      <p class="small">${d.confidence.reasons.map(esc).join(" · ")}</p>`;
+    $("#dlg").showModal();
+  });
+});
+
+reset(518, 8); buildRouter(); buildShip(); rungRows("#ladder-intent", {}, 0); rungRows("#ladder-screen", {}, 0); meters();
+const es = new EventSource("/api/events");
+es.onmessage = (m) => onEvent(JSON.parse(m.data));
+$("#start").onclick = () => {
+  const live = $("#mode").value === "1";
+  if (live && !confirm("LIVE API: real Anthropic API calls (about USD 0.40 for 518 requests, less for the sample) into an empty demo cache. The submission files are not touched. Continue?")) return;
+  ["#start", "#workers", "#mode", "#set"].forEach((s) => ($(s).disabled = true)); $("#log").innerHTML = "";
+  fetch(`/api/full?set=${$("#set").value}&workers=${$("#workers").value}&live=${live ? 1 : 0}`, {method: "POST"})
+    .then((r) => { if (!r.ok) r.json().then((b) => { say(esc(b.error), "bad"); ["#start", "#workers", "#mode", "#set"].forEach((s) => ($(s).disabled = false)); }); });
+};
+</script>
+</body>
+</html>

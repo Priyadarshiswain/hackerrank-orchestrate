@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audit Core</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #030712; --panel: rgba(10, 22, 40, .72); --line: rgba(120, 200, 255, .18);
+  --cyan: #5ee7ff; --cyan-dim: rgba(94, 231, 255, .35); --blue: #3b82f6; --white: #e8f6ff;
+  --muted: #7d9bb8; --amber: #ffb547; --red: #ff5d6c; --green: #4dffb0; --violet: #b18cff;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--white); font: 15px/1.35 Rajdhani, "Segoe UI", sans-serif; overflow-x: hidden; }
+#stars { position: fixed; inset: 0; z-index: 0; }
+.grid { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, rgba(0,0,0,.35), transparent 75%); }
+.app { position: relative; z-index: 1; max-width: 1500px; margin: 0 auto; padding: 14px 18px 30px; }
+header { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding: 10px 16px; border: 1px solid var(--line);
+  border-radius: 14px; background: var(--panel); backdrop-filter: blur(6px); }
+.logo { font: 700 18px Orbitron, sans-serif; letter-spacing: .18em; color: var(--cyan); text-shadow: 0 0 12px var(--cyan-dim); }
+.logo small { display: block; font: 500 11px Rajdhani; letter-spacing: .35em; color: var(--muted); }
+.meter { min-width: 150px; }
+.meter label { font-size: 11px; letter-spacing: .25em; color: var(--muted); }
+.meter b { display: block; font: 700 20px Orbitron; color: var(--white); }
+.spacer { flex: 1; }
+button, select { font: 600 14px Rajdhani; letter-spacing: .12em; color: var(--white); background: rgba(94,231,255,.08);
+  border: 1px solid var(--cyan-dim); border-radius: 999px; padding: 9px 18px; cursor: pointer; }
+button.go { background: linear-gradient(90deg, rgba(94,231,255,.25), rgba(59,130,246,.25)); box-shadow: 0 0 18px rgba(94,231,255,.25); }
+button:disabled { opacity: .45; cursor: default; }
+.layout { display: grid; grid-template-columns: 260px 1fr 340px; gap: 14px; margin-top: 14px; }
+.panel { border: 1px solid var(--line); border-radius: 16px; background: var(--panel); backdrop-filter: blur(6px); padding: 12px 14px; position: relative; overflow: hidden; }
+.panel h3 { margin: 0 0 10px; font: 600 12px Orbitron; letter-spacing: .28em; color: var(--cyan); }
+.panel::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); opacity: .6; }
+.pod { display: grid; grid-template-columns: 14px 1fr; gap: 8px; align-items: center; padding: 8px 6px; border-radius: 10px; margin-bottom: 4px; border: 1px solid transparent; }
+.pod .dot { width: 10px; height: 10px; border-radius: 50%; background: #23384f; box-shadow: none; }
+.pod.active { border-color: var(--cyan-dim); background: rgba(94,231,255,.06); }
+.pod.active .dot { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); animation: pulse 1s infinite; }
+.pod.done .dot { background: var(--green); }
+.pod.done.inc .dot { background: var(--red); }
+.pod.done.na .dot { background: var(--muted); }
+.pod b { font-weight: 600; } .pod small { display: block; color: var(--muted); font-size: 12px; }
+.pod .res { font: 600 11px Orbitron; letter-spacing: .1em; }
+@keyframes pulse { 50% { opacity: .35; } }
+#ship { width: 100%; height: auto; display: block; }
+.bay rect.body { fill: rgba(12, 30, 52, .9); stroke: #24435f; stroke-width: 1.4; transition: all .5s; }
+.bay.online rect.body { stroke: var(--cyan); filter: drop-shadow(0 0 8px rgba(94,231,255,.55)); }
+.bay.sealed rect.body { fill: rgba(8, 14, 24, .9); stroke: #1a2838; }
+.bay text { fill: var(--white); font: 600 12px Orbitron; letter-spacing: .12em; }
+.bay text.sub { fill: var(--muted); font: 500 12px Rajdhani; letter-spacing: .08em; }
+.bay.sealed text { fill: #3d5670; }
+.bay rect.bar { fill: var(--cyan); transition: width .6s ease; }
+.bay.sealed rect.bar { fill: #26384b; }
+.conduit { stroke: #1b3047; stroke-width: 3; fill: none; }
+.conduit.flow { stroke: var(--cyan); stroke-dasharray: 8 10; animation: flow .6s linear infinite; filter: drop-shadow(0 0 4px var(--cyan)); }
+@keyframes flow { to { stroke-dashoffset: -18; } }
+.reactor circle.core { fill: url(#coreGlow); }
+.reactor circle.ring { fill: none; stroke: var(--cyan); stroke-width: 1.5; opacity: .6; transform-origin: 90px 160px; animation: spin 12s linear infinite; stroke-dasharray: 6 8; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.cell rect { fill: rgba(12, 30, 52, .9); stroke: #24435f; transition: all .4s; }
+.cell.lit rect { stroke: var(--violet); filter: drop-shadow(0 0 7px rgba(177,140,255,.7)); fill: rgba(70, 40, 120, .35); }
+.cell.pass rect { stroke: var(--green); filter: drop-shadow(0 0 7px rgba(77,255,176,.6)); fill: rgba(20, 90, 60, .35); }
+.cell text { fill: var(--muted); font: 600 10px Orbitron; letter-spacing: .08em; }
+.cell.lit text, .cell.pass text { fill: var(--white); }
+.tx { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+.tx .who { font: 700 15px Orbitron; letter-spacing: .06em; }
+.chip { display: inline-block; font: 600 11px Orbitron; letter-spacing: .12em; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--cyan-dim); color: var(--cyan); }
+.chip.warn { color: var(--amber); border-color: rgba(255,181,71,.5); }
+.chip.bad { color: var(--red); border-color: rgba(255,93,108,.55); }
+.chip.ok { color: var(--green); border-color: rgba(77,255,176,.5); }
+.chip.na { color: var(--muted); border-color: #3a5470; }
+.quote { margin-top: 8px; padding: 10px 12px; border-left: 2px solid var(--cyan); background: rgba(94,231,255,.05); border-radius: 0 10px 10px 0; font-size: 16px; min-height: 48px; }
+.why { margin-top: 8px; color: var(--amber); font-size: 14px; }
+.kv { color: var(--muted); font-size: 13px; margin-top: 6px; }
+.kv b { color: var(--white); font-weight: 600; }
+#log { height: 560px; overflow-y: auto; font: 500 14px/1.45 Rajdhani; padding-right: 4px; }
+#log p { margin: 0 0 6px; opacity: 0; transform: translateY(4px); animation: in .35s forwards; }
+#log p .t { color: var(--muted); font-size: 12px; margin-right: 6px; }
+#log p.sys { color: var(--cyan); } #log p.warn { color: var(--amber); } #log p.bad { color: var(--red); } #log p.ok { color: var(--green); } #log p.save { color: var(--violet); }
+@keyframes in { to { opacity: 1; transform: none; } }
+.result { display: none; margin-top: 12px; }
+.result.show { display: block; animation: in .5s forwards; }
+.verdict { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.verdict .big { font: 700 26px Orbitron; letter-spacing: .14em; }
+.big.INCOMPLETE { color: var(--red); text-shadow: 0 0 14px rgba(255,93,108,.5); }
+.big.COMPLETE { color: var(--green); text-shadow: 0 0 14px rgba(77,255,176,.45); }
+.big.NOT_APPLICABLE { color: var(--muted); }
+.gauge { width: 160px; height: 8px; border-radius: 99px; background: #13263b; overflow: hidden; }
+.gauge i { display: block; height: 100%; background: linear-gradient(90deg, var(--blue), var(--cyan)); width: 0; transition: width 1s; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 8px; }
+th, td { text-align: left; padding: 4px 6px; border-bottom: 1px solid rgba(120,200,255,.1); vertical-align: top; }
+th { color: var(--muted); font: 600 10px Orbitron; letter-spacing: .14em; }
+td.mono, .mono { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; }
+.FINDING { color: var(--red); } .REMEDIATION { color: var(--amber); } .VERIFICATION { color: var(--green); }
+.summary { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 14px; }
+.card { border: 1px solid var(--line); border-radius: 12px; padding: 10px; background: var(--panel); min-height: 74px; }
+.card .h { font: 600 11px Orbitron; letter-spacing: .12em; color: var(--muted); }
+.card .s { font: 700 14px Orbitron; margin-top: 6px; }
+.footnote { margin-top: 10px; color: var(--muted); font-size: 12px; text-align: center; }
+@media (max-width: 1150px) { .layout { grid-template-columns: 1fr; } #log { height: 300px; } .summary { grid-template-columns: repeat(2, 1fr); } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="grid"></div>
+<div class="app">
+  <header>
+    <div class="logo">AUDIT CORE<small>DATA DELETION INTEGRITY · DEEP-SPACE OPS</small></div>
+    <div class="meter"><label>REACTOR OUTPUT</label><b id="output">0%</b></div>
+    <div class="meter"><label>POWER SAVED</label><b id="saved">0 kWh</b></div>
+    <div class="meter"><label>EVIDENCE UNITS</label><b id="units">—</b></div>
+    <div class="spacer"></div>
+    <select id="pace" aria-label="Pace"><option value="1.4">SLOW</option><option value="1" selected>NORMAL</option><option value="0.5">FAST</option></select>
+    <button class="go" id="start">INITIATE AUDIT SEQUENCE</button>
+  </header>
+
+  <div class="layout">
+    <section class="panel">
+      <h3>INCOMING TRANSMISSIONS</h3>
+      <div id="queue"><p class="kv">Six requests are waiting in the queue.</p></div>
+    </section>
+
+    <section>
+      <div class="panel">
+        <h3>CORE SCHEMATIC · POWER ROUTING</h3>
+        <svg id="ship" viewBox="0 0 900 330" role="img" aria-label="Ship core schematic">
+          <defs>
+            <radialGradient id="coreGlow"><stop offset="0%" stop-color="#e8fbff"/><stop offset="35%" stop-color="#5ee7ff"/><stop offset="100%" stop-color="#0b2540" stop-opacity="0"/></radialGradient>
+          </defs>
+          <path class="conduit" id="spine" d="M150 160 H880"/>
+          <g class="reactor"><circle class="core" cx="90" cy="160" r="54"/><circle class="ring" cx="90" cy="160" r="66"/>
+            <text x="90" y="245" text-anchor="middle" fill="#7d9bb8" font-family="Orbitron" font-size="11" letter-spacing="2">REACTOR</text></g>
+          <g id="bays"></g>
+          <g id="cells"></g>
+        </svg>
+      </div>
+      <div class="panel" style="margin-top:14px">
+        <h3>ACTIVE TRANSMISSION</h3>
+        <div id="tx"><p class="kv">Press <b>INITIATE AUDIT SEQUENCE</b>. Each request runs through the real pipeline with recorded model answers; no live model calls.</p></div>
+        <div class="result" id="result"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3>SHIP AI</h3>
+      <div id="log"></div>
+    </section>
+  </div>
+  <div class="summary" id="summary"></div>
+  <p class="footnote">Demo only, not part of the submission. Real pipeline (code/), offline replay of the final API run's model answers.</p>
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const BAYS = [
+  {id: "intent", name: "INTENT", sub: "model ladder"},
+  {id: "identity", name: "IDENTITY", sub: "who is it?"},
+  {id: "discovery", name: "DISCOVERY", sub: "find records"},
+  {id: "state", name: "STATE", sub: "at audit time"},
+  {id: "steps", name: "PLAN", sub: "status, steps"},
+  {id: "confidence", name: "CONFIDENCE", sub: "how sure?"},
+];
+const MODELS = ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5", "claude-fable-5-1"];
+const LABEL = {"claude-haiku-5-5": "HAIKU", "claude-sonnet-5-5": "SONNET", "claude-opus-5-5": "OPUS", "claude-fable-5-1": "FABLE"};
+let saved = 0, results = {}, current = null, typing = null;
+
+// ---------- starfield ----------
+(() => {
+  const c = $("#stars"), x = c.getContext("2d"); let stars = [];
+  const size = () => { c.width = innerWidth; c.height = innerHeight;
+    stars = Array.from({length: 220}, () => ({x: Math.random() * c.width, y: Math.random() * c.height, z: Math.random() * 1.5 + .2})); };
+  size(); addEventListener("resize", size);
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  (function draw() { x.clearRect(0, 0, c.width, c.height);
+    for (const s of stars) { s.x -= s.z * .25; if (s.x < 0) s.x = c.width;
+      x.fillStyle = `rgba(200,235,255,${.25 + s.z * .4})`; x.fillRect(s.x, s.y, s.z, s.z); }
+    if (!still) requestAnimationFrame(draw); })();
+})();
+
+// ---------- schematic ----------
+function buildShip() {
+  const g = $("#bays"); g.innerHTML = "";
+  BAYS.forEach((b, i) => {
+    const x = 180 + i * 118, y = 118;
+    g.insertAdjacentHTML("beforeend", `
+      <path class="conduit" id="c-${b.id}" d="M${x + 50} 160 V${y + 84}"/>
+      <g class="bay" id="b-${b.id}">
+        <rect class="body" x="${x}" y="${y}" width="104" height="84" rx="12"/>
+        <text x="${x + 52}" y="${y + 26}" text-anchor="middle">${b.name}</text>
+        <text class="sub" x="${x + 52}" y="${y + 44}" text-anchor="middle">${b.sub}</text>
+        <text class="sub" id="s-${b.id}" x="${x + 52}" y="${y + 62}" text-anchor="middle">STANDBY</text>
+        <rect x="${x + 12}" y="${y + 70}" width="80" height="5" rx="2" fill="#13263b"/>
+        <rect class="bar" id="p-${b.id}" x="${x + 12}" y="${y + 70}" width="0" height="5" rx="2"/>
+      </g>`);
+  });
+  const cells = $("#cells"); cells.innerHTML = "";
+  MODELS.forEach((m, i) => {
+    const x = 180 + i * 62, y = 238;
+    cells.insertAdjacentHTML("beforeend", `<g class="cell" id="m-${i}"><rect x="${x}" y="${y}" width="56" height="34" rx="8"/>
+      <text x="${x + 28}" y="${y + 15}" text-anchor="middle">${LABEL[m]}</text><text id="mc-${i}" x="${x + 28}" y="${y + 28}" text-anchor="middle">—</text></g>`);
+  });
+  cells.insertAdjacentHTML("beforeend", `<text x="180" y="296" fill="#7d9bb8" font-family="Orbitron" font-size="10" letter-spacing="2">MODEL LADDER · STOP AT ≥ 0.90</text>`);
+}
+function power(active) {
+  // the active bay gets most of the output; finished bays are sealed; the rest idle
+  let total = 0;
+  BAYS.forEach((b, i) => {
+    const el = $(`#b-${b.id}`), bar = $(`#p-${b.id}`), st = $(`#s-${b.id}`), con = $(`#c-${b.id}`);
+    const isActive = b.id === active, sealed = el.classList.contains("sealed");
+    el.classList.toggle("online", isActive);
+    con.classList.toggle("flow", isActive);
+    const p = sealed ? 0 : isActive ? 62 : 4;
+    total += p; bar.setAttribute("width", String(80 * p / 62));
+    if (!sealed) st.textContent = isActive ? `ONLINE · ${p}%` : "STANDBY";
+  });
+  $("#spine").classList.toggle("flow", !!active);
+  $("#output").textContent = `${Math.min(100, total + 12)}%`;
+}
+function seal(id, why) {
+  const el = $(`#b-${id}`); if (el.classList.contains("sealed")) return;
+  el.classList.add("sealed"); el.classList.remove("online"); $(`#c-${id}`).classList.remove("flow");
+  $(`#s-${id}`).textContent = "SEALED"; $(`#p-${id}`).setAttribute("width", "0");
+  if (why) { saved += 1.7; $("#saved").textContent = `${saved.toFixed(1)} kWh`; }
+}
+function resetBays() {
+  BAYS.forEach((b) => { const el = $(`#b-${b.id}`); el.classList.remove("sealed", "online"); $(`#s-${b.id}`).textContent = "STANDBY"; });
+  MODELS.forEach((m, i) => { $(`#m-${i}`).classList.remove("lit", "pass"); $(`#mc-${i}`).textContent = "—"; });
+  power(null);
+}
+
+// ---------- log ----------
+function say(text, cls = "") {
+  const t = new Date().toISOString().slice(11, 19);
+  const p = document.createElement("p"); p.className = cls; p.innerHTML = `<span class="t">${t}</span>${text}`;
+  $("#log").appendChild(p); $("#log").scrollTop = $("#log").scrollHeight;
+}
+function typeText(el, text) {
+  clearInterval(typing); el.textContent = ""; let i = 0;
+  typing = setInterval(() => { el.textContent = text.slice(0, i += 3); if (i >= text.length) clearInterval(typing); }, 18);
+}
+
+// ---------- queue / summary ----------
+function renderQueue(cases) {
+  $("#queue").innerHTML = cases.map((c, i) => `<div class="pod" id="q-${c.case_id}"><span class="dot"></span>
+    <div><b>${i + 1}. ${esc(c.title)}</b><small class="mono">${esc(c.case_id)} · claim ${esc(c.reported)}</small><span class="res" id="qr-${c.case_id}"></span></div></div>`).join("");
+  $("#summary").innerHTML = cases.map((c) => `<div class="card" id="sc-${c.case_id}"><div class="h">${esc(c.case_id)}</div><div class="s" style="color:#3d5670">WAITING</div></div>`).join("");
+}
+
+// ---------- events ----------
+const STAGE_TEXT = {
+  intent: (s) => `INTENT bay: ${esc(s)}.`,
+  identity: (s) => `IDENTITY bay resolved ${esc(s)}.`,
+  discovery: (s) => `DISCOVERY bay: ${esc(s)} linked to this person.`,
+  state: (s) => `STATE bay: ${esc(s)} at the audit time.`,
+  steps: (s) => `PLAN bay: ${esc(s)}.`,
+  confidence: (s) => `CONFIDENCE: ${esc(s)}.`,
+};
+function onEvent(e) {
+  if (e.type === "boot") {
+    say(esc(e.message), "sys");
+    if (e.phase === "start") { $("#output").textContent = "35%"; }
+    if (e.phase === "done") { $("#units").textContent = e.units.toLocaleString(); }
+  } else if (e.type === "run_start") {
+    buildShip(); renderQueue(e.cases); saved = 0; $("#saved").textContent = "0 kWh";
+    say(`Six transmissions in the queue. Life support only; every bay on standby.`, "sys");
+  } else if (e.type === "case_start") {
+    current = e.case_id; resetBays();
+    document.querySelectorAll(".pod").forEach((p) => p.classList.remove("active"));
+    $(`#q-${e.case_id}`).classList.add("active");
+    $("#result").className = "result"; $("#result").innerHTML = "";
+    $("#tx").innerHTML = `<div class="tx"><div><div class="who">${esc(e.title).toUpperCase()}</div>
+        <div class="kv mono">${esc(e.case_id)} · ${esc(e.email)}</div></div>
+        <div><span class="chip warn">CLAIM: ${esc(e.reported)}</span></div></div>
+      <div class="kv">Requested <b>${esc(e.requested_at)}</b> · audit at <b>${esc(e.audit_at)}</b> (nothing after it may be cited)</div>
+      <div class="quote" id="quote"></div><div class="why">⚠ ${esc(e.why)}</div>`;
+    typeText($("#quote"), `“${e.text}”`);
+    say(`Incoming transmission ${e.index}/6 from <b>${esc(e.email)}</b>. The workflow claims <b>${esc(e.reported)}</b>; a claim is not proof.`, "warn");
+    say(`Routing power to the INTENT bay.`, "sys"); power("intent");
+  } else if (e.type === "stage") {
+    const i = BAYS.findIndex((b) => b.id === e.stage);
+    if (e.stage === "intent") {  // light the model that answered on the ladder
+      const k = MODELS.findIndex((m) => e.summary.startsWith(m));
+      for (let j = 0; j < k; j++) $(`#m-${j}`).classList.add("lit");
+      if (k >= 0) { $(`#m-${k}`).classList.add("pass"); say(`Model ladder: ${LABEL[MODELS[k]]} answered with enough confidence; higher reactors stay cold.`, "save"); }
+    }
+    say(STAGE_TEXT[e.stage](e.summary), e.stage === "steps" && /INCOMPLETE/.test(e.summary) ? "bad" : e.stage === "steps" && /COMPLETE/.test(e.summary) ? "ok" : "");
+    seal(e.stage);
+    if (e.stage === "steps" && /NOT_APPLICABLE/.test(e.summary)) {
+      ["discovery", "state"].forEach((b) => seal(b, true));
+      say(`Not a deletion request. Sealing DISCOVERY and STATE bays unused; nothing is searched or deleted.`, "save");
+    }
+    const next = BAYS.slice(i + 1).find((b) => !$(`#b-${b.id}`).classList.contains("sealed"));
+    if (next) { say(`Rerouting power to ${next.name}. Sealing ${BAYS[i].name} to conserve energy.`, "save"); power(next.id); }
+    else power(null);
+  } else if (e.type === "case_done") {
+    BAYS.forEach((b) => seal(b.id));
+    power(null); showResult(e.case_id, e.detail);
+    const pod = $(`#q-${e.case_id}`); pod.classList.remove("active");
+    pod.classList.add("done", e.detail.status === "INCOMPLETE" ? "inc" : e.detail.status === "NOT_APPLICABLE" ? "na" : "ok");
+    $(`#qr-${e.case_id}`).textContent = e.detail.status;
+    const sc = $(`#sc-${e.case_id}`);
+    sc.innerHTML = `<div class="h">${esc(e.case_id)}</div><div class="s big ${e.detail.status}" style="font-size:13px">${esc(e.detail.status)}</div>
+      <div class="kv">${e.detail.steps.length} steps · ${esc(e.detail.confidence.band)} ${e.detail.confidence.score.toFixed(2)}</div>`;
+    say(`Transmission closed. All bays sealed; reactor back to life support.`, "sys");
+  } else if (e.type === "run_done") {
+    say(`Queue empty. Six audits complete. Powering down to standby.`, "ok");
+    $("#start").disabled = false; $("#output").textContent = "12%";
+  } else if (e.type === "failed") {
+    say(`Fault: ${esc(e.error)}`, "bad"); $("#start").disabled = false;
+  }
+}
+function showResult(caseId, d) {
+  const lad = d.intent.attempts || [];
+  lad.forEach((a, i) => { const k = MODELS.indexOf(a.model); if (k < 0) return;
+    $(`#m-${k}`).classList.add(a.passed ? "pass" : "lit"); $(`#mc-${k}`).textContent = a.confidence == null ? "—" : Number(a.confidence).toFixed(2); });
+  const recs = d.records.map((r) => {
+    const v = r.compliant === true ? `<span class="chip ok">OK</span>` : r.compliant === false ? `<span class="chip bad">VIOLATION</span>` : `<span class="chip na">UNKNOWN</span>`;
+    const scr = r.screens.length ? ` · screen read by ${esc(LABEL[r.screens[0].model] || r.screens[0].model)} ${r.screens[0].confidence ?? ""}` : "";
+    return `<tr><td class="mono">${esc(r.resource_id)}</td><td>${esc(r.category)}</td><td>${esc(r.action)}</td><td>${v}</td><td>${esc(r.how)}${scr}</td></tr>`;
+  }).join("");
+  const steps = d.steps.map((s) => `<tr><td>${s.step_no}</td><td class="${s.phase}">${esc(s.phase)}</td><td class="mono">${esc(s.resource_id)}</td><td>${esc(s.operation)}</td><td class="mono">${esc(s.evidence_id || "—")}</td></tr>`).join("");
+  const a = d.intent.answer || {};
+  $("#result").innerHTML = `
+    <div class="verdict"><span class="big ${d.status}">${esc(d.status)}</span>
+      <span class="chip">${esc(d.confidence.band).toUpperCase()} · ${d.confidence.score.toFixed(2)}</span>
+      <div class="gauge"><i id="gauge"></i></div></div>
+    <div class="kv">Intent <b>${esc(a.intent || "—")}</b> by <b>${esc(LABEL[d.intent.model] || d.intent.model)}</b> at ${esc(d.intent.confidence ?? "—")} · ${esc(a.reason || "")}</div>
+    <div class="kv">Person <b class="mono">${esc(d.identity.user_id)}</b> · ${d.identity.emails} email(s), ${d.identity.phones} phone(s) · ${d.found} record(s) found${d.reason ? ` · ${esc(d.reason)}` : ""}</div>
+    ${recs ? `<table><tr><th>RECORD</th><th>CATEGORY</th><th>POLICY</th><th>AT AUDIT</th><th>LINKED BY</th></tr>${recs}</table>` : ""}
+    ${steps ? `<table><tr><th>#</th><th>PHASE</th><th>RECORD</th><th>OPERATION</th><th>EVIDENCE</th></tr>${steps}</table>` : `<div class="kv">steps_json = [] (nothing to audit)</div>`}
+    <div class="kv">${d.confidence.reasons.map(esc).join(" · ")}</div>`;
+  $("#result").className = "result show";
+  requestAnimationFrame(() => { $("#gauge").style.width = `${Math.round(d.confidence.score * 100)}%`; });
+}
+
+buildShip();
+const es = new EventSource("/api/events");
+es.onmessage = (m) => onEvent(JSON.parse(m.data));
+$("#start").onclick = () => {
+  $("#start").disabled = true; $("#log").innerHTML = "";
+  fetch(`/api/start?pace=${$("#pace").value}`, {method: "POST"}).then((r) => { if (!r.ok) { $("#start").disabled = false; r.json().then((b) => say(esc(b.error), "bad")); } });
+};
+</script>
+</body>
+</html>
