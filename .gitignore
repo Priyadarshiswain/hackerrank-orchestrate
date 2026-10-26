@@ -1,0 +1,31 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Local-only working copy of the October session (superseded by sessions/2026-10)
+hackerrank-orchestrate-october26/
+
+# Environments and compiled files
+.venv/
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Session transcripts, run logs, packaging artifacts
+*-read-agentsmd-*.txt
+transcripts/
+log.txt
+*.zip
+
+# Fresh model-answer caches from live runs (the shipped cache lives in submission/code/cache)
+cache_api/
+cache_live/
+cache_final/
+cache_v3/
+code/cache/*.tmp
+
+# Scratch predictions produced while iterating
+sample_predictions*.csv
+sample_confidence.csv
