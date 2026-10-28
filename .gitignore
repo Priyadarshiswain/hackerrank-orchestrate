@@ -29,3 +29,7 @@ code/cache/*.tmp
 # Scratch predictions produced while iterating
 sample_predictions*.csv
 sample_confidence.csv
+
+# Deep-research working files (final reports are copied into shared/prep)
+research_notes/
+reports/
