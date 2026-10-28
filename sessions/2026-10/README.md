@@ -37,7 +37,7 @@ cached in `submission/code/cache` so the submitted run needs no API access. Deta
 - [notes/](notes/) — decisions log and reading notes.
 
 **What I would change.** The retrospective in
-[../../shared/prep/2026-11-preparation.md](../../shared/prep/2026-11-preparation.md) lists
+my private retrospective lists
 the concrete lessons: the plan step let "no cited findings" imply `COMPLETE`, tests encoded
 implementation assumptions instead of requirements, and the investigation followed fixed
 rules rather than choosing its next action from an unresolved question.

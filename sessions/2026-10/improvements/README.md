@@ -7,7 +7,7 @@ Not started yet. When it is, this file records: what changed, why, and before/af
 against `../evaluation/`. Code goes in `code/`, started as a copy of
 `../submission/code`.
 
-Candidate first targets, from the retrospective in `../../../shared/prep/2026-11-preparation.md`:
+Candidate first targets, from my private retrospective:
 
 1. `plan.py`: require cited proof before a case can be `COMPLETE`.
 2. Derive test expectations from the problem statement, not from the implementation.

@@ -22,7 +22,7 @@ sessions/<yyyy-mm>/
   evaluation/      scoring scripts, eval cases, reports
   notes/           decisions log and reading notes written during the session
 shared/
-  prep/            session-prep checklists and retrospectives
+  prep/            session-prep checklists (kept private until after each edition)
   tooling/         pieces reused across sessions (added when actually reused)
   templates/       README template for a new session
 docs/
